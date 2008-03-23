@@ -1,0 +1,73 @@
+{
+	shapes : {
+		myText : {
+			type : "text",
+			value : "text content",
+			size : 12,
+			align : "left",
+			width : 200
+		},
+		myCircle : {
+			type : "circle",
+			radius : 123,
+			stroke : {
+				color : "#ABC",
+				style : "dashed",
+				size : 2,
+				join : "miter"
+			},
+			fill : {
+				color : "green",
+				gradient : {
+					angle : 45,
+					stops : [
+						{
+							offset : -10,
+							color : "#FFF"
+						}
+					]
+				},
+				image : {
+					url : "http://...",
+					transform : { ... }
+				}
+			}
+		},
+		myRect : {
+			type : "rect",
+			width : 240,
+			height : 120,
+			stroke : { ... },
+			fill : { ... }
+		}
+		myComp : {
+			type : "compound",
+			objects : [
+				{
+					ref : "myCircle",
+					transform : {
+						translate : [100,200],
+						scale : 2,
+						rotate : 90,
+						opacity : 0.5
+					}
+				}
+			]
+		}
+	},
+	
+	timeline: {
+		fps : 12,
+		layers : [
+			{
+				shapes : { ... },
+				start : 1,
+				end : 100
+				objects : [
+					
+				]
+			}
+		]
+	}
+	
+}

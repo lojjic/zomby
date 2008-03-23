@@ -6,7 +6,6 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 	iconClass : "select-tool-icon",
 
 	handleclick : function(e) {
-		console.log('click');
 		var s = e.data.shape,
 			c = e.data.canvas;
 		if(!s || !e.ctrlKey) {

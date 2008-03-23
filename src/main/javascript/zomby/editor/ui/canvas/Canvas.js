@@ -2,6 +2,8 @@
 
 Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 
+	dragDelay : 50,
+
 	constructor : function(parent) {
 		this.base(parent);
 		this.shapeViews = [];
@@ -120,7 +122,7 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 	
 	mousedown : function(e) {
 		this.events.mousedown.fire(this.decorateEvent(e));
-		this._mousedown = true;
+		this._mousedown = new Date();
 	},
 
 	mouseup : function(e) {
@@ -129,17 +131,19 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 			this._dragging = false;
 			this.events.dragend.fire(this.decorateEvent(e));
 		}
-		this._mousedown = false;
+		this._mousedown = null;
 	},
 
 	mousemove : function(e) {
 		this.events.mousemove.fire(this.decorateEvent(e));
 		if(this._mousedown) {
-			if(!this._dragging) {
+			if(!this._dragging && new Date() - this._mousedown > this.dragDelay) {
 				this._dragging = true;
 				this.events.dragstart.fire(this.decorateEvent(e));
 			}
-			this.events.drag.fire(this.decorateEvent(e));
+			if(this._dragging) {
+				this.events.drag.fire(this.decorateEvent(e));
+			}
 		}
 	},
 	

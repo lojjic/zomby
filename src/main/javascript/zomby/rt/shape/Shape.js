@@ -7,13 +7,7 @@ Package("zomby.rt.shape").Shape = Base.extend({
 	constructor : function(type) {
 		this.base();
 		this.type = this.constructor.TYPE;
-		this.initEvents();
-	},
-
-	initEvents : function() {
-		this.events = {
-			propertychanged : new zomby.core.Event("propertychanged")
-		}
+		this.onpropertychange = new zomby.core.Event("propertychanged");
 	},
 
 	getType : function() {
@@ -55,7 +49,7 @@ Package("zomby.rt.shape").Shape = Base.extend({
 	},
 
 	propertyChanged : function(name, oldValue, newValue) {
-		this.events.propertychanged.fire({name:name, oldValue:oldValue, newValue:newValue, target:this});
+		this.onpropertychange.fire({name:name, oldValue:oldValue, newValue:newValue, target:this});
 	}
 
 }, {

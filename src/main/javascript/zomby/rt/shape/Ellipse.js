@@ -1,6 +1,4 @@
-/**
- * @class Circle
- */
+
 Package("zomby.rt.shape").Ellipse = zomby.rt.shape.Shape.extend({
 
 	radius : {x:0, y:0},

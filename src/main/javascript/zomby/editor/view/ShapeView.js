@@ -16,10 +16,10 @@ Package("zomby.editor.view").ShapeView = zomby.editor.Widget.extend({
 	},
 
 	initEventListeners : function() {
-		this.shape.events.propertychanged.subscribe($.rescope(this.handlePropertyChanged, this));
+		this.shape.onpropertychange.subscribe($.rescope(this.handlePropertyChange, this));
 	},
 
-	handlePropertyChanged : function(e) {
+	handlePropertyChange : function(e) {
 		if(e.name == "position") {
 			this.getElement().css({left:e.newValue.x, top:e.newValue.y});
 		}

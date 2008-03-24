@@ -1,4 +1,6 @@
-<html>
+<?xml version="1.0" ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Random Testing</title>
 	
@@ -14,7 +16,8 @@
 	
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Shape.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Ellipse.js"></script>
-	
+	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Rectangle.js"></script>
+
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/Widget.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/Canvas.js"></script>
 	
@@ -22,18 +25,23 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/Tool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/Toolbox.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/SelectTool.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/AbstractShapeTool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/EllipseTool.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/RectangleTool.js"></script>
 
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeViewFactory.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeView.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/EllipseView.js"></script>
-	
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/RectangleView.js"></script>
+
 	<script type="text/javascript">
 		$(function() {
 			var toolbox = new zomby.editor.ui.toolbox.Toolbox($("#tester"));
 			
 			var canvas = new zomby.editor.ui.canvas.Canvas($("#tester"));
+			canvas.setShapeViewFactory(new zomby.editor.view.ShapeViewFactory());
 			$.each(["dragstart","drag","dragend","click","keypress"], function(i,type) {
-				canvas.events[type].subscribe(function(e) {
+				canvas["on"+type].subscribe(function(e) {
 					toolbox.getSelectedTool()["handle"+type](e);
 				});
 			});
@@ -41,6 +49,8 @@
 	</script>
 	
 	<style type="text/css">
+		@namespace svg "http://www.w3.org/2000/svg";
+
 		#tester {
 			border:1px solid #CCC;
 			width: 800px;
@@ -50,10 +60,22 @@
 		.tool-icon {
 			float: left;
 			margin: 2px;
-			width: 32px;
-			height: 32px;
-			border: 2px outset #CCC;
-			background: #EEE;
+			width: 24px;
+			height: 24px;
+			border: 1px outset #CCC;
+			background: #EEE none no-repeat 50% 50%;
+		}
+
+		.select-tool-icon {
+			background-image: url(icons/select-rectangular.png);
+		}
+
+		.ellipse-tool-icon {
+			background-image: url(icons/krita_tool_ellipse.png);
+		}
+
+		.rectangle-tool-icon {
+			background-image : url(icons/krita_tool_rectangle.png);
 		}
 		
 		.tool-icon-selected {
@@ -61,7 +83,7 @@
 		}
 		
 		.tool-icon-hover {
-			background:#CCC;
+			background-color: #CCC;
 		}
 		
 		.canvas {
@@ -83,6 +105,10 @@
 
 		.ellipse {
 			background:#FCC;
+		}
+
+		.rectangle {
+			background:#CFC;
 		}
 
 		.selected {

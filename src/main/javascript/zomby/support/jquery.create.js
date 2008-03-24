@@ -1,5 +1,9 @@
 
 
-jQuery.create = function(tag) {
-	return jQuery(document.createElement(tag));
+jQuery.create = function(ns, tag) {
+	return jQuery(
+		tag ?
+			document.createElementNS(ns, tag) :
+			document.createElement(ns)
+	);
 };

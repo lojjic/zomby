@@ -3,11 +3,16 @@
 Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 
 	dragDelay : 50,
+	shapeViewFactory : null,
 
 	constructor : function(parent) {
 		this.base(parent);
 		this.shapeViews = [];
 		this.initEvents();
+	},
+
+	setShapeViewFactory : function(svf) {
+		this.shapeViewFactory = svf;
 	},
 
 	create : function() {
@@ -30,16 +35,15 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 		}, this));
 		
 		// Create custom Event objects:
-		var events = this.events = {};
-		$.each([mouseTypes, kbdTypes, customTypes], function() {
-			$.each(this, function() {
-				events[this] = new zomby.core.Event(this);
-			});
-		});
+		$.each([mouseTypes, kbdTypes, customTypes], $.rescope(function(i,arr) {
+			$.each(arr, $.rescope(function(i,type) {
+				this["on"+type] = new zomby.core.Event(type);
+			}, this));
+		}, this));
 	},
 	
 	addShape : function(shape) {
-		this.shapeViews.push(new zomby.editor.view.EllipseView(shape, this.getElement()));
+		this.shapeViews.push(this.shapeViewFactory.getShapeView(shape, this.getElement()));
 	},
 
 	removeShape : function(shape) {
@@ -121,58 +125,58 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 	},
 	
 	mousedown : function(e) {
-		this.events.mousedown.fire(this.decorateEvent(e));
+		this.onmousedown.fire(this.decorateEvent(e));
 		this._mousedown = new Date();
 	},
 
 	mouseup : function(e) {
-		this.events.mouseup.fire(this.decorateEvent(e));
+		this.onmouseup.fire(this.decorateEvent(e));
 		if(this._dragging) {
 			this._dragging = false;
-			this.events.dragend.fire(this.decorateEvent(e));
+			this.ondragend.fire(this.decorateEvent(e));
 		}
 		this._mousedown = null;
 	},
 
 	mousemove : function(e) {
-		this.events.mousemove.fire(this.decorateEvent(e));
+		this.onmousemove.fire(this.decorateEvent(e));
 		if(this._mousedown) {
 			if(!this._dragging && new Date() - this._mousedown > this.dragDelay) {
 				this._dragging = true;
-				this.events.dragstart.fire(this.decorateEvent(e));
+				this.ondragstart.fire(this.decorateEvent(e));
 			}
 			if(this._dragging) {
-				this.events.drag.fire(this.decorateEvent(e));
+				this.ondrag.fire(this.decorateEvent(e));
 			}
 		}
 	},
 	
 	mouseover : function(e) {
-		this.events.mouseover.fire(this.decorateEvent(e));
+		this.onmouseover.fire(this.decorateEvent(e));
 	},
 	
 	mouseout : function(e) {
-		this.events.mouseout.fire(this.decorateEvent(e));
+		this.onmouseout.fire(this.decorateEvent(e));
 	},
 
 	click : function(e) {
-		this.events.click.fire(this.decorateEvent(e));
+		this.onclick.fire(this.decorateEvent(e));
 	},
 
 	dblclick : function(e) {
-		this.events.dblclick.fire(this.decorateEvent(e));
+		this.ondblclick.fire(this.decorateEvent(e));
 	},
 	
 	keypress : function(e) {
-		this.events.keypress.fire(this.decorateEvent(e));
+		this.onkeypress.fire(this.decorateEvent(e));
 	},
 	
 	keydown : function(e) {
-		this.events.keydown.fire(this.decorateEvent(e));
+		this.onkeydown.fire(this.decorateEvent(e));
 	},
 	
 	keyup : function(e) {
-		this.events.keyup.fire(this.decorateEvent(e));
+		this.onkeyup.fire(this.decorateEvent(e));
 	},
 	
 	decorateEvent : function(e) {

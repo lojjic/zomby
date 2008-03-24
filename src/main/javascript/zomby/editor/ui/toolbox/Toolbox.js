@@ -4,7 +4,8 @@ Package("zomby.editor.ui.toolbox").Toolbox = zomby.editor.Widget.extend({
 
 	toolClasses : [
 		"zomby.editor.ui.toolbox.SelectTool",
-		"zomby.editor.ui.toolbox.EllipseTool"
+		"zomby.editor.ui.toolbox.EllipseTool",
+		"zomby.editor.ui.toolbox.RectangleTool"
 	],
 	
 	create : function(parent) {

@@ -25,7 +25,7 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 			s = e.data.shape,
 			x = e.data.canvasX,
 			y = e.data.canvasY,
-			ds = this._dragState = {start : {x:x, y:y}};
+			ds = this._dragState = {start : {x:x, y:y}, last : {x:x, y:y}};
 		if(s) {
 			ds.shape  = s;
 			if(!c.isShapeSelected(s)) {
@@ -41,22 +41,18 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 	handledrag : function(e) {
 		var ds = this._dragState,
 			c = e.data.canvas,
+			s = ds.shape,
 			newX = e.data.canvasX,
-			newY = e.data.canvasY,
-			deltaX = newX - ds.start.x,
-			deltaY = newY - ds.start.y,
-			s = ds.shape;
-		ds.start = {x:newX, y:newY};
+			newY = e.data.canvasY;
 		if(s) {
 			$.each(c.getSelectedShapes(), function() {
 				var old = this.getPosition();
-				this.setPosition(old.x + deltaX, old.y + deltaY);
+				this.setPosition(old.x + newX - ds.last.x, old.y + newY - ds.last.y);
 			})
 		} else {
-			var l = ds.lasso,
-				old = l.getSize();
-			l.setSize(old.w + deltaX, old.h + deltaY);
+			ds.lasso.setSize(newX - ds.start.x, newY - ds.start.y);
 		}
+		ds.last = {x:newX, y:newY};
 	},
 	
 	handledragend : function(e) {

@@ -1,5 +1,5 @@
 
-Package("zomby.rt.shape").Ellipse = zomby.rt.shape.Shape.extend({
+Package("zomby.model.shape").Ellipse = zomby.model.shape.Shape.extend({
 
 	radius : {x:0, y:0},
 	fill : "none",

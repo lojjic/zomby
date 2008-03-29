@@ -1,6 +1,6 @@
 
 
-Package("zomby.rt.shape").Stroke = Base.extend({
+Package("zomby.model.shape").Stroke = Base.extend({
 
 	size : 1,
 	style : "solid",

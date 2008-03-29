@@ -1,5 +1,5 @@
 
-Package("zomby.rt.shape").Line = zomby.rt.shape.Shape.extend({
+Package("zomby.model.shape").Line = zomby.model.shape.Shape.extend({
 
 	start : {x:0, y:0},
 	end : {x:0, y:0},

@@ -1,6 +1,6 @@
 
 
-Package("zomby.rt.shape").Color = Base.extend({
+Package("zomby.model.shape").Color = Base.extend({
 
 	r : 0,
 	g : 0,

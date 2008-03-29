@@ -8,7 +8,7 @@ Package("zomby.editor.ui.toolbox").LineTool = zomby.editor.ui.toolbox.AbstractSh
 	createShape : function(lasso) {
 		var s = lasso.getStart(),
 			e = lasso.getEnd(),
-			line = new zomby.rt.shape.Line();
+			line = new zomby.model.shape.Line();
 		line.setPosition(s.x, s.y);
 		line.setStart(0, 0);
 		line.setEnd(e.x - s.x, e.y - s.y);

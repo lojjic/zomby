@@ -1,5 +1,5 @@
 
-Package("zomby.rt.shape").Rectangle = zomby.rt.shape.Shape.extend({
+Package("zomby.model.shape").Rectangle = zomby.model.shape.Shape.extend({
 
 	width : 0,
 	height : 0,

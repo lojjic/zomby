@@ -1,5 +1,5 @@
 
-Package("zomby.rt.shape").Shape = Base.extend({
+Package("zomby.model.shape").Shape = Base.extend({
 
 	type : null,
 	position : {x:0, y:0},

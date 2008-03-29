@@ -1,8 +1,4 @@
 
-Package("zomby.core").Util = Base.extend({
+Package("zomby.core").Util = {
 
-	constructor : null
-
-}, { //Static:
-
-});
+};

@@ -4,6 +4,7 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 
 	dragDelay : 50,
 	shapeViewFactory : null,
+	svgElement : null,
 
 	constructor : function(parent) {
 		this.base(parent);
@@ -16,7 +17,12 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 	},
 
 	create : function() {
-		return $.create("div").addClass("canvas");
+		return $.create("div").addClass("canvas").append(
+			this.svgElement = $.create(zomby.core.Constants.SVG_NS, "svg").attr({
+				width : "100%",
+				height : "100%"
+			})
+		);
 	},
 	
 	initEvents : function() {
@@ -43,7 +49,7 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 	},
 	
 	addShape : function(shape) {
-		this.shapeViews.push(this.shapeViewFactory.getShapeView(shape, this.getElement()));
+		this.shapeViews.push(this.shapeViewFactory.getShapeView(shape, this.svgElement));
 	},
 
 	removeShape : function(shape) {

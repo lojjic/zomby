@@ -3,7 +3,7 @@
 Package("zomby.view.shape").RectangleView = zomby.view.shape.ShapeView.extend({
 
 	create : function() {
-		return $.create("div").addClass("rectangle").css({position : "absolute"});
+		return $.create(zomby.core.Constants.SVG_NS, "rect");
 	},
 
 	handlePropertyChanged : function(e) {
@@ -22,14 +22,12 @@ Package("zomby.view.shape").RectangleView = zomby.view.shape.ShapeView.extend({
 
 	updateSizeAndPosition : function() {
 		var s = this.getShape(),
-			w = s.getWidth(),
-			h = s.getHeight(),
 			p = s.getPosition();
-		this.getElement().css({
-			width : w,
-			height : h,
-			left : p.x - w/2,
-			top : p.y - h/2
+		this.getElement().attr({
+			x : p.x,
+			y : p.y,
+			width : s.getWidth(),
+			height : s.getHeight()
 		});
 	}
 

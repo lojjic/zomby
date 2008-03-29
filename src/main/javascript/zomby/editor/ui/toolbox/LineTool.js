@@ -9,9 +9,8 @@ Package("zomby.editor.ui.toolbox").LineTool = zomby.editor.ui.toolbox.AbstractSh
 		var s = lasso.getStart(),
 			e = lasso.getEnd(),
 			line = new zomby.model.shape.Line();
-		line.setPosition(s.x, s.y);
-		line.setStart(0, 0);
-		line.setEnd(e.x - s.x, e.y - s.y);
+		line.setStart(s.x, s.y);
+		line.setEnd(e.x, e.y);
 		return line;
 	}
 

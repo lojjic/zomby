@@ -3,7 +3,7 @@
 Package("zomby.view.shape").EllipseView = zomby.view.shape.ShapeView.extend({
 
 	create : function() {
-		return $.create("div").addClass("ellipse").css({position : "absolute"});
+		return $.create(zomby.core.Constants.SVG_NS, "ellipse");
 	},
 
 	handlePropertyChanged : function(e) {
@@ -21,16 +21,13 @@ Package("zomby.view.shape").EllipseView = zomby.view.shape.ShapeView.extend({
 
 	updateRadiusAndPosition : function() {
 		var s = this.getShape(),
-			w = s.getWidth(),
-			h = s.getHeight(),
 			p = s.getPosition();
-		this.getElement().css({
-			width : w,
-			height : h,
-			left : p.x - w/2,
-			top : p.y - h/2
+		this.getElement().attr({
+			cx : p.x,
+			cy : p.y,
+			rx : s.getWidth() / 2,
+			ry : s.getHeight() / 2
 		});
-
 	}
 
 });

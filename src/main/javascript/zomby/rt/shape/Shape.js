@@ -25,16 +25,6 @@ Package("zomby.rt.shape").Shape = Base.extend({
 		return this.type;
 	},
 
-	render : function(parent) {
-		var renderer = Renderer.getRenderer(this);
-		renderer.render(this, parent);
-	},
-
-	serialize : function() {
-		var serializer = Serializer.getSerializer(this);
-		return serializer.serialize(this);
-	},
-	
 	getPosition : function() {
 		return this.position;
 	},

@@ -25,7 +25,7 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 			s = e.data.shape,
 			x = e.data.canvasX,
 			y = e.data.canvasY,
-			ds = this._dragState = {start : {x:x, y:y}, last : {x:x, y:y}};
+			ds = this._dragState = {last : {x:x, y:y}};
 		if(s) {
 			ds.shape  = s;
 			if(!c.isShapeSelected(s)) {
@@ -50,7 +50,7 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 				this.setPosition(old.x + newX - ds.last.x, old.y + newY - ds.last.y);
 			})
 		} else {
-			ds.lasso.setSize(newX - ds.start.x, newY - ds.start.y);
+			ds.lasso.setEnd(newX, newY);
 		}
 		ds.last = {x:newX, y:newY};
 	},

@@ -41,7 +41,7 @@ Package("zomby.editor.ui.toolbox").AbstractShapeTool = zomby.editor.ui.toolbox.T
 		if(e.shiftKey) {
 			w = h = Math.min(w, h);
 		}
-		ds.lasso.setSize(w, h);
+		ds.lasso.setEnd(ds.start.x + w, ds.start.y + h);
 	},
 	
 	cancelLasso : function() {

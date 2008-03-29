@@ -2,13 +2,33 @@
 Package("zomby.rt.shape").Ellipse = zomby.rt.shape.Shape.extend({
 
 	radius : {x:0, y:0},
+	fill : "none",
+	stroke : "1px solid #000",
+
+	getRadius : function() {
+		return this.radius;
+	},
 
 	setRadius : function(rX, rY) {
-		var old = this.radius,
-			noo = this.radius = {x:rX, y:rY};
-		this.propertyChanged("radius", old, noo);
+		this._setProperty("radius", {x:rX, y:rY});
+	},
+
+	getFill : function() {
+		return this.fill;
+	},
+
+	setFill : function(fill) {
+		this._setProperty("fill", fill);
 	},
 	
+	getStroke : function() {
+		return this.stroke;
+	},
+
+	setStroke : function(stroke) {
+		this._setProperty("stroke", stroke);
+	},
+
 	getBounds : function() {
 		var r = this.radius,
 			p = this.getPosition();

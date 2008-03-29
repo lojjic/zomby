@@ -9,6 +9,7 @@ Package("zomby.editor.view").ShapeView = zomby.editor.Widget.extend({
 		this.shape = shape;
 		this.initEventListeners();
 		this.base(parent);
+		this.update();
 	},
 
 	getShape : function() {
@@ -16,13 +17,19 @@ Package("zomby.editor.view").ShapeView = zomby.editor.Widget.extend({
 	},
 
 	initEventListeners : function() {
-		this.shape.onpropertychange.subscribe($.rescope(this.handlePropertyChange, this));
+		this.shape.onpropertychange.subscribe($.rescope(this.handlePropertyChanged, this));
 	},
 
-	handlePropertyChange : function(e) {
-		if(e.name == "position") {
-			this.getElement().css({left:e.newValue.x, top:e.newValue.y});
-		}
+	/**
+	 * Update the entire state of the view from the shape.
+	 * @abstract
+	 */
+	update : function() {
+		throw new Error("Not Implemented.");
+	},
+
+	handlePropertyChanged : function(e) {
+		throw new Error("Not Implemented");
 	},
 
 	select : function() {

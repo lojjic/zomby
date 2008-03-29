@@ -17,7 +17,8 @@ Package("zomby.editor.view").ShapeViewFactory = Base.extend({
 	getClassForType : function(type) {
 		return {
 			ellipse : zomby.editor.view.EllipseView,
-			rectangle : zomby.editor.view.RectangleView
+			rectangle : zomby.editor.view.RectangleView,
+			line : zomby.editor.view.LineView
 		}[type];
 	}
 

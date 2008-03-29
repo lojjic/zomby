@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Shape.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Ellipse.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Rectangle.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Line.js"></script>
 
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/Widget.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/Canvas.js"></script>
@@ -28,11 +29,13 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/AbstractShapeTool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/EllipseTool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/RectangleTool.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/LineTool.js"></script>
 
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeViewFactory.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeView.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/EllipseView.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/RectangleView.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/LineView.js"></script>
 
 	<script type="text/javascript">
 		$(function() {
@@ -78,6 +81,10 @@
 			background-image : url(icons/krita_tool_rectangle.png);
 		}
 		
+		.line-tool-icon {
+			background-image : url(icons/krita_tool_line.png);
+		}
+
 		.tool-icon-selected {
 			border-style: inset;
 		}
@@ -109,6 +116,10 @@
 
 		.rectangle {
 			background:#CFC;
+		}
+
+		.line {
+			background:#CCF;
 		}
 
 		.selected {

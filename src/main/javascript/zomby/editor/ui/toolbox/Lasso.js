@@ -3,7 +3,7 @@
 Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
 
 	start : {x:0, y:0},
-	size : {w:0, h:0},
+	end : {x:0, y:0},
 	minSize : 0,
 
 	create : function() {
@@ -13,17 +13,21 @@ Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
 	},
 	
 	setStart : function(x, y) {
-		this.start = {x:x, y:y};
+		this.start = this.end = {x:x, y:y};
 		this.update();
 	},
 	
-	setSize : function(w, h) {
-		this.size = {w:w, h:h};
+	setEnd : function(x, y) {
+		this.end = {x:x, y:y};
 		this.update();
 	},
 
-	getSize : function() {
-		return this.size;
+	getStart : function() {
+		return this.start;
+	},
+
+	getEnd : function() {
+		return this.end;
 	},
 	
 	setMinSize : function(size) {
@@ -31,7 +35,7 @@ Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
 	},
 	
 	isBelowMinSize : function() {
-		return Math.abs(this.size.w) < this.minSize && Math.abs(this.size.h) < this.minSize;
+		return this.getWidth() < this.minSize && this.getHeight() < this.minSize;
 	},
 
 	update : function() {
@@ -52,8 +56,8 @@ Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
 	getBounds : function() {
 		var x1 = this.start.x,
 		    y1 = this.start.y,
-		    x2 = x1 + this.size.w,
-		    y2 = y1 + this.size.h;
+		    x2 = this.end.x,
+		    y2 = this.end.y;
 		return [
 			Math.min(x1, x2),
 			Math.min(y1, y2),
@@ -68,6 +72,14 @@ Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
 			x : b[0] + (b[2] - b[0]) / 2,
 			y : b[1] + (b[3] - b[1]) / 2
 		};
+	},
+
+	getWidth : function() {
+		return Math.abs(this.end.x - this.start.x);
+	},
+
+	getHeight : function() {
+		return Math.abs(this.end.y - this.start.y);
 	}
 
 });

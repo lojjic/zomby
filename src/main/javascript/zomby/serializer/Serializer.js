@@ -23,7 +23,7 @@ var Serializer = Base.extend({
 	 * @return {Object} the parsed object
 	 */
 	parse : function(str) {
-		throw new Error("Not implemented");
+		throw new Error("Not implemented: Serializer.parse(str)");
 	}
 
 });

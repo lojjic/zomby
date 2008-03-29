@@ -25,11 +25,11 @@ Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
 	 * @abstract
 	 */
 	update : function() {
-		throw new Error("Not Implemented.");
+		throw new Error("Not Implemented: ShapeView.update()");
 	},
 
 	handlePropertyChanged : function(e) {
-		throw new Error("Not Implemented");
+		throw new Error("Not Implemented: ShapeView.handlePropertyChanged(e)");
 	},
 
 	select : function() {

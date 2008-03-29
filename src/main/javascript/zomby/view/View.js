@@ -18,7 +18,7 @@ Package("zomby.view").View = Base.extend({
 	 * @type jQuery
 	 */
 	create : function() {
-		throw new Error("Not Implemented");
+		throw new Error("Not Implemented: View.create()");
 	},
 
 	/**

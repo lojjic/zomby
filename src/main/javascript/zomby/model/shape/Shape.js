@@ -34,7 +34,7 @@ Package("zomby.model.shape").Shape = Base.extend({
 	},
 
 	getBounds : function() {
-		throw new Error("Not Implemented");
+		throw new Error("Not Implemented: Shape.getBounds()");
 	},
 
 	getWidth : function() {

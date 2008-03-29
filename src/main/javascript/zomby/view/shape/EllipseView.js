@@ -1,26 +1,25 @@
 
 
-Package("zomby.editor.view").RectangleView = zomby.editor.view.ShapeView.extend({
+Package("zomby.view.shape").EllipseView = zomby.view.shape.ShapeView.extend({
 
 	create : function() {
-		return $.create("div").addClass("rectangle").css({position : "absolute"});
+		return $.create("div").addClass("ellipse").css({position : "absolute"});
 	},
 
 	handlePropertyChanged : function(e) {
 		switch(e.name) {
-			case "width":
-			case "height":
+			case "radius":
 			case "position":
-				this.updateSizeAndPosition();
+				this.updateRadiusAndPosition();
 				break;
 		}
 	},
 
 	update : function() {
-		this.updateSizeAndPosition();
+		this.updateRadiusAndPosition();
 	},
 
-	updateSizeAndPosition : function() {
+	updateRadiusAndPosition : function() {
 		var s = this.getShape(),
 			w = s.getWidth(),
 			h = s.getHeight(),
@@ -31,6 +30,7 @@ Package("zomby.editor.view").RectangleView = zomby.editor.view.ShapeView.extend(
 			left : p.x - w/2,
 			top : p.y - h/2
 		});
+
 	}
 
 });

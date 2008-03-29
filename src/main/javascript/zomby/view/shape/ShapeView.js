@@ -1,6 +1,6 @@
 
 
-Package("zomby.editor.view").ShapeView = zomby.editor.Widget.extend({
+Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
 
 	shape : null,
 	selected : false,

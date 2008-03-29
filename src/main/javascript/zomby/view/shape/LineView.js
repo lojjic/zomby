@@ -1,6 +1,6 @@
 
 
-Package("zomby.editor.view").LineView = zomby.editor.view.ShapeView.extend({
+Package("zomby.view.shape").LineView = zomby.view.shape.ShapeView.extend({
 
 	create : function() {
 		return $.create("div").addClass("line").css({position : "absolute"});

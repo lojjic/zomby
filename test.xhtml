@@ -19,6 +19,13 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Rectangle.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/rt/shape/Line.js"></script>
 
+	<script type="text/javascript" src="src/main/javascript/zomby/view/View.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/ShapeViewFactory.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/ShapeView.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/EllipseView.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/RectangleView.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/LineView.js"></script>
+
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/Widget.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/Canvas.js"></script>
 	
@@ -31,18 +38,12 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/RectangleTool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/LineTool.js"></script>
 
-	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeViewFactory.js"></script>
-	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/ShapeView.js"></script>
-	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/EllipseView.js"></script>
-	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/RectangleView.js"></script>
-	<script type="text/javascript" src="src/main/javascript/zomby/editor/view/LineView.js"></script>
-
 	<script type="text/javascript">
 		$(function() {
 			var toolbox = new zomby.editor.ui.toolbox.Toolbox($("#tester"));
 			
 			var canvas = new zomby.editor.ui.canvas.Canvas($("#tester"));
-			canvas.setShapeViewFactory(new zomby.editor.view.ShapeViewFactory());
+			canvas.setShapeViewFactory(new zomby.view.shape.ShapeViewFactory());
 			$.each(["dragstart","drag","dragend","click","keypress"], function(i,type) {
 				canvas["on"+type].subscribe(function(e) {
 					toolbox.getSelectedTool()["handle"+type](e);

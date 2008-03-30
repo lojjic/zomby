@@ -34,12 +34,12 @@ Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
 
 	select : function() {
 		this.selected = true;
-		this.getElement().addClass("selected");
+		//this.getElement().addClass("selected");
 	},
 
 	deselect : function() {
 		this.selected = false;
-		this.getElement().removeClass("selected");
+		//this.getElement().removeClass("selected");
 	},
 
 	isSelected : function() {

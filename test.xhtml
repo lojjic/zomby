@@ -29,8 +29,12 @@
 	<script type="text/javascript" src="src/main/javascript/zomby/view/shape/LineView.js"></script>
 
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/Widget.js"></script>
+
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/SelectionBox.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/ResizableSelectionBox.js"></script>
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/SelectionManager.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/Canvas.js"></script>
-	
+
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/Lasso.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/Tool.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/toolbox/Toolbox.js"></script>
@@ -46,7 +50,7 @@
 			
 			var canvas = new zomby.editor.ui.canvas.Canvas($("#tester"));
 			canvas.setShapeViewFactory(new zomby.view.shape.ShapeViewFactory());
-			$.each(["dragstart","drag","dragend","click","keypress"], function(i,type) {
+			$.each(["dragstart","drag","dragend","mousedown","keypress"], function(i,type) {
 				canvas["on"+type].subscribe(function(e) {
 					toolbox.getSelectedTool()["handle"+type](e);
 				});
@@ -113,20 +117,29 @@
 			border-color: red;
 		}
 
-		.ellipse {
-			background:#FCC;
+		.selection-box {
+			border: 1px dashed #CCC;
+			color: #CCC;
 		}
 
-		.rectangle {
-			background:#CFC;
+		.resize-handle {
+			position: absolute;
+			border:1px solid;
+			width: 8px;
+			height: 8px;
+			margin: -5px;
 		}
+		.resize-nw {top:0; left:0; cursor:nw-resize;}
+		.resize-n {top:0; left:50%; cursor:n-resize;}
+		.resize-ne {top:0; right:0; cursor:ne-resize;}
+		.resize-e {top:50%; right:0; cursor:e-resize;}
+		.resize-se {bottom:0; right:0; cursor:se-resize;}
+		.resize-s {bottom:0; left:50%; cursor:s-resize;}
+		.resize-sw {bottom:0; left:0; cursor:sw-resize;}
+		.resize-w {top:50%; left:0; cursor:w-resize;}
 
-		.line {
-			background:#CCF;
-		}
-
-		.selected {
-			background: blue;
+		svg|svg {
+			-moz-user-select : none;
 		}
 	</style>
 </head>

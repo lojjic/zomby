@@ -5,17 +5,18 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 	title : "Select",
 	iconClass : "select-tool-icon",
 
-	handleclick : function(e) {
+	handlemousedown : function(e) {
 		var s = e.data.shape,
-			c = e.data.canvas;
+			c = e.data.canvas,
+			sm = c.getSelectionManager();
 		if(!s || !e.ctrlKey) {
-			c.deselectAll();
+			sm.deselectAll();
 		}
 		if(s) {
-			if(e.ctrlKey && c.isShapeSelected(s)) {
-				c.deselectShape(s);
+			if(e.ctrlKey && sm.isSelected(s)) {
+				sm.deselect(s);
 			} else {
-				c.selectShape(s);
+				sm.select(s);
 			}
 		}
 	},
@@ -25,12 +26,13 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 			s = e.data.shape,
 			x = e.data.canvasX,
 			y = e.data.canvasY,
-			ds = this._dragState = {last : {x:x, y:y}};
+			ds = this._dragState = {last : {x:x, y:y}},
+			sm = c.getSelectionManager();
 		if(s) {
 			ds.shape  = s;
 			if(!c.isShapeSelected(s)) {
-				c.deselectAll();
-				c.selectShape(s);
+				sm.deselectAll();
+				sm.select(s);
 			}
 		} else {
 			ds.lasso = new zomby.editor.ui.toolbox.Lasso(c.getElement());
@@ -57,12 +59,13 @@ Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.ext
 	
 	handledragend : function(e) {
 		var l = this._dragState.lasso,
-			c = e.data.canvas;
+			c = e.data.canvas,
+			sm = c.getSelectionManager();
 		if(l) {
 			if(!e.ctrlKey) {
-				c.deselectAll()
+				sm.deselectAll()
 			}
-			c.selectShapesInBounds(l.getBounds());
+			sm.selectShapesInBounds(l.getBounds());
 			l.destroy();
 		}
 		this._dragState = null;

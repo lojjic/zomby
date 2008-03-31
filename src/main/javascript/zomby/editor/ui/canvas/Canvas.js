@@ -9,11 +9,16 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 	constructor : function(parent) {
 		this.base(parent);
 		this.shapeViews = [];
+		this.selectionManager = new zomby.editor.ui.canvas.SelectionManager(this);
 		this.initEvents();
 	},
 
 	setShapeViewFactory : function(svf) {
 		this.shapeViewFactory = svf;
+	},
+
+	getSelectionManager : function() {
+		return this.selectionManager;
 	},
 
 	create : function() {
@@ -58,7 +63,17 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 				sv.destroy();
 				return null;
 			}
-			return sv
+			return sv;
+		});
+	},
+
+	getShapeViews : function() {
+		return this.shapeViews;
+	},
+
+	getShapes : function() {
+		return $.map(this.shapeViews, function(sv) {
+			return sv.getShape();
 		});
 	},
 	
@@ -81,55 +96,6 @@ Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
 		})[0];
 	},
 
-	selectShape : function(shape) {
-		var sv = this.getShapeViewByShape(shape);
-		if(sv) {
-			sv.select();
-		}
-	},
-	
-	deselectShape : function(shape) {
-		var sv = this.getShapeViewByShape(shape);
-		if(sv) {
-			sv.deselect();
-		}
-	},
-
-	selectShapesInBounds : function(bounds) {
-		$.each(this.getShapeViewsInBounds(bounds), function() {
-			this.select();
-		});
-	},
-
-	deselectShapesInBounds : function(bounds) {
-		$.each(this.getShapeViewsInBounds(bounds), function() {
-			this.deselect();
-		});
-	},
-
-	isShapeSelected : function(shape) {
-		var sv = this.getShapeViewByShape(shape);
-		return sv && sv.isSelected();
-	},
-
-	getSelectedShapes : function() {
-		return $.map(this.shapeViews, function(sv) {
-			return (sv.isSelected() ? sv.getShape() : null);
-		});
-	},
-
-	selectAll : function() {
-		$.each(this.shapeViews, function() {
-			this.select();
-		});
-	},
-	
-	deselectAll : function() {
-		$.each(this.shapeViews, function() {
-			this.deselect();
-		});
-	},
-	
 	mousedown : function(e) {
 		this.onmousedown.fire(this.decorateEvent(e));
 		this._mousedown = new Date();

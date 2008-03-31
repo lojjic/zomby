@@ -32,18 +32,30 @@ Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
 		throw new Error("Not Implemented: ShapeView.handlePropertyChanged(e)");
 	},
 
+	// TODO move these selection methods into a subclass/wrapper in the editor package
+
 	select : function() {
-		this.selected = true;
-		//this.getElement().addClass("selected");
+		if(!this.selected) {
+			this.selected = true;
+			var box = this.selectionBox = new zomby.editor.ui.toolbox.SelectionBox(this.getElement().parent().parent());
+			box.setBounds(this.getShape().getBounds());
+			box.onchange.subscribe($.rescope(this.handleSelectionBoxChange, this));
+		}
 	},
 
 	deselect : function() {
-		this.selected = false;
-		//this.getElement().removeClass("selected");
+		if(this.selected) {
+			this.selected = false;
+			this.selectionBox.destroy();
+		}
 	},
 
 	isSelected : function() {
 		return this.selected;
+	},
+
+	handleSelectionBoxChange : function() {
+		var box = this.selectionBox;
 	}
 
 });

@@ -88,7 +88,12 @@ Package("zomby.editor.ui.canvas").SelectionManager = Base.extend({
 	},
 
 	handleSelectionBoxChange : function(e) {
-		
+		var b1 = this._lastBounds,
+			b2 = this._lastBounds = this._selectionBox.getBounds();
+		$.each(this.shapes, function() {
+			var p = this.getPosition();
+			this.setPosition(p.x + b2[0] - b1[0], p.y + b2[1] - b1[1]);
+		});
 	},
 
 	_add : function(shape) {
@@ -109,16 +114,20 @@ Package("zomby.editor.ui.canvas").SelectionManager = Base.extend({
 		var sb = this._selectionBox;
 		if(sb) {
 			sb.destroy();
+			sb = null;
 		}
 
 		if(this.shapes.length == 1) {
 			sb = this._selectionBox = new zomby.editor.ui.canvas.ResizableSelectionBox(this.canvas.getElement());
 			sb.setBounds(this.shapes[0].getBounds());
-			sb.onchange.subscribe();
 		}
 		else if(this.shapes.length > 1) {
 			sb = this._selectionBox = new zomby.editor.ui.canvas.SelectionBox(this.canvas.getElement());
 			sb.setBounds(this.getTotalBounds(this.shapes));
+		}
+		if(sb) {
+			sb.onchange.subscribe($.rescope(this.handleSelectionBoxChange, this));
+			this._lastBounds = sb.getBounds();
 		}
 	}
 

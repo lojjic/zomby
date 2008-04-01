@@ -55,6 +55,11 @@ Package("zomby.editor.ui.canvas").SelectionBox = zomby.editor.Widget.extend({
 		this.update();
 	},
 
+	getBounds : function() {
+		var p = this.props;
+		return [p.x, p.y, p.x + p.width, p.y + p.height];
+	},
+
 	update : function() {
 		var p = this.props,
 			el = this.getElement(),

@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.lojjic.zomby</groupId>
+	<artifactId>zomby</artifactId>
+	<packaging>jar</packaging>
+	<version>0.1-SNAPSHOT</version>
+	<name>Zomby</name>
+	<url></url>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/javascript</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>gr.abiss.mvn.plugins</groupId>
+				<artifactId>maven-jstools-plugin</artifactId>
+				<configuration>
+					<jsDir>src/main/javascript</jsDir>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>jslint</report>
+							<report>jsdoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+
+	<!--<dependencies>
+		<dependency>
+			<groupId>org.apache.myfaces.trinidadbuild</groupId>
+			<artifactId>maven-javascript-plugin</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+	</dependencies>-->
+</project>

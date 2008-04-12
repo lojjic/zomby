@@ -1,11 +1,25 @@
+Package("zomby.view.shape");
 
-
-Package("zomby.view.shape").LineView = zomby.view.shape.ShapeView.extend({
-
+/**
+ * @class A view of a Line
+ * @extends zomby.view.shape.ShapeView
+ */
+zomby.view.shape.LineView = zomby.view.shape.ShapeView.extend(
+/** @scope zomby.view.shape.LineView.prototype */
+{
+	/**
+	 * Create the view element for the Line.
+	 * @type jQuery
+	 */
 	create : function() {
 		return $.create(zomby.core.Constants.SVG_NS, "line");
 	},
 
+	/**
+	 * Handle a 'propertychange' event fired by this view's Line object
+	 * @event propertychange
+	 * @param {zomby.model.PropertyChangeEventData} e The event data object
+	 */
 	handlePropertyChanged : function(e) {
 		switch(e.name) {
 			case "position":
@@ -19,10 +33,16 @@ Package("zomby.view.shape").LineView = zomby.view.shape.ShapeView.extend({
 		}
 	},
 
+	/**
+	 * Update the view to match all aspects of its Line object
+	 */
 	update : function() {
 		this.updateEndPoints();
 	},
 
+	/**
+	 * Update the view to match its Line's end points.
+	 */
 	updateEndPoints : function() {
 		var line = this.getShape(),
 			ls = line.getStart(),
@@ -37,6 +57,3 @@ Package("zomby.view.shape").LineView = zomby.view.shape.ShapeView.extend({
 	}
 
 });
-
-
-//y / (y2 - y2) = x / (x2 - x1)

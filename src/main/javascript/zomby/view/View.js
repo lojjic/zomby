@@ -1,17 +1,20 @@
+Package("zomby.view");
 
-
-Package("zomby.view").View = Base.extend({
-
-	/**
-	 * @constructor
-	 * @param {HTMLElement|jQuery} parent The parent element into which this view's element will be inserted
-	 */
+/**
+ * @class A view of a model object.
+ * 
+ * @constructor
+ * @param {Element|jQuery} parent The parent element into which this view's element will be inserted
+ */
+zomby.view.View = Base.extend(
+/** @scope zomby.view.View.prototype */
+{
 	constructor : function(parent) {
 		this.getElement().appendTo(parent);
 	},
 
 	/**
-	 * Create the element for the view. Must be implemented by
+	 * (Abstract) Create the element for the view. Must be implemented by
 	 * concrete subclasses.
 	 * @abstract
 	 * @return The topmost element for the view

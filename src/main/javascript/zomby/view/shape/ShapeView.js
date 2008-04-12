@@ -1,7 +1,16 @@
+Package("zomby.view.shape");
 
-
-Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
-
+/**
+ * @class Abstract base class for views of shapes
+ * @extends zomby.view.View
+ *
+ * @constructor
+ * @param {zomby.model.shape.Shape} shape The Shape object for which the view will be rendered
+ * @param {Element|jQuery} parent
+ */
+zomby.view.shape.ShapeView = zomby.view.View.extend(
+/** @scope zomby.view.shape.ShapeView.prototype */
+{
 	shape : null,
 	selected : false,
 
@@ -12,50 +21,45 @@ Package("zomby.view.shape").ShapeView = zomby.view.View.extend({
 		this.update();
 	},
 
+	/**
+	 * Get the target {@link zomby.model.shape.Shape} for this view
+	 * @type zomby.model.shape.Shape
+	 */
 	getShape : function() {
 		return this.shape;
 	},
 
+	/**
+	 * Initialize event listener(s)
+	 */
 	initEventListeners : function() {
-		this.shape.onpropertychange.subscribe($.rescope(this.handlePropertyChanged, this));
+		this.shape.onpropertychange.subscribe(this.handlePropertyChanged, this);
 	},
 
 	/**
 	 * Update the entire state of the view from the shape.
+	 * Abstract; must be implemented by subclasses.
 	 * @abstract
 	 */
 	update : function() {
 		throw new Error("Not Implemented: ShapeView.update()");
 	},
 
+	/**
+	 * Handle an onpropertychange event. Abstract; must be implemented by subclasses.
+	 * @param {zomby.model.PropertyChangeEventData} e The event data
+	 */
 	handlePropertyChanged : function(e) {
 		throw new Error("Not Implemented: ShapeView.handlePropertyChanged(e)");
 	},
 
-	// TODO move these selection methods into a subclass/wrapper in the editor package
-
-	select : function() {
-		if(!this.selected) {
-			this.selected = true;
-			var box = this.selectionBox = new zomby.editor.ui.toolbox.SelectionBox(this.getElement().parent().parent());
-			box.setBounds(this.getShape().getBounds());
-			box.onchange.subscribe($.rescope(this.handleSelectionBoxChange, this));
-		}
-	},
-
-	deselect : function() {
-		if(this.selected) {
-			this.selected = false;
-			this.selectionBox.destroy();
-		}
-	},
-
-	isSelected : function() {
-		return this.selected;
-	},
-
-	handleSelectionBoxChange : function() {
-		var box = this.selectionBox;
+	/**
+	 * Destroy the view, removing its element from the DOM and unsubscribing all event listeners.
+	 * @override
+	 */
+	destroy : function() {
+		this.base();
+		this.shape.onpropertychange.unsubscribe(this.handlePropertyChanged);
 	}
 
 });

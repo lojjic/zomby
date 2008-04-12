@@ -24,6 +24,7 @@
 				<artifactId>maven-jstools-plugin</artifactId>
 				<configuration>
 					<jsDir>src/main/javascript</jsDir>
+					<template>sunny</template>
 				</configuration>
 				<reportSets>
 					<reportSet>

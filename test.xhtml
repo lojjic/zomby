@@ -31,6 +31,7 @@
 
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/Widget.js"></script>
 
+	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/Editor.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/SelectionBox.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/ResizableSelectionBox.js"></script>
 	<script type="text/javascript" src="src/main/javascript/zomby/editor/ui/canvas/SelectionManager.js"></script>
@@ -47,15 +48,7 @@
 
 	<script type="text/javascript">
 		$(function() {
-			var toolbox = new zomby.editor.ui.toolbox.Toolbox($("#tester"));
-			
-			var canvas = new zomby.editor.ui.canvas.Canvas($("#tester"));
-			canvas.setShapeViewFactory(new zomby.view.shape.ShapeViewFactory());
-			$.each(["dragstart","drag","dragend","mousedown","keypress"], function(i,type) {
-				canvas["on"+type].subscribe(function(e) {
-					toolbox.getSelectedTool()["handle"+type](e);
-				});
-			});
+			new zomby.editor.ui.Editor(document.getElementById("tester"));
 		});
 	</script>
 	

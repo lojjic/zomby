@@ -53,7 +53,7 @@ Package("zomby.model.shape").Shape = Base.extend({
 		}
 		var old = this[name];
 		this[name] = value;
-		this.onpropertychange.fire({name:name, oldValue:old, newValue:value, target:this});
+		this.onpropertychange.fire(new zomby.model.PropertyChangeEventData(name, old, value, this));
 	}
 
 }, {

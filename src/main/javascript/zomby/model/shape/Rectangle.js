@@ -9,7 +9,7 @@ Package("zomby.model.shape").Rectangle = zomby.model.shape.Shape.extend({
 	},
 
 	setWidth : function(width) {
-		this._setProperty("width", width);
+		this.set("width", width);
 	},
 
 	getHeight : function() {
@@ -17,7 +17,7 @@ Package("zomby.model.shape").Rectangle = zomby.model.shape.Shape.extend({
 	},
 
 	setHeight : function(height) {
-		this._setProperty("height", height);
+		this.set("height", height);
 	},
 
 	setSize : function(width, height) {

@@ -1,5 +1,6 @@
+Package("zomby.model.shape");
 
-Package("zomby.model.shape").Shape = Base.extend({
+zomby.model.shape.Shape = zomby.model.ModelBase.extend({
 
 	type : null,
 	position : {x:0, y:0},
@@ -9,16 +10,8 @@ Package("zomby.model.shape").Shape = Base.extend({
 	 * @param {Object} props (optional) Name-value pairs for the shape's initial values. 
 	 */
 	constructor : function(props) {
-		this.base();
-		this.initProps(props);
+		this.base(props);
 		this.type = this.constructor.TYPE;
-		this.onpropertychange = new zomby.core.Event("propertychanged");
-	},
-
-	initProps : function(props) {
-		for(var i in props) {
-			this._setProperty(i, props[i]);
-		}
 	},
 
 	getType : function() {
@@ -30,7 +23,7 @@ Package("zomby.model.shape").Shape = Base.extend({
 	},
 		
 	setPosition : function(x, y) {
-		this._setProperty("position", {x:x, y:y});
+		this.set("position", {x:x, y:y});
 	},
 
 	getBounds : function() {
@@ -45,15 +38,6 @@ Package("zomby.model.shape").Shape = Base.extend({
 	getHeight : function() {
 		var b = this.getBounds();
 		return b[3] - b[1];
-	},
-
-	_setProperty : function(name, value) {
-		if(!(name in this) || $.isFunction(this[name])) {
-			throw new Error("Tried to set unknown shape property '" + name + "'");
-		}
-		var old = this[name];
-		this[name] = value;
-		this.onpropertychange.fire(new zomby.model.PropertyChangeEventData(name, old, value, this));
 	}
 
 }, {

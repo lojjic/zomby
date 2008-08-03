@@ -10,7 +10,7 @@ Package("zomby.model.shape").Ellipse = zomby.model.shape.Shape.extend({
 	},
 
 	setRadius : function(rX, rY) {
-		this._setProperty("radius", {x:rX, y:rY});
+		this.set("radius", {x:rX, y:rY});
 	},
 
 	getFill : function() {
@@ -18,7 +18,7 @@ Package("zomby.model.shape").Ellipse = zomby.model.shape.Shape.extend({
 	},
 
 	setFill : function(fill) {
-		this._setProperty("fill", fill);
+		this.set("fill", fill);
 	},
 	
 	getStroke : function() {
@@ -26,7 +26,7 @@ Package("zomby.model.shape").Ellipse = zomby.model.shape.Shape.extend({
 	},
 
 	setStroke : function(stroke) {
-		this._setProperty("stroke", stroke);
+		this.set("stroke", stroke);
 	},
 
 	getBounds : function() {

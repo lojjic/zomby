@@ -23,7 +23,7 @@ Package("zomby.model.shape").Line = zomby.model.shape.Shape.extend({
 	},
 
 	setStart : function(x, y) {
-		this._setProperty("start", {x:x, y:y});
+		this.set("start", {x:x, y:y});
 	},
 
 	getEnd : function() {
@@ -31,7 +31,7 @@ Package("zomby.model.shape").Line = zomby.model.shape.Shape.extend({
 	},
 
 	setEnd : function(x, y) {
-		this._setProperty("end", {x:x, y:y});
+		this.set("end", {x:x, y:y});
 	},
 
 	getBounds : function() {

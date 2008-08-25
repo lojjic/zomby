@@ -30,9 +30,9 @@ zomby.view.shape.ShapeViewFactory = Base.extend(
 	 */
 	getClassForType : function(type) {
 		return {
-			ellipse : zomby.view.shape.EllipseView,
-			rectangle : zomby.view.shape.RectangleView,
-			line : zomby.view.shape.LineView
+			ellipse : zomby.view.shape.svg.EllipseSvgView,
+			rectangle : zomby.view.shape.svg.RectangleSvgView,
+			line : zomby.view.shape.svg.LineSvgView
 		}[type] || null;
 	}
 });

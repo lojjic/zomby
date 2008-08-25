@@ -4,13 +4,13 @@ Package("zomby.view");
  * @class A view of a model object.
  * 
  * @constructor
- * @param {Element|jQuery} parent The parent element into which this view's element will be inserted
+ * @param {Element} parent The parent element into which this view's element will be inserted
  */
 zomby.view.View = Base.extend(
 /** @scope zomby.view.View.prototype */
 {
 	constructor : function(parent) {
-		this.getElement().appendTo(parent);
+		parent.appendChild(this.getElement());
 	},
 
 	/**
@@ -18,7 +18,7 @@ zomby.view.View = Base.extend(
 	 * concrete subclasses.
 	 * @abstract
 	 * @return The topmost element for the view
-	 * @type jQuery
+	 * @type Element
 	 */
 	create : function() {
 		throw new Error("Not Implemented: View.create()");
@@ -27,7 +27,7 @@ zomby.view.View = Base.extend(
 	/**
 	 * Get the view's element
 	 * @return the view's element
-	 * @type jQuery
+	 * @type Element
 	 */
 	getElement : function() {
 		return this.element || (this.element = this.create());

@@ -8,26 +8,13 @@ Package("zomby.model.shape").Rectangle = zomby.model.shape.Shape.extend({
 		return this.width;
 	},
 
-	setWidth : function(width) {
-		this.set("width", width);
-	},
-
 	getHeight : function() {
 		return this.height;
 	},
 
-	setHeight : function(height) {
-		this.set("height", height);
-	},
-
-	setSize : function(width, height) {
-		this.setWidth(width);
-		this.setHeight(height);
-	},
-
 	getBounds : function() {
-		var p = this.getPosition();
-		return [p.x, p.y, p.x + this.width, p.y + this.height];
+		var t = this;
+		return [t.x, t.y, t.x + t.width, t.y + t.height];
 	}
 	
 }, { //Static

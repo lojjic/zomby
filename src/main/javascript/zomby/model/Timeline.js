@@ -50,10 +50,10 @@ zomby.model.Timeline = Base.extend(
 	 * Sync all shapes to the current frame
 	 */
 	sync : function() {
-		var tl = this;
-		$.each(this.layers, function() {
-			this.go(tl.frame + this.start);
-		});
+		var lyr = this.layers;
+		for(var i=0; i<lyr.length; i++) {
+			lyr[i].go(this.frame + lyr.start);
+		}
 	},
 
 	/**
@@ -61,7 +61,7 @@ zomby.model.Timeline = Base.extend(
 	 */
 	start : function() {
 		if(!this._timer) {
-			this._timer = setInterval($.rescope(this.step,  this), 1000 / this.fps);
+			this._timer = setInterval(zomby.core.Util.rescope(this.step,  this), 1000 / this.fps);
 		}
 	},
 

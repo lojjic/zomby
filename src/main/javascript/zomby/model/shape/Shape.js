@@ -3,31 +3,11 @@ Package("zomby.model.shape");
 zomby.model.shape.Shape = zomby.model.ModelBase.extend({
 
 	type : null,
-	position : {x:0, y:0},
-
-	/**
-	 * @constructor
-	 * @param {Object} props (optional) Name-value pairs for the shape's initial values. 
-	 */
-	constructor : function(props) {
-		this.base(props);
-		this.type = this.constructor.TYPE;
-	},
-
-	getType : function() {
-		return this.type;
-	},
-
-	getPosition : function() {
-		return this.position;
-	},
-		
-	setPosition : function(x, y) {
-		this.set("position", {x:x, y:y});
-	},
+	x : 0,
+	y : 0,
 
 	getBounds : function() {
-		throw new Error("Not Implemented: Shape.getBounds()");
+		return [0,0,0,0];
 	},
 
 	getWidth : function() {

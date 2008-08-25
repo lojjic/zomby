@@ -30,9 +30,8 @@ Package("zomby.model.shape").Ellipse = zomby.model.shape.Shape.extend({
 	},
 
 	getBounds : function() {
-		var r = this.radius,
-			p = this.getPosition();
-		return [p.x - r.x, p.y - r.y, p.x + r.x, p.y + r.y];
+		var t = this;
+		return [t.x - t.xRadius, t.y - t.yRadius, t.x + t.xRadius, t.y + t.yRadius];
 	}
 	
 }, { //Static

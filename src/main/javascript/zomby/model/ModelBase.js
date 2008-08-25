@@ -6,60 +6,75 @@ Package("zomby.model");
  *        which other objects can subscribe to monitor changes.
  *
  * @constructor
- * @param {Object} props (optional) Name-value pairs for the object's initial property
- *        values. Note that setting properties up-front like this will not give any
- *        potential consumers an opportunity to attach to the onpropertychange events
- *        before the initial properties are set.
+ * @param {Object} props (optional) Name-value pairs for the object's initial property values.
  */
 zomby.model.ModelBase = Base.extend(
-/** @scope zomby.model.Transform.prototype */
+/** @scope zomby.model.ModelBase.prototype */
 {
+	type : null,
+
 	constructor : function(props) {
 		this.base();
-		this.initProps(props);
-
-		/**
-		 * Event listener object for property change events. Subscribed functions
-		 * will be passed a {@link zomby.model.PropertyChangeEventData} object.
-		 */
-		this.onpropertychange = new zomby.core.Event("propertychanged");
-	},
-
-	initProps : function(props) {
-		for(var p in props) {
-			this.set(p, props[p]);
-		}
+		this.type = this.constructor.TYPE;
+		if(props) this.set(props);
 	},
 
 	/**
-	 * Get a named property's value. The object must actually have a non-Function
+	 * Return the type of the model object
+	 * @type String
+	 */
+	getType : function() {
+		return this.constructor.TYPE;
+	},
+
+	/**
+	 * Set the value(s) of one or more properties. Arguments take two forms:
+	 * (a) a single property name and value
+	 * (b) an object of name-value pairs
+	 * For each property specified, the object must actually have a non-Function
 	 * property of that name or an error will be thrown.
 	 *
-	 * @param {String} name The name of the property
+	 * @param {String|Object} nameOrPairs Either the name of the property, or an object holding
+	 *        a set of property name-value pairs
+	 * @param {Object} value The new value of the property, if the first argument was a String
 	 */
-	get : function(name) {
-		if(!(name in this) || $.isFunction(this[name])) {
-			throw new Error("Tried to get unknown property '" + name + "'");
+	set : function(nameOrPairs, value) {
+		if(typeof nameOrPairs == "string") {
+			if(!(nameOrPairs in this) || typeof this[nameOrPairs] == "function") {
+				throw new Error("Tried to set unknown property '" + nameOrPairs + "'");
+			}
+			if(nameOrPairs != "type") {
+				this[nameOrPairs] = value;
+			}
+		} else if(typeof nameOrPairs == "object") {
+			for(var p in nameOrPairs) {
+				this.set(p, nameOrPairs[p]);
+			}
+		} else {
+			throw new Error("Argument must be a String or an Object");
 		}
-		return this[name];
 	},
 
 	/**
-	 * Set a named property's value. The object must actually have a non-Function
-	 * property of that name or an error will be thrown. Calling this method will
-	 * fire a propertychanged event with the name of the property and its old and
-	 * new values; consumers can listen for these events by subscribing to this.onpropertychange.
-	 *
-	 * @param {String} name The name of the property
-	 * @param {Object} value The new value of the property
+	 * Create a deep copy of this model object.
+	 * @return zomby.model.ModelBase
 	 */
-	set : function(name, value) {
-		if(!(name in this) || $.isFunction(this[name])) {
-			throw new Error("Tried to set unknown property '" + name + "'");
+	clone : function() {
+		var obj = new this.constructor();
+		for(var p in this) {
+			var val = this[p];
+			switch(typeof val) {
+				case "function":
+					break;
+				case "object":
+					obj[p] = ('clone' in val && typeof val.clone == "function") ? val.clone() : val;
+					break;
+				default:
+					obj[p] = val;
+			}
 		}
-		var old = this[name];
-		this[name] = value;
-		this.onpropertychange.fire(new zomby.model.PropertyChangeEventData(name, old, value, this));
 	}
 
+}, {
+	TYPE : null
 });

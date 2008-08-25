@@ -5,7 +5,7 @@
  */
 function Package(name) {
 	var levels = name.split("."),
-		ctxt = window;
+		ctxt = this;
 	for(var i=0; i<levels.length; i++) {
 		var l = levels[i];
 		if(!(l in ctxt)) {

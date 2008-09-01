@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<assembler>
+	<scripts>
+		<script>
+			<fileName>zomby-runtime.js</fileName>
+			<includes>
+				<!--===== Core classes =====-->
+				<include>zomby/support/Base.js</include>
+				<include>zomby/support/json2.js</include>
+				<include>zomby/core/__package__.js</include>
+				<include>zomby/core/Constants.js</include>
+				<include>zomby/core/Util.js</include>
+
+				<!--===== Model classes =====-->
+				<include>zomby/model/__package__.js</include>
+				<include>zomby/model/ModelObject.js</include>
+				<include>zomby/model/Timeline.js</include>
+				<include>zomby/model/shape/__package__.js</include>
+				<include>zomby/model/shape/Shape.js</include>
+				<include>zomby/model/shape/Group.js</include>
+				<include>zomby/model/shape/Strokeable.js</include>
+				<include>zomby/model/shape/Fillable.js</include>
+				<include>zomby/model/shape/Ellipse.js</include>
+				<include>zomby/model/shape/Line.js</include>
+				<include>zomby/model/shape/Rectangle.js</include>
+				<include>zomby/model/shape/property/__package__.js</include>
+				<include>zomby/model/shape/property/Property.js</include>
+				<include>zomby/model/shape/property/Fill.js</include>
+				<include>zomby/model/shape/property/Gradient.js</include>
+				<include>zomby/model/shape/property/Stroke.js</include>
+				<include>zomby/model/shape/property/Transform.js</include>
+
+				<!--===== View classes =====-->
+				<include>zomby/view/__package__.js</include>
+				<include>zomby/view/View.js</include>
+				<include>zomby/view/shape/__package__.js</include>
+				<include>zomby/view/shape/ShapeView.js</include>
+				<include>zomby/view/shape/svg/__package__.js</include>
+				<include>zomby/view/shape/svg/ShapeSvgView.js</include>
+				<include>zomby/view/shape/svg/GroupSvgView.js</include>
+				<include>zomby/view/shape/svg/StrokeableSvgView.js</include>
+				<include>zomby/view/shape/svg/FillableSvgView.js</include>
+				<include>zomby/view/shape/svg/EllipseSvgView.js</include>
+				<include>zomby/view/shape/svg/LineSvgView.js</include>
+				<include>zomby/view/shape/svg/RectangleSvgView.js</include>
+				<include>zomby/view/shape/property/__package__.js</include>
+				<include>zomby/view/shape/property/PropertyView.js</include>
+				<include>zomby/view/shape/property/svg/__package__.js</include>
+				<include>zomby/view/shape/property/svg/FillSvgView.js</include>
+				<include>zomby/view/shape/property/svg/GradientSvgView.js</include>
+				<include>zomby/view/shape/property/svg/StrokeSvgView.js</include>
+				<include>zomby/view/shape/property/svg/TransformSvgView.js</include>
+			</includes>
+		</script>
+	</scripts>
+</assembler>

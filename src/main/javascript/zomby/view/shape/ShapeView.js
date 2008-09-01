@@ -1,12 +1,10 @@
-Package("zomby.view.shape");
-
 /**
  * @class Abstract base class for views of shapes
  * @extends zomby.view.View
  *
  * @constructor
  * @param {zomby.model.shape.Shape} shape The Shape object for which the view will be rendered
- * @param {Element} parent
+ * @param {Element} parent The parent element into which the view element will be appended
  */
 zomby.view.shape.ShapeView = zomby.view.View.extend(
 /** @scope zomby.view.shape.ShapeView.prototype */
@@ -15,25 +13,35 @@ zomby.view.shape.ShapeView = zomby.view.View.extend(
 	selected : false,
 
 	constructor : function(shape, parent) {
-		this.shape = shape;
-		this.base(parent);
-		this.update();
+		this.base(shape, parent);
+		parent.getElement().appendChild(this.getElement());
 	},
 
 	/**
-	 * Get the target {@link zomby.model.shape.Shape} for this view
-	 * @type zomby.model.shape.Shape
-	 */
-	getShape : function() {
-		return this.shape;
-	},
-
-	/**
-	 * Update the entire state of the view from the shape.
-	 * Abstract; must be implemented by subclasses.
+	 * Create the element for the view. Must be implemented by
+	 * concrete subclasses.
 	 * @abstract
+	 * @return The topmost element for the view
+	 * @type Element
 	 */
-	update : function() {
-		throw new Error("Not Implemented: ShapeView.update()");
+	create : function() {
+		throw new Error("Not Implemented: View.create()");
+	},
+
+	/**
+	 * Get the view's element
+	 * @return the view's element
+	 * @type Element
+	 */
+	getElement : function() {
+		return this.element || (this.element = this.create());
+	},
+
+	/**
+	 * Destroy the view, removing it from the DOM
+	 */
+	destroy : function() {
+		this.getElement().remove();
 	}
+
 });

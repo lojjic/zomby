@@ -1,3 +1,3 @@
 
 
-Package("zomby.editor").Widget = zomby.view.View.extend({});
+zomby.editor.Widget = zomby.view.View.extend({});

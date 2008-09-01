@@ -1,10 +1,14 @@
-Package("zomby.model.shape");
-
-zomby.model.shape.Shape = zomby.model.ModelBase.extend({
+zomby.model.shape.Shape = zomby.model.ModelObject.extend({
 
 	type : null,
 	x : 0,
 	y : 0,
+	transform : null,
+
+	constructor : function(props) {
+		this.base(props);
+		this.transform = new zomby.model.shape.property.Transform(props ? props.transform : null);
+	},
 
 	getBounds : function() {
 		return [0,0,0,0];

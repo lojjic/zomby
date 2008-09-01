@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").Toolbox = zomby.editor.Widget.extend({
+zomby.editor.ui.toolbox.Toolbox = zomby.editor.Widget.extend({
 
 	toolClasses : [
 		"zomby.editor.ui.toolbox.SelectTool",

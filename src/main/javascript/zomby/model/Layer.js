@@ -1,5 +1,3 @@
-Package("zomby.model");
-
 /**
  * @class Layer of a timeline.
  *

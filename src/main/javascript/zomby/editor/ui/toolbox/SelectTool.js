@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").SelectTool = zomby.editor.ui.toolbox.Tool.extend({
+zomby.editor.ui.toolbox.SelectTool = zomby.editor.ui.toolbox.Tool.extend({
 
 	title : "Select",
 	iconClass : "select-tool-icon",

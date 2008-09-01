@@ -1,5 +1,4 @@
-
-Package("zomby.core").Util = {
+zomby.core.Util = {
 
 	rescope : function(fn, scope) {
 		return function() {

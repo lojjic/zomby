@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.canvas").Canvas = zomby.editor.Widget.extend({
+zomby.editor.ui.canvas.Canvas = zomby.editor.Widget.extend({
 
 	dragDelay : 50,
 	shapeViewFactory : null,

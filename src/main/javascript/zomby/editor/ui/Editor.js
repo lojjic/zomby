@@ -1,5 +1,3 @@
-Package("zomby.editor.ui");
-
 /**
  * @class The main Zomby editor user interface
  * @extends zomby.editor.Widget

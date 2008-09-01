@@ -1,43 +1,63 @@
-Package("zomby.view");
+(function() {
+
+var _modelViewMapping = {};
 
 /**
+ }
  * @class A view of a model object.
  * 
  * @constructor
- * @param {Element} parent The parent element into which this view's element will be inserted
+ * @param {zomby.model.ModelObject} modelObject The model object this view represents
+ * @param {zomby.view.View} parentView The parent View object for this view, or null if top-level
  */
 zomby.view.View = Base.extend(
 /** @scope zomby.view.View.prototype */
 {
-	constructor : function(parent) {
-		parent.appendChild(this.getElement());
+	constructor : function(modelObject, parentView) {
+		this.modelObject = modelObject;
+		this.parentView = parentView;
 	},
 
 	/**
-	 * (Abstract) Create the element for the view. Must be implemented by
-	 * concrete subclasses.
+	 * Update the entire state of the view from the shape.
+	 * Abstract; must be implemented by subclasses.
 	 * @abstract
-	 * @return The topmost element for the view
-	 * @type Element
 	 */
-	create : function() {
-		throw new Error("Not Implemented: View.create()");
-	},
-
-	/**
-	 * Get the view's element
-	 * @return the view's element
-	 * @type Element
-	 */
-	getElement : function() {
-		return this.element || (this.element = this.create());
-	},
-
-	/**
-	 * Destroy the view, removing it from the DOM
-	 */
-	destroy : function() {
-		this.getElement().remove();
+	update : function() {
+		throw new Error("Not Implemented: ShapeView.update()");
 	}
 
+}, {
+	MODEL_CLASS : zomby.model.ModelObject,
+
+	/**
+	 * Create and return an appropriate View instance for the given ModelObject
+	 * @param {zomby.model.ModelObject} model
+	 * @param {zomby.view.View} parent
+	 */
+	forModelObject : function(model, parent) {
+		if(model.type) {
+			var cls = _modelViewMapping[model.type];
+			if(cls) {
+				return new cls(model, parent);
+			}
+		}
+		return null;
+	},
+
+	/**
+	 * Override the extend method for this and subclasses to maintain a mapping
+	 * of model types to view classes. This allows #forModelObject to create the
+	 * appropriate View for a given model object.
+	 */
+	extend : function(proto, stat) {
+		var sub = Base.extend.call(this, proto, stat),
+			c = stat.MODEL_CLASS;
+		if(c) {
+			_modelViewMapping[c.TYPE] = sub;
+		}
+		return sub;
+	}
 });
+
+})();

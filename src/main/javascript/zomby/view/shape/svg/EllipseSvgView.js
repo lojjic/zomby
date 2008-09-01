@@ -1,10 +1,8 @@
-Package("zomby.view.shape.svg");
-
 /**
  * @class A SVG based view of an Ellipse
  * @extends zomby.view.shape.svg.ShapeSvgView
  */
-zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
+zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 /** @scope zomby.view.shape.svg.EllipseSvgView.prototype */
 {
 	/**
@@ -19,6 +17,7 @@ zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 	 * Update the view to match all aspects of its Ellipse object
 	 */
 	update : function() {
+		this.base();
 		var s = this.getShape();
 		this.setAttributes({
 			cx : s.x,
@@ -27,4 +26,6 @@ zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 			ry : s.height / 2
 		});
 	}
+}, {
+	MODEL_CLASS : zomby.model.shape.Ellipse
 });

@@ -1,6 +1,6 @@
 
 
-Package("zomby.editor.ui.canvas").ResizableSelectionBox = zomby.editor.ui.canvas.SelectionBox.extend({
+zomby.editor.ui.canvas.ResizableSelectionBox = zomby.editor.ui.canvas.SelectionBox.extend({
 
 	create : function() {
 		var box = this,

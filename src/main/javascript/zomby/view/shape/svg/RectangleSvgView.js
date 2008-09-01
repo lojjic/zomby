@@ -1,10 +1,8 @@
-Package("zomby.view.shape.svg");
-
 /**
  * @class A SVG based view for a Rectangle
- * @extends zomby.view.shape.svg.ShapeSvgView
+ * @extends zomby.view.shape.svg.FillableSvgView
  */
-zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
+zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 /** @scope zomby.view.shape.svg.RectangleSvgView.prototype */
 {
 	/**
@@ -19,6 +17,7 @@ zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.ShapeSvgView.extend
 	 * Update the view to match all aspects of its Rectangle object
 	 */
 	update : function() {
+		this.base();
 		var s = this.getShape();
 		this.setAttributes({
 			x : s.x,
@@ -27,4 +26,6 @@ zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.ShapeSvgView.extend
 			height : s.height
 		});
 	}
+}, {
+	MODEL_CLASS : zomby.model.shape.Rectangle
 });

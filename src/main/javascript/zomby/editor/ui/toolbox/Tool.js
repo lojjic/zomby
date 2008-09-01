@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").Tool = zomby.editor.Widget.extend({
+zomby.editor.ui.toolbox.Tool = zomby.editor.Widget.extend({
 
 	title : "Tool",
 	iconClass : "tool-icon",

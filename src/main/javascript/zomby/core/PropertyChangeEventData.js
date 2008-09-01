@@ -1,5 +1,3 @@
-Package("zomby.model");
-
 /**
  * @class Event data object for an onpropertychange event
  * @constructor
@@ -8,8 +6,8 @@ Package("zomby.model");
  * @param {Object} newValue The new value of the property
  * @param {Object} target The target object whose property was changed
  */
-zomby.model.PropertyChangeEventData = Base.extend(
-/** @scope zomby.model.PropertyChangeEventData.prototype */
+zomby.core.PropertyChangeEventData = Base.extend(
+/** @scope zomby.core.PropertyChangeEventData.prototype */
 {
 	constructor : function(name, oldValue, newValue, target) {
 		this.name = name;

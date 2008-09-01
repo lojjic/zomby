@@ -1,0 +1,1 @@
+zomby.ui.editor.canvas = {};

@@ -1,6 +1,4 @@
-Package("zomby.model.shape.property")
-
-zomby.model.shape.property.Fill = zomby.model.ModelBase.extend({
+zomby.model.shape.property.Fill = zomby.model.shape.property.Property.extend({
 
 	paint : "#000",
 	rule : "nonzero",

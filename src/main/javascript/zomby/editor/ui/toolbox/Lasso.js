@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").Lasso = zomby.editor.Widget.extend({
+zomby.editor.ui.toolbox.Lasso = zomby.editor.Widget.extend({
 
 	start : {x:0, y:0},
 	end : {x:0, y:0},

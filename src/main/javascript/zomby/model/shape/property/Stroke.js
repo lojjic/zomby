@@ -1,14 +1,12 @@
-Package("zomby.model.shape.property");
-
-zomby.model.shape.property.Stroke = zomby.model.ModelBase.extend({
+zomby.model.shape.property.Stroke = zomby.model.shape.property.Property.extend({
 
 	paint : "#000",
 	width : 1,
 	cap : "butt",
 	join : "miter",
-	miterlimit : 4,
-	dasharray : null,
-	dashoffset : 0,
+	miterLimit : 4,
+	dashArray : null,
+	dashOffset : 0,
 	opacity : 1
 
 }, {

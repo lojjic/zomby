@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.canvas").SelectionBox = zomby.editor.Widget.extend({
+zomby.editor.ui.canvas.SelectionBox = zomby.editor.Widget.extend({
 
 	props : null,
 

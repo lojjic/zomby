@@ -1,15 +1,15 @@
-Package("zomby.model");
+(function() {
+
+var _typesToClasses = {};
 
 /**
- * @class Base class for model objects. Provides convenience get and set methods for
- *        manipulating properties by name, and an onpropertychange event object to
- *        which other objects can subscribe to monitor changes.
+ * @class Base class for model objects.
  *
  * @constructor
  * @param {Object} props (optional) Name-value pairs for the object's initial property values.
  */
-zomby.model.ModelBase = Base.extend(
-/** @scope zomby.model.ModelBase.prototype */
+zomby.model.ModelObject = Base.extend(
+/** @scope zomby.model.ModelObject.prototype */
 {
 	type : null,
 
@@ -20,19 +20,11 @@ zomby.model.ModelBase = Base.extend(
 	},
 
 	/**
-	 * Return the type of the model object
-	 * @type String
-	 */
-	getType : function() {
-		return this.constructor.TYPE;
-	},
-
-	/**
 	 * Set the value(s) of one or more properties. Arguments take two forms:
 	 * (a) a single property name and value
 	 * (b) an object of name-value pairs
 	 * For each property specified, the object must actually have a non-Function
-	 * property of that name or an error will be thrown.
+	 * property of that name or it will be ignored.
 	 *
 	 * @param {String|Object} nameOrPairs Either the name of the property, or an object holding
 	 *        a set of property name-value pairs
@@ -40,10 +32,7 @@ zomby.model.ModelBase = Base.extend(
 	 */
 	set : function(nameOrPairs, value) {
 		if(typeof nameOrPairs == "string") {
-			if(!(nameOrPairs in this) || typeof this[nameOrPairs] == "function") {
-				throw new Error("Tried to set unknown property '" + nameOrPairs + "'");
-			}
-			if(nameOrPairs != "type") {
+			if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
 				this[nameOrPairs] = value;
 			}
 		} else if(typeof nameOrPairs == "object") {
@@ -57,7 +46,7 @@ zomby.model.ModelBase = Base.extend(
 
 	/**
 	 * Create a deep copy of this model object.
-	 * @return zomby.model.ModelBase
+	 * @return zomby.model.ModelObject
 	 */
 	clone : function() {
 		var obj = new this.constructor();
@@ -73,8 +62,48 @@ zomby.model.ModelBase = Base.extend(
 					obj[p] = val;
 			}
 		}
+	},
+
+	/**
+	 * Serialize this ModelObject's non-function properties to a JSON-formatted string.
+	 * @type String
+	 */
+	serialize : function() {
+		return JSON.stringify(this);
 	}
 
-}, {
-	TYPE : null
+},
+/** @scope zomby.model.ModelObject */
+{
+	TYPE : null,
+
+	/**
+	 * Given a generic Object, create an appropriate ModelObject instance
+	 * from it based on its declared type.
+	 */
+	fromObject : function(obj) {
+		if(obj.type) {
+			var cls = _typesToClasses[obj.type];
+			if(cls) {
+				return new cls(obj);
+			}
+		}
+		return null;
+	},
+
+	/**
+	 * Override base extend function to make it keep a mapping of static TYPEs
+	 * to classes; this allows fromObject() to retrieve the appropriate class
+	 * for a given model object type string. 
+	 */
+	extend : function(proto, stat) {
+		var sub = Base.extend.call(this, proto, stat),
+			t = stat.TYPE;
+		if(t) {
+			_typesToClasses[t] = sub;
+		}
+		return sub;
+	}
 });
+
+})();

@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").AbstractShapeTool = zomby.editor.ui.toolbox.Tool.extend({
+zomby.editor.ui.toolbox.AbstractShapeTool = zomby.editor.ui.toolbox.Tool.extend({
 
 	minLassoSize : 4,
 

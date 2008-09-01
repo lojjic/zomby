@@ -1,5 +1,3 @@
-Package("zomby.core");
-
 /**
  * @class A custom event object. Objects may subscribe an event handler
  * function to be executed when the event fires.

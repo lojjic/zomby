@@ -4,20 +4,71 @@
 
 	<groupId>net.lojjic.zomby</groupId>
 	<artifactId>zomby</artifactId>
-	<packaging>jar</packaging>
+	<packaging>javascript</packaging>
 	<version>0.1-SNAPSHOT</version>
 	<name>Zomby</name>
 	<url></url>
 
 	<build>
-		<resources>
+		<!--<resources>
 			<resource>
 				<directory>src/main/javascript</directory>
 			</resource>
-		</resources>
+		</resources>-->
+
+
+		<extensions>
+			<extension>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javascript-maven-plugin</artifactId>
+				<version>1.0-alpha-1-SNAPSHOT</version>
+			</extension>
+		</extensions>
+
+		<outputDirectory>target/scripts</outputDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javascript-maven-plugin</artifactId>
+				<version>1.0-alpha-1-SNAPSHOT</version>
+				<extensions>true</extensions>
+				<configuration>
+					<descriptor>${basedir}/src/assembler/zomby.xml</descriptor>
+					<compressor>shrinksafe</compressor>
+				</configuration>
+				<executions>
+					<execution>
+						<id>compress</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-compressed</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
-	<reporting>
+	<repositories>
+		<repository>
+			<id>Codehaus Snapshots</id>
+			<url>http://snapshots.repository.codehaus.org/</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>false</enabled></releases>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Codehaus Snapshots</id>
+			<url>http://snapshots.repository.codehaus.org/</url>
+			<snapshots><enabled>true</enabled></snapshots>
+			<releases><enabled>false</enabled></releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<!--<reporting>
 		<plugins>
 			<plugin>
 				<groupId>gr.abiss.mvn.plugins</groupId>
@@ -36,7 +87,7 @@
 				</reportSets>
 			</plugin>
 		</plugins>
-	</reporting>
+	</reporting>-->
 
 
 	<!--<dependencies>

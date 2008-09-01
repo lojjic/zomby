@@ -1,5 +1,4 @@
-
-Package("zomby.model.shape").Line = zomby.model.shape.Shape.extend({
+zomby.model.shape.Line = zomby.model.shape.Strokeable.extend({
 
 	xEnd : 0,
 	yEnd : 0,

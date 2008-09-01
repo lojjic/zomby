@@ -1,11 +1,9 @@
-Package("zomby.model");
-
 /**
  * @class A keyframe in a timeline layer.
  *
  * @constructor
  */
-zomby.model.Keyframe = zomby.model.ModelBase.extend(
+zomby.model.Keyframe = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Keyframe.prototype */
 {
 	index : 0,

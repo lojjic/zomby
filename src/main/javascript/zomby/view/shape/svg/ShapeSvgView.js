@@ -1,5 +1,3 @@
-Package("zomby.view.shape.svg");
-
 /**
  * @class Abstract base class for views of shapes
  * @extends zomby.view.shape.ShapeView

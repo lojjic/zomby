@@ -1,4 +1,3 @@
-Package("zomby.core");
 /**
  * @static
  * @class Common constant values

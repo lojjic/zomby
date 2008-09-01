@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").LineTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
+zomby.editor.ui.toolbox.LineTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
 
 	title : "Line",
 	iconClass : "line-tool-icon",

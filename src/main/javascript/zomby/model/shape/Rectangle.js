@@ -1,16 +1,7 @@
-
-Package("zomby.model.shape").Rectangle = zomby.model.shape.Shape.extend({
+zomby.model.shape.Rectangle = zomby.model.shape.Fillable.extend({
 
 	width : 0,
 	height : 0,
-
-	getWidth : function() {
-		return this.width;
-	},
-
-	getHeight : function() {
-		return this.height;
-	},
 
 	getBounds : function() {
 		var t = this;

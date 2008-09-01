@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").RectangleTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
+zomby.editor.ui.toolbox.RectangleTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
 
 	title : "Rectangle",
 	iconClass : "rectangle-tool-icon",

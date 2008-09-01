@@ -1,6 +1,5 @@
 
-
-Package("zomby.editor.ui.toolbox").EllipseTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
+zomby.editor.ui.toolbox.EllipseTool = zomby.editor.ui.toolbox.AbstractShapeTool.extend({
 
 	title : "Ellipse",
 	iconClass : "ellipse-tool-icon",

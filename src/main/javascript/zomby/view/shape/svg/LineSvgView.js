@@ -6,14 +6,6 @@ zomby.view.shape.svg.LineSvgView = zomby.view.shape.svg.StrokeableSvgView.extend
 /** @scope zomby.view.shape.svg.LineSvgView.prototype */
 {
 	/**
-	 * Create the view element for the Line.
-	 * @type Element
-	 */
-	create : function() {
-		return this.createSVG("line");
-	},
-
-	/**
 	 * Update the view to match all aspects of its Line object
 	 */
 	update : function() {
@@ -29,5 +21,6 @@ zomby.view.shape.svg.LineSvgView = zomby.view.shape.svg.StrokeableSvgView.extend
 		});
 	}
 }, {
+	TAG : "line",
 	MODEL_CLASS : zomby.model.shape.Line
 });

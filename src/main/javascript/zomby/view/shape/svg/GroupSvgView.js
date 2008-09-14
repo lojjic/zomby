@@ -10,26 +10,23 @@ zomby.view.shape.svg.GroupSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 	constructor : function(group, parent) {
 		this.base(group, parent);
 		this.shapeViews = [];
+		var el = this.getElement().firstChild;
 		for(var s = group.shapes, i = 0, len = s.length; i < len; i++) {
-			this.shapeViews.push(zomby.view.View.forModelObject(s[i], this));
+			var v = zomby.view.View.forModelObject(s[i], this);
+			this.shapeViews.push(v);
+			v.appendTo(el);
 		}
-	},
-
-	/**
-	 * Create the view element for the Group.
-	 */
-	create : function() {
-		return this.createSVG("g");
 	},
 
 	/**
 	 * Update the view to match all aspects of its Line object
 	 */
 	update : function() {
-		for(var i=0; i<this.shapeViews.length; i++) {
+		for(var i=0, len=this.shapeViews.length; i<len; i++) {
 			this.shapeViews[i].update();
 		}
 	}
 }, {
+	TAG : "g",
 	MODEL_CLASS : zomby.model.shape.Group
 });

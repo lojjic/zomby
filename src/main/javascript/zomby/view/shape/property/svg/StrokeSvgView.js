@@ -14,7 +14,7 @@ zomby.view.shape.property.svg.StrokeSvgView = zomby.view.shape.property.Property
 			"stroke-linecap" : m.cap,
 			"stroke-linejoin" : m.join,
 			"stroke-miterlimit" : m.miterLimit,
-			"stroke-dasharray" : m.dashArray,
+			"stroke-dasharray" : m.dashArray ? m.dashArray.join(',') : null,
 			"stroke-dashoffset" : m.dashOffset,
 			"stroke-opacity" : m.opacity
 		});

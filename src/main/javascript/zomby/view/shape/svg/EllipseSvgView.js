@@ -6,26 +6,17 @@ zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.FillableSvgView.exten
 /** @scope zomby.view.shape.svg.EllipseSvgView.prototype */
 {
 	/**
-	 * Create the view element for the ellipse.
-	 * @type Element
-	 */
-	create : function() {
-		return this.createSVG("ellipse");
-	},
-
-	/**
 	 * Update the view to match all aspects of its Ellipse object
 	 */
 	update : function() {
 		this.base();
 		var m = this.modelObject;
 		this.setAttributes({
-			cx : m.x,
-			cy : m.y,
 			rx : m.xRadius,
 			ry : m.yRadius
 		});
 	}
 }, {
+	TAG : "ellipse",
 	MODEL_CLASS : zomby.model.shape.Ellipse
 });

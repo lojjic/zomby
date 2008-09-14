@@ -10,6 +10,7 @@
 
 	<script type="text/javascript">
 		//new zomby.Player('tester', {});
+		var start = new Date();
 
 		var model = zomby.model.ModelObject.fromObject(
 			{
@@ -26,13 +27,32 @@
 						}
 					},
 					{
+						type: "ellipse",
+						xRadius : 100,
+						yRadius : 30,
+						x : 140,
+						y : 110,
+						fill : {
+							paint:'yellow'
+						},
+						stroke : {
+							paint : "#000",
+							width:3,
+							dashArray : [1,3,6]
+						},
+						transform : {
+							opacity: 0.5
+						}
+					},
+					{
 						type: "rectangle",
 						width : 80,
 						height: 50,
 						x : 10,
 						y : 20,
 						fill : {
-							paint:'gray'
+							paint:'gray',
+							opacity: 0.8
 						},
 						stroke : {
 							paint: 'blue',
@@ -64,6 +84,8 @@
 		view.appendTo(svg);
 		view.update();
 
+		var end = new Date();
+		document.write('<p>Rendered in ' + (end - start) + "ms</p>");
 	</script>
 
 

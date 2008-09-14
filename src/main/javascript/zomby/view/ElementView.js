@@ -9,14 +9,6 @@
 zomby.view.ElementView = zomby.view.View.extend(
 /** @scope zomby.view.ElementView.prototype */
 {
-	constructor : function(modelObject, parent) {
-		this.base(modelObject, parent);
-		var el = parent && parent.getElement();
-		if(el) {
-			this.appendTo(el);
-		}
-	},
-
 	/**
 	 * Create the element for the view. Must be implemented by
 	 * concrete subclasses.
@@ -43,16 +35,6 @@ zomby.view.ElementView = zomby.view.View.extend(
 	 */
 	appendTo : function(el) {
 		el.appendChild(this.getElement());
-	},
-
-	/**
-	 * Copy the given object's properties onto the element as attributes
-	 * @param {Object} attrs
-	 */
-	setAttributes : function(attrs) {
-		for(var a in attrs) {
-			this.getElement().setAttribute(a, attrs[a]);
-		}
 	},
 
 	/**

@@ -5,6 +5,11 @@
 zomby.core.Constants = {
 
 	/**
+	 * Default frames per second for animations
+	 */
+	DEFAULT_FPS : 12,
+
+	/**
 	 * SVG namespace
 	 */
 	SVG_NS : "http://www.w3.org/2000/svg",

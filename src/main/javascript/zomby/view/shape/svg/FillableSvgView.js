@@ -8,13 +8,14 @@ zomby.view.shape.svg.FillableSvgView = zomby.view.shape.svg.StrokeableSvgView.ex
 {
 	constructor : function(shape, parent) {
 		this.base(shape, parent);
-		this.strokeView = new zomby.view.shape.property.svg.StrokeSvgView(shape.stroke, this);
+		this.fillView = new zomby.view.shape.property.svg.FillSvgView(shape.fill, this);
 	},
 
 	/**
-	 * Update the view to match all aspects of its Line object
+	 * Update the view to match all aspects of its Fillable object
 	 */
 	update : function() {
-		this.strokeView.update();
+		this.base();
+		this.fillView.update();
 	}
 });

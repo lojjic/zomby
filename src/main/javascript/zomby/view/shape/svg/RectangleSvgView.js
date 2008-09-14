@@ -18,12 +18,12 @@ zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.FillableSvgView.ext
 	 */
 	update : function() {
 		this.base();
-		var s = this.getShape();
+		var m = this.modelObject;
 		this.setAttributes({
-			x : s.x,
-			y : s.y,
-			width : s.width,
-			height : s.height
+			x : m.x,
+			y : m.y,
+			width : m.width,
+			height : m.height
 		});
 	}
 }, {

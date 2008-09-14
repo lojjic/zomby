@@ -18,12 +18,12 @@ zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.FillableSvgView.exten
 	 */
 	update : function() {
 		this.base();
-		var s = this.getShape();
+		var m = this.modelObject;
 		this.setAttributes({
-			cx : s.x,
-			cy : s.y,
-			rx : s.width / 2,
-			ry : s.height / 2
+			cx : m.x,
+			cy : m.y,
+			rx : m.xRadius,
+			ry : m.yRadius
 		});
 	}
 }, {

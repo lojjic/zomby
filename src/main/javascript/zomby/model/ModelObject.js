@@ -94,11 +94,11 @@ zomby.model.ModelObject = Base.extend(
 	/**
 	 * Override base extend function to make it keep a mapping of static TYPEs
 	 * to classes; this allows fromObject() to retrieve the appropriate class
-	 * for a given model object type string. 
+	 * for a given model object type string.
 	 */
 	extend : function(proto, stat) {
 		var sub = Base.extend.call(this, proto, stat),
-			t = stat.TYPE;
+			t = stat && stat.TYPE;
 		if(t) {
 			_typesToClasses[t] = sub;
 		}

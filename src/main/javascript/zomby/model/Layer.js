@@ -7,9 +7,9 @@ zomby.model.Layer = Base.extend(
 /** @scope zomby.model.Layer.prototype */
 {
 	frame : 0,
-	start : 0,
-	zIndex : 0,
-	length : 100,
+	startFrame : 0,
+	endFrame : 100,
+	shape : null,
 
 	constructor : function() {
 		/**
@@ -30,33 +30,47 @@ zomby.model.Layer = Base.extend(
 	/**
 	 * Sync the given {@link zomby.model.shape.Shape}'s properties to the current frame
 	 */
-	sync : function(shape) {
-		var kf = this.getPrevNextKeyframes();
+	sync : function() {
+		var kf = this.getPrevNextKeyframes(),
+			s = this.shape,
+			props, p;
 		// Current frame is keyframe; copy shape properties directly:
-		if(kf[0].getIndex() == this.frame) {
-			var kfShape = kf[0].getShape();
-			for(var p in kfShape) {
-				if(typeof kfShape[p] != "function" && p != "type") {
-					shape.set(p, kfShape[p]);
-				}
+		if(kf[0].index == this.frame) {
+			props = kf[0].properties;
+			for(p in props) {
+				s[p] = props[p];
 			}
 		}
-		else if(kf[0].isTween()) {
-			
+		// In between tweened keyframes; calculate the tweened numeric values and copy the rest directly:
+		else if(kf[1]) {
+			props = kf[1].properties;
+			var easing = zomby.anim.Easing[kf[1].easing || "linear"],
+				oldProps = kf[0].properties,
+				curFrame = this.frame - kf[0].frame,
+				totFrames = kf[1].frame - kf[0].frame;
+			for(p in props) {
+				if(kf[1].tween && typeof props[p] == "number") {
+					s[p] = easing(curFrame, oldProps[p], props[p], totFrames);
+				} else {
+					s[p] = oldProps[p];
+				}
+			}
 		}
 	},
 
 	/**
 	 * Get the previous/current and next keyframes
-	 * 
 	 */
 	getPrevNextKeyframes : function() {
-		// TODO replace with a faster algorithm and/or indexing and/or caching
-		for(var i=0; i<this.keyframes.length; i++) {
+		var last = this._lastPrevNext, f = this.frame;
+		if(last && last[0].index <= f && last[1] > f) {
+			return last;
+		}
+		for(var i=0, len=this.keyframes.length; i<len; i++) {
 			var prev = this.keyframes[i],
 				next = this.keyframes[i + 1];
-			if(prev.getIndex() <= this.frame && next.getIndex() > this.frame) {
-				return [prev, next];
+			if(prev.index <= f && next.index > f) {
+				return this._lastPrevNext = [prev, next];
 			}
 		}
 	}

@@ -1,0 +1,71 @@
+<html>
+<head>
+	<title>Test 1</title>
+</head>
+<body>
+	<h1>Test 1</h1>
+	<div id="tester"></div>
+
+	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
+
+	<script type="text/javascript">
+		//new zomby.Player('tester', {});
+
+		var model = zomby.model.ModelObject.fromObject(
+			{
+				type: "group",
+				shapes: [
+					{
+						type: "ellipse",
+						xRadius : 64,
+						yRadius : 48,
+						x : 100,
+						y : 100,
+						fill : {
+							paint:'red'
+						}
+					},
+					{
+						type: "rectangle",
+						width : 80,
+						height: 50,
+						x : 10,
+						y : 20,
+						fill : {
+							paint:'gray'
+						},
+						stroke : {
+							paint: 'blue',
+							width: 4
+						}
+					},
+					{
+						type: "rectangle",
+						width : 40,
+						height: 50,
+						x : 220,
+						y : 60,
+						stroke : {
+							paint: 'black',
+							width: 8,
+							join: "round"
+						},
+						transform: {
+							rotate: 10
+						}
+					}
+				]
+			}
+		);
+
+		var view = zomby.view.View.forModelObject(model, null);
+		var svg = document.createElementNS(zomby.core.Constants.SVG_NS, "svg");
+		document.getElementById('tester').appendChild(svg);
+		view.appendTo(svg);
+		view.update();
+
+	</script>
+
+
+</body>
+</html>

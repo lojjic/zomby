@@ -24,7 +24,12 @@ zomby.view.View = Base.extend(
 	 * @abstract
 	 */
 	update : function() {
-		throw new Error("Not Implemented: ShapeView.update()");
+	},
+
+	/**
+	 * Destroy the view instance, cleaning up any resources
+	 */
+	destroy : function() {
 	}
 
 }, {
@@ -52,7 +57,7 @@ zomby.view.View = Base.extend(
 	 */
 	extend : function(proto, stat) {
 		var sub = Base.extend.call(this, proto, stat),
-			c = stat.MODEL_CLASS;
+			c = stat && stat.MODEL_CLASS;
 		if(c) {
 			_modelViewMapping[c.TYPE] = sub;
 		}

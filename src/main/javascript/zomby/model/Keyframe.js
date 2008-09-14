@@ -7,30 +7,12 @@ zomby.model.Keyframe = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Keyframe.prototype */
 {
 	index : 0,
-	shape : null,
 	tween : false,
+	easing : "linear",
+	properties : null,
 
-	setIndex : function(i) {
-		this.set("index", i);
-	},
-
-	getIndex : function() {
-		return this.index;
-	},
-
-	setShape : function(s) {
-		this.set("shape", s);
-	},
-
-	getShape : function() {
-		return this.shape;
-	},
-
-	setTween : function(t) {
-		this.set("tween", t);
-	},
-
-	isTween : function() {
-		return this.tween;
+	constructor : function(props) {
+		this.base(props);
+		this.properties = props.properties || {}; 
 	}
 });

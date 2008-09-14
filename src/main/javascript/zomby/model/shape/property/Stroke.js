@@ -1,6 +1,6 @@
 zomby.model.shape.property.Stroke = zomby.model.shape.property.Property.extend({
 
-	paint : "#000",
+	paint : "none",
 	width : 1,
 	cap : "butt",
 	join : "miter",

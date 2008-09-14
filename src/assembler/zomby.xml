@@ -7,13 +7,19 @@
 				<!--===== Core classes =====-->
 				<include>zomby/support/Base.js</include>
 				<include>zomby/support/json2.js</include>
+				<include>zomby/__package__.js</include>
+				<include>zomby/Player.js</include>
 				<include>zomby/core/__package__.js</include>
 				<include>zomby/core/Constants.js</include>
 				<include>zomby/core/Util.js</include>
+				<include>zomby/anim/__package__.js</include>
+				<include>zomby/anim/Easing.js</include>
 
 				<!--===== Model classes =====-->
 				<include>zomby/model/__package__.js</include>
 				<include>zomby/model/ModelObject.js</include>
+				<include>zomby/model/Keyframe.js</include>
+				<include>zomby/model/Layer.js</include>
 				<include>zomby/model/Timeline.js</include>
 				<include>zomby/model/shape/__package__.js</include>
 				<include>zomby/model/shape/Shape.js</include>
@@ -33,6 +39,11 @@
 				<!--===== View classes =====-->
 				<include>zomby/view/__package__.js</include>
 				<include>zomby/view/View.js</include>
+				<include>zomby/view/ElementView.js</include>
+				<include>zomby/view/svg/__package__.js</include>
+				<include>zomby/view/svg/SvgView.js</include>
+				<include>zomby/view/svg/LayerSvgView.js</include>
+				<include>zomby/view/svg/TimelineSvgView.js</include>
 				<include>zomby/view/shape/__package__.js</include>
 				<include>zomby/view/shape/ShapeView.js</include>
 				<include>zomby/view/shape/svg/__package__.js</include>

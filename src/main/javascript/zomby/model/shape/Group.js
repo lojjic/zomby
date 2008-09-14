@@ -12,8 +12,8 @@ zomby.model.shape.Group = zomby.model.shape.Shape.extend(
 		this.shapes = [];
 		var s = props.shapes;
 		if(s) {
-			for(var i=0; i<s.length; i++) {
-				s.push(zomby.model.ModelObject.fromObject(s[i]));
+			for(var i=0, len=s.length; i<len; i++) {
+				this.shapes.push(zomby.model.ModelObject.fromObject(s[i]));
 			}
 		}
 	},
@@ -21,4 +21,6 @@ zomby.model.shape.Group = zomby.model.shape.Shape.extend(
 	addShape : function(shape) {
 		this.shapes.push(shape);
 	}
+}, {
+	TYPE : "group"
 });

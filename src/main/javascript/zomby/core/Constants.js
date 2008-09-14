@@ -17,6 +17,11 @@ zomby.core.Constants = {
 	/**
 	 * XHTML namespace
 	 */
-	XHTML_NS : "http://www.w3.org/1999/xhtml"
+	XHTML_NS : "http://www.w3.org/1999/xhtml",
+
+	/**
+	 * XLink namespace
+	 */
+	XLINK_NS : "http://www.w3.org/1999/xlink"
 
 };

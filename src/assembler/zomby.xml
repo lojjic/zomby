@@ -27,6 +27,7 @@
 				<include>zomby/model/shape/Strokeable.js</include>
 				<include>zomby/model/shape/Fillable.js</include>
 				<include>zomby/model/shape/Ellipse.js</include>
+				<include>zomby/model/shape/Image.js</include>
 				<include>zomby/model/shape/Line.js</include>
 				<include>zomby/model/shape/Path.js</include>
 				<include>zomby/model/shape/Rectangle.js</include>
@@ -53,6 +54,7 @@
 				<include>zomby/view/shape/svg/StrokeableSvgView.js</include>
 				<include>zomby/view/shape/svg/FillableSvgView.js</include>
 				<include>zomby/view/shape/svg/EllipseSvgView.js</include>
+				<include>zomby/view/shape/svg/ImageSvgView.js</include>
 				<include>zomby/view/shape/svg/LineSvgView.js</include>
 				<include>zomby/view/shape/svg/PathSvgView.js</include>
 				<include>zomby/view/shape/svg/RectangleSvgView.js</include>

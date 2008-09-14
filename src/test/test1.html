@@ -87,6 +87,21 @@
 						y:10,
 						stroke : {
 							paint: 'black'
+						},
+						fill : {
+							paint: 'purple',
+							opacity: 0.1
+						}
+					},
+					{
+						type : "image",
+						src : "boo.jpg",
+						width: 160,
+						height: 120,
+						x:480,
+						y:20,
+						transform:{
+							rotate:45
 						}
 					}
 				]
@@ -102,7 +117,7 @@
 		view.update();
 
 		var end = new Date();
-		document.write('<p>Loaded in ' + (mid - start) + 'ms, rendered in ' + (end - mid) + "ms</p>");
+		document.write('<p>Runtime loaded in ' + (mid - start) + 'ms, movie loaded and rendered in ' + (end - mid) + "ms</p>");
 	</script>
 
 

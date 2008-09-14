@@ -6,11 +6,15 @@
 	<h1>Test 1</h1>
 	<div id="tester"></div>
 
+	<script type="text/javascript">
+		var start = new Date();
+	</script>
+
 	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
 
 	<script type="text/javascript">
 		//new zomby.Player('tester', {});
-		var start = new Date();
+		var mid = new Date();
 
 		var model = zomby.model.ModelObject.fromObject(
 			{
@@ -73,6 +77,17 @@
 						transform: {
 							rotate: 10
 						}
+					},
+					{
+						type: "path",
+						//         M100,200 C100,100 250,100 250,200 S400,300 400,200
+						segments : [['C',100,100,250,100,250,200],['S',400,300,400,200]],
+						closed : false,
+						x:20,
+						y:10,
+						stroke : {
+							paint: 'black'
+						}
 					}
 				]
 			}
@@ -80,12 +95,14 @@
 
 		var view = zomby.view.View.forModelObject(model, null);
 		var svg = document.createElementNS(zomby.core.Constants.SVG_NS, "svg");
+		svg.setAttribute('width', 800);
+		svg.setAttribute('height', 600);
 		document.getElementById('tester').appendChild(svg);
 		view.appendTo(svg);
 		view.update();
 
 		var end = new Date();
-		document.write('<p>Rendered in ' + (end - start) + "ms</p>");
+		document.write('<p>Loaded in ' + (mid - start) + 'ms, rendered in ' + (end - mid) + "ms</p>");
 	</script>
 
 

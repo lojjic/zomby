@@ -1,6 +1,6 @@
 zomby.model.shape.property.Fill = zomby.model.shape.property.Property.extend({
 
-	paint : "none",
+	paint : null,
 	rule : "nonzero",
 	opacity : 1
 

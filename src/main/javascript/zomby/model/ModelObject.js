@@ -24,7 +24,9 @@ zomby.model.ModelObject = Base.extend(
 	 * (a) a single property name and value
 	 * (b) an object of name-value pairs
 	 * For each property specified, the object must actually have a non-Function
-	 * property of that name or it will be ignored.
+	 * property of that name or it will be ignored. If the property's value is a
+	 * complex object with a 'type' property, then we try to find and instantiate
+	 * an appropriate ModelObject subclass for it.
 	 *
 	 * @param {String|Object} nameOrPairs Either the name of the property, or an object holding
 	 *        a set of property name-value pairs
@@ -33,7 +35,11 @@ zomby.model.ModelObject = Base.extend(
 	set : function(nameOrPairs, value) {
 		if(typeof nameOrPairs == "string") {
 			if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
-				this[nameOrPairs] = value;
+				if(typeof value == "object" && value.type && _typesToClasses[value.type]) {
+					this[nameOrPairs] = zomby.model.ModelObject.fromObject(value);
+				} else {
+					this[nameOrPairs] = value;
+				}
 			}
 		} else if(typeof nameOrPairs == "object") {
 			for(var p in nameOrPairs) {

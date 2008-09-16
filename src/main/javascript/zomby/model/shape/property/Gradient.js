@@ -1,14 +1,14 @@
 zomby.model.shape.property.Gradient = zomby.model.shape.property.Property.extend({
 
-	type : "linear",
+	style : "linear",
 	stops : null,
 
 	constructor : function(props) {
 		this.base(props);
 		this.stops = [];
-		var s = props.stops, i;
+		var s = props.stops;
 		if(s) {
-			for(i=0; i<s.length; i++) {
+			for(var i=0, len=s.length; i<len; i++) {
 				this.stops.push(new zomby.model.shape.property.Gradient.Stop(s[i]));
 			}
 		}
@@ -18,7 +18,7 @@ zomby.model.shape.property.Gradient = zomby.model.shape.property.Property.extend
 
 	TYPE : "gradient",
 
-	Type : {
+	Style : {
 		LINEAR : "linear",
 		RADIAL : "radial"
 	},

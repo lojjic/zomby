@@ -103,6 +103,24 @@
 						transform:{
 							rotate:45
 						}
+					},
+					{
+						type : "rectangle",
+						x: 20,
+						y:200,
+						width: 200,
+						height: 200,
+						stroke:{paint:"#000"},
+						fill:{
+							paint:{
+								type:"gradient",
+								style:"linear",
+								stops:[
+									{color:"red", offset: "0%"},
+									{color:"blue", offset:"100%"}
+								]
+							}
+						}
 					}
 				]
 			}
@@ -118,6 +136,9 @@
 
 		var end = new Date();
 		document.write('<p>Runtime loaded in ' + (mid - start) + 'ms, movie loaded and rendered in ' + (end - mid) + "ms</p>");
+
+		var modelSerialized = model.serialize();
+		document.write('<textarea rows="10" cols="80">' + modelSerialized + '</textarea> (' + modelSerialized.length + ' chars)');
 	</script>
 
 

@@ -36,6 +36,19 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 		}
 	},
 
+	/**
+	 * Get a <defs/> element suitable for storing shape/gradient/etc. definitions
+	 * for this view. The element is lazily created and inserted upon first access.
+	 */
+	getDefsElement : function() {
+		if(!this._defs) {
+			this.getElement().appendChild(
+				this._defs = this.createSVG("defs")
+			);
+		}
+		return this._defs;
+	},
+
 	update : function() {
 		this.base();
 		var m = this.modelObject;

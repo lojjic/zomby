@@ -15,6 +15,6 @@ zomby.view.svg.SvgView = zomby.view.ElementView.extend(
 	 * @type SVGElement
 	 */
 	createSVG: function(name) {
-		return document.createElementNS(zomby.core.Constants.SVG_NS, name);
+		return document.createElementNS(zomby.Constants.SVG_NS, name);
 	}
 });

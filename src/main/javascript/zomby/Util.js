@@ -1,4 +1,4 @@
-zomby.core.Util = {
+zomby.Util = {
 
 	rescope : function(fn, scope) {
 		return function() {

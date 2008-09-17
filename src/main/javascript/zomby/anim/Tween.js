@@ -19,7 +19,7 @@
 zomby.anim.Tween = Base.extend(
 /** @scope zomby.anim.Tween.prototype */
 {
-	FPS : zomby.core.Constants.DEFAULT_FPS,
+	FPS : zomby.Constants.DEFAULT_FPS,
 
 	_playing : false,
 

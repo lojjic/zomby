@@ -22,7 +22,7 @@ zomby.editor.ui.canvas.Canvas = zomby.editor.Widget.extend({
 
 	create : function() {
 		return $.create("div").addClass("canvas").append(
-			this.svgElement = $.create(zomby.core.Constants.SVG_NS, "svg").attr({
+			this.svgElement = $.create(zomby.Constants.SVG_NS, "svg").attr({
 				width : "100%",
 				height : "100%"
 			})

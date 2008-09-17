@@ -2,7 +2,7 @@
  * @static
  * @class Common constant values
  */
-zomby.core.Constants = {
+zomby.Constants = {
 
 	/**
 	 * Default frames per second for animations

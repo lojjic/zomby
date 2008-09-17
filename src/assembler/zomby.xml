@@ -9,9 +9,8 @@
 				<include>zomby/support/json2.js</include>
 				<include>zomby/__package__.js</include>
 				<include>zomby/Player.js</include>
-				<include>zomby/core/__package__.js</include>
-				<include>zomby/core/Constants.js</include>
-				<include>zomby/core/Util.js</include>
+				<include>zomby/Constants.js</include>
+				<include>zomby/Util.js</include>
 				<include>zomby/anim/__package__.js</include>
 				<include>zomby/anim/Easing.js</include>
 

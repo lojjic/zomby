@@ -59,7 +59,7 @@ zomby.model.Timeline = Base.extend(
 	 */
 	start : function() {
 		if(!this._timer) {
-			this._timer = setInterval(zomby.core.Util.rescope(this.step,  this), 1000 / this.fps);
+			this._timer = setInterval(zomby.Util.rescope(this.step,  this), 1000 / this.fps);
 		}
 	},
 

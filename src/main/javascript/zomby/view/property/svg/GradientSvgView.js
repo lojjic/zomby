@@ -8,7 +8,7 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 	getElement : function() {
 		var el = this._element;
 		if(!el) {
-			el = this._element = document.createElementNS(zomby.core.Constants.SVG_NS,
+			el = this._element = document.createElementNS(zomby.Constants.SVG_NS,
 					this.modelObject.style == 'radial' ? "radialGradient" : "linearGradient");
 			el.setAttribute("id", this.getId());
 			this.parentView.getDefsElement().appendChild(el);
@@ -17,7 +17,7 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 	},
 
 	getId : function() {
-		return zomby.core.Util.generateId(this);
+		return zomby.Util.generateId(this);
 	},
 
 	update : function() {
@@ -29,7 +29,7 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 			stop = m.stops[i],
 			stopEl = el.childNodes[i];
 			if(!stopEl) {
-				stopEl = document.createElementNS(zomby.core.Constants.SVG_NS, "stop");
+				stopEl = document.createElementNS(zomby.Constants.SVG_NS, "stop");
 				el.appendChild(stopEl);
 			}
 			stopEl.setAttribute("offset", stop.offset);

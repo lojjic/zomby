@@ -48,10 +48,9 @@ zomby.model.Timeline = Base.extend(
 	 * Sync all shapes to the current frame
 	 */
 	sync : function() {
-		var lyr = this.layers;
-		for(var i=0; i<lyr.length; i++) {
-			lyr[i].go(this.frame + lyr.start);
-		}
+		zomby.Util.each(this.layers, function(lyr) {
+			lyr.go(this.frame + lyr.start);
+		}, this);
 	},
 
 	/**

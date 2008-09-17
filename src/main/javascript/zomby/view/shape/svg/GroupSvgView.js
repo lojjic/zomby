@@ -11,20 +11,20 @@ zomby.view.shape.svg.GroupSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 		this.base(group, parent);
 		this.shapeViews = [];
 		var el = this.getElement().firstChild;
-		for(var s = group.shapes, i = 0, len = s.length; i < len; i++) {
-			var v = zomby.view.View.forModelObject(s[i], this);
+		zomby.Util.each(group.shapes, function(shape) {
+			var v = zomby.view.View.forModelObject(shape, this);
 			this.shapeViews.push(v);
 			v.appendTo(el);
-		}
+		}, this);
 	},
 
 	/**
 	 * Update the view to match all aspects of its Line object
 	 */
 	update : function() {
-		for(var i=0, len=this.shapeViews.length; i<len; i++) {
-			this.shapeViews[i].update();
-		}
+		zomby.Util.each(this.shapeViews, function(view) {
+			view.update();
+		});
 	}
 }, {
 	TAG : "g",

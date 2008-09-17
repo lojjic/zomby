@@ -62,16 +62,17 @@ zomby.model.Layer = Base.extend(
 	 * Get the previous/current and next keyframes
 	 */
 	getPrevNextKeyframes : function() {
-		var last = this._lastPrevNext, f = this.frame;
+		var last = this._lastPrevNext,
+			kf = this.keyframes,
+			f = this.frame;
 		if(last && last[0].index <= f && last[1] > f) {
 			return last;
 		}
-		for(var i=0, len=this.keyframes.length; i<len; i++) {
-			var prev = this.keyframes[i],
-				next = this.keyframes[i + 1];
+		zomby.Util.each(kf, function(prev, i) {
+			var next = kf[i + 1];
 			if(prev.index <= f && next.index > f) {
 				return this._lastPrevNext = [prev, next];
 			}
-		}
+		}, this);
 	}
 });

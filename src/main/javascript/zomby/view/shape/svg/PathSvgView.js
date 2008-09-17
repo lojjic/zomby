@@ -11,11 +11,10 @@ zomby.view.shape.svg.PathSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 	update : function() {
 		this.base();
 		var m = this.modelObject,
-			s = m.segments,
 			d = ["M 0 0"];
-		for(var i=0, len=s.length; i<len; i++) {
-			d.push(s[i].join(' '));
-		}
+		zomby.Util.each(m.segments, function(seg) {
+			d.push(seg.join(' '));
+		});
 		if(m.closed) {
 			d.push('Z');
 		}

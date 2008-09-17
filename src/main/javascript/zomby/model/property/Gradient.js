@@ -8,9 +8,9 @@ zomby.model.property.Gradient = zomby.model.property.Property.extend({
 		this.stops = [];
 		var s = props.stops;
 		if(s) {
-			for(var i=0, len=s.length; i<len; i++) {
-				this.stops.push(new zomby.model.property.Gradient.Stop(s[i]));
-			}
+			zomby.Util.each(s, function(stop) {
+				this.stops.push(new zomby.model.property.Gradient.Stop(stop));
+			}, this);
 		}
 	}
 

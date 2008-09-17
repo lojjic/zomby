@@ -23,10 +23,9 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 	update : function() {
 		var el = this.getElement(),
 			m = this.modelObject,
-			stop, stopEl;
-		for(var i=0, len=m.stops.length; i<len; i++) {
+			stopEl;
+		zomby.Util.each(m.stops, function(stop, i) {
 			// reuse existing stop elements if available
-			stop = m.stops[i],
 			stopEl = el.childNodes[i];
 			if(!stopEl) {
 				stopEl = document.createElementNS(zomby.Constants.SVG_NS, "stop");
@@ -35,9 +34,9 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 			stopEl.setAttribute("offset", stop.offset);
 			stopEl.setAttribute("stop-color", stop.color);
 			stopEl.setAttribute("stop-opacity", stop.opacity);
-		}
+		});
 		// remove any additional stop elements from previous renderings
-		while(stopEl = el.childNodes[i]) {
+		while(stopEl = el.childNodes[m.stops.length]) {
 			el.removeChild(stopEl);
 		}
 	}

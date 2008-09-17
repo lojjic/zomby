@@ -1,9 +1,9 @@
 /**
  * @class SVG view for a shape transform
- * @extends zomby.view.shape.property.PropertyView
+ * @extends zomby.view.property.PropertyView
  */
-zomby.view.shape.property.svg.TransformSvgView = zomby.view.shape.property.PropertyView.extend(
-/** @scope zomby.view.shape.property.svg.TransformSvgView.prototype */
+zomby.view.property.svg.TransformSvgView = zomby.view.property.PropertyView.extend(
+/** @scope zomby.view.property.svg.TransformSvgView.prototype */
 {
 	update : function() {
 		var v = this.parentView,

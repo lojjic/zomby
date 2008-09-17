@@ -1,4 +1,4 @@
-zomby.model.shape.property.Stroke = zomby.model.shape.property.Property.extend({
+zomby.model.property.Stroke = zomby.model.property.Property.extend({
 
 	paint : "none",
 	width : 1,

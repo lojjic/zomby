@@ -1,4 +1,4 @@
-zomby.model.shape.property.Fill = zomby.model.shape.property.Property.extend({
+zomby.model.property.Fill = zomby.model.property.Property.extend({
 
 	paint : null,
 	rule : "nonzero",

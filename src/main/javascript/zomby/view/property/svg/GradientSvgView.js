@@ -1,9 +1,9 @@
 /**
  * @class SVG view for a gradient definition
- * @extends zomby.view.shape.property.PropertyView
+ * @extends zomby.view.property.PropertyView
  */
-zomby.view.shape.property.svg.GradientSvgView = zomby.view.shape.property.PropertyView.extend(
-/** @scope zomby.view.shape.property.svg.GradientSvgView.prototype */
+zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.extend(
+/** @scope zomby.view.property.svg.GradientSvgView.prototype */
 {
 	getElement : function() {
 		var el = this._element;
@@ -42,5 +42,5 @@ zomby.view.shape.property.svg.GradientSvgView = zomby.view.shape.property.Proper
 		}
 	}
 }, {
-	MODEL_CLASS : zomby.model.shape.property.Gradient
+	MODEL_CLASS : zomby.model.property.Gradient
 });

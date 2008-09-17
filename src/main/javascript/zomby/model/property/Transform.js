@@ -3,8 +3,8 @@
  *
  * @constructor
  */
-zomby.model.shape.property.Transform = zomby.model.shape.property.Property.extend(
-/** @scope zomby.model.shape.property.Transform.prototype */
+zomby.model.property.Transform = zomby.model.property.Property.extend(
+/** @scope zomby.model.property.Transform.prototype */
 {
 	/**
 	 * Scale. 1 == native size.

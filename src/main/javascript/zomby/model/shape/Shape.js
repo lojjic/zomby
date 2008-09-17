@@ -7,7 +7,7 @@ zomby.model.shape.Shape = zomby.model.ModelObject.extend({
 
 	constructor : function(props) {
 		this.base(props);
-		this.transform = new zomby.model.shape.property.Transform(props ? props.transform : null);
+		this.transform = new zomby.model.property.Transform(props ? props.transform : null);
 	},
 
 	getBounds : function() {

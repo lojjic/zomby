@@ -4,7 +4,7 @@ zomby.model.shape.Fillable = zomby.model.shape.Strokeable.extend({
 
 	constructor : function(props) {
 		this.base(props);
-		this.fill = new zomby.model.shape.property.Fill(props ? props.fill : null);
+		this.fill = new zomby.model.property.Fill(props ? props.fill : null);
 	}
 
 });

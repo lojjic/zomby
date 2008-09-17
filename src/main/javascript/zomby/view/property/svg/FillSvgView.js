@@ -1,13 +1,13 @@
 /**
  * @class SVG view for a fill property
- * @extends zomby.view.shape.property.PropertyView
+ * @extends zomby.view.property.PropertyView
  */
-zomby.view.shape.property.svg.FillSvgView = zomby.view.shape.property.PropertyView.extend(
-/** @scope zomby.view.shape.property.svg.FillSvgView.prototype */
+zomby.view.property.svg.FillSvgView = zomby.view.property.PropertyView.extend(
+/** @scope zomby.view.property.svg.FillSvgView.prototype */
 {
 	constructor : function(fill, parentView) {
 		this.base(fill, parentView);
-		if(fill.paint instanceof zomby.model.shape.property.Gradient) {
+		if(fill.paint instanceof zomby.model.property.Gradient) {
 			this.gradientView = zomby.view.View.forModelObject(fill.paint, this);
 		}
 	},

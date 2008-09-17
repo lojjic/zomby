@@ -1,1 +1,0 @@
-zomby.model.shape.property = {};

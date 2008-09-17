@@ -8,7 +8,7 @@ zomby.view.shape.svg.StrokeableSvgView = zomby.view.shape.svg.ShapeSvgView.exten
 {
 	constructor : function(shape, parent) {
 		this.base(shape, parent);
-		this.strokeView = new zomby.view.shape.property.svg.StrokeSvgView(shape.stroke, this);
+		this.strokeView = new zomby.view.property.svg.StrokeSvgView(shape.stroke, this);
 	},
 
 	/**

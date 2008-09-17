@@ -5,7 +5,7 @@
 zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	constructor : function(shape, parent) {
 		this.base(shape, parent);
-		this.transformView = new zomby.view.shape.property.svg.TransformSvgView(shape.transform, this);
+		this.transformView = new zomby.view.property.svg.TransformSvgView(shape.transform, this);
 	},
 
 	/**

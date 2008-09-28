@@ -109,7 +109,7 @@
 						x: 20,
 						y:200,
 						width: 200,
-						height: 200,
+						height: 50,
 						stroke:{paint:"#000"},
 						fill:{
 							paint:{
@@ -121,7 +121,52 @@
 								]
 							}
 						}
-					}
+					},
+					{
+						type:"text",
+						x:10, y:300,
+						fill:{
+							paint:"#000"
+						},
+						lines:[
+							{
+								parts:[
+									"This is a ",
+									{
+										fill:{paint:"blue"},
+										parts:[" text "]
+									},
+									" line."
+								]
+							},
+							{
+								parts:[
+									"...and so is ",
+									{
+										fill:{paint:"red"},
+										font:{size:20, weight:800},
+										parts:[" this."]
+									}
+								]
+							}
+						]
+					},
+					{
+						type:"text",
+						x:120,
+						y:350,
+						transform:{scale:0.5},
+						font:{size:40,family:"sans-serif"},
+						path:{
+							type:"path",
+							segments:[
+								["C", 100, -100, 200, -200, 300, -100],
+								["C", 400, 0, 500, 100, 600, 0],
+								["C", 700, -100, 800, -100, 800, -100]
+							]
+						},
+						lines:[{parts:["This is some text following a curvy path."]}]
+					},
 				]
 			}
 		);

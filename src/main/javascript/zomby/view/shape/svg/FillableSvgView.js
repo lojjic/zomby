@@ -6,16 +6,13 @@
 zomby.view.shape.svg.FillableSvgView = zomby.view.shape.svg.StrokeableSvgView.extend(
 /** @scope zomby.view.shape.svg.FillableSvgView.prototype */
 {
-	constructor : function(shape, parent) {
-		this.base(shape, parent);
-		this.fillView = new zomby.view.property.svg.FillSvgView(shape.fill, this);
-	},
-
 	/**
 	 * Update the view to match all aspects of its Fillable object
 	 */
 	update : function() {
 		this.base();
-		this.fillView.update();
+		var f = this.modelObject.fill,
+			v = this.fillView || (this.fillView = new zomby.view.property.svg.FillSvgView(f, this));
+		v.update();
 	}
 });

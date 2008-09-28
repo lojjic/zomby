@@ -104,9 +104,11 @@ zomby.model.ModelObject = Base.extend(
 	 */
 	extend : function(proto, stat) {
 		var sub = Base.extend.call(this, proto, stat),
-			t = stat && stat.TYPE;
+			t = stat && stat.TYPE,
+			ttc = _typesToClasses;
 		if(t) {
-			_typesToClasses[t] = sub;
+			if(ttc[t]) throw new Error("ModelObject TYPE already defined: " + t);
+			ttc[t] = sub;
 		}
 		return sub;
 	}

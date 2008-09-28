@@ -3,7 +3,6 @@
 var _modelViewMapping = {};
 
 /**
- }
  * @class A view of a model object.
  * 
  * @constructor

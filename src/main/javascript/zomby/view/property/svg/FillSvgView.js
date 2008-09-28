@@ -28,7 +28,7 @@ zomby.view.property.svg.FillSvgView = zomby.view.property.PropertyView.extend(
 			gv.update();
 			attrs.fill = "url(#" + gv.getId() + ")";
 		} else {
-			attrs.fill = m.paint || "none";
+			attrs.fill = m.paint;
 		}
 		v.setAttributes(attrs);
 	}

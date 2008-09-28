@@ -30,9 +30,11 @@
 				<include>zomby/model/shape/Line.js</include>
 				<include>zomby/model/shape/Path.js</include>
 				<include>zomby/model/shape/Rectangle.js</include>
+				<include>zomby/model/shape/Text.js</include>
 				<include>zomby/model/property/__package__.js</include>
 				<include>zomby/model/property/Property.js</include>
 				<include>zomby/model/property/Fill.js</include>
+				<include>zomby/model/property/Font.js</include>
 				<include>zomby/model/property/Gradient.js</include>
 				<include>zomby/model/property/Stroke.js</include>
 				<include>zomby/model/property/Transform.js</include>
@@ -57,10 +59,12 @@
 				<include>zomby/view/shape/svg/LineSvgView.js</include>
 				<include>zomby/view/shape/svg/PathSvgView.js</include>
 				<include>zomby/view/shape/svg/RectangleSvgView.js</include>
+				<include>zomby/view/shape/svg/TextSvgView.js</include>
 				<include>zomby/view/property/__package__.js</include>
 				<include>zomby/view/property/PropertyView.js</include>
 				<include>zomby/view/property/svg/__package__.js</include>
 				<include>zomby/view/property/svg/FillSvgView.js</include>
+				<include>zomby/view/property/svg/FontSvgView.js</include>
 				<include>zomby/view/property/svg/GradientSvgView.js</include>
 				<include>zomby/view/property/svg/StrokeSvgView.js</include>
 				<include>zomby/view/property/svg/TransformSvgView.js</include>

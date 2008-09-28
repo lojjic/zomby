@@ -11,7 +11,7 @@ zomby.view.shape.svg.ImageSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 	update : function() {
 		this.base();
 		var m = this.modelObject;
-		this._shapeElement.setAttributeNS(zomby.Constants.XLINK_NS, "href", m.src);
+		this.getShapeElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", m.src);
 		this.setAttributes({
 			width : m.width,
 			height : m.height,

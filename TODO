@@ -1,0 +1,23 @@
+===================
+=== Zomby TODOs ===
+
+
+>>> Runtime <<<
+
+*) Figure out how to support embedded images etc. -- data: URIs should work except in IE
+
+*) VML-based views for all shapes to support IE
+
+*) Loading mechanism - AJAX to load the data
+
+*) When updating views, avoid modifying SVG attributes/elements if they haven't changed since the last update --
+   need some sort of local property cache to compare against?
+
+*) Work to make JSON serialization as succinct as possible -- omit properties that don't need to be serialized, like
+   those that match the default values for their ModelObject.
+
+*) Customize the JSON parser so that it assembles objects as their data streams in; this is necessary to support the
+   movie starting to play before all the data has downloaded, loading progress bar scripts, etc.
+
+*) ForeignObject support so complex content e.g. HTML can be loaded as a shape
+

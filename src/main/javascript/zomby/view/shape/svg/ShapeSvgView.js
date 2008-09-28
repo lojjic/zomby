@@ -5,19 +5,34 @@
 zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	constructor : function(shape, parent) {
 		this.base(shape, parent);
-		this.transformView = new zomby.view.property.svg.TransformSvgView(shape.transform, this);
+		this.transformView = shape.transform ? new zomby.view.property.svg.TransformSvgView(shape.transform, this) : null;
 	},
 
 	/**
 	 * Create the view element for the shape. We wrap the actual shape element
-	 * within a "g" container which gets positioned with a translate transform.
+	 * within a "g" container which gets positioned with a translate transform;
+	 * positioning the element this way moves the origin point so further
+	 * transforms e.g. rotate behave more sensibly.
 	 * @type Element
 	 */
 	create : function() {
-		var g = this.createSVG("g"),
-			s = this._shapeElement = this.createSVG(this.constructor.TAG);
-		g.appendChild(s);
+		var g = this.createSVG("g");
+		g.appendChild(this.getShapeElement());
 		return g;
+	},
+
+	/**
+	 * Get the shape-specific SVG element, which is wrapped in the outer "g" element.
+	 */
+	getShapeElement : function() {
+		return this._shapeElement || (this._shapeElement = this.createSVG(this.getTagName()));
+	},
+
+	/**
+	 * Get the name of the SVG tag for the shape.
+	 */
+	getTagName : function() {
+		return this.constructor.TAG;
 	},
 
 	/**
@@ -25,7 +40,7 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	 * @param {Object} attrs
 	 */
 	setAttributes : function(attrs) {
-		var el = this._shapeElement;
+		var el = this.getShapeElement();
 		for(var a in attrs) {
 			var val = attrs[a];
 			if(val === null) {

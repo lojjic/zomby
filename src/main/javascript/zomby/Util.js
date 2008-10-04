@@ -42,6 +42,59 @@ zomby.Util = {
 			}
 			return id;
 		}
-	})()
+	})(),
+
+	/**
+	 * Retrieve a remote JSON document and parse it into a Javascript object.
+	 * @param {String} url - The URL of the JSON document
+	 * @param {Function} callback - A function to be called when the JSON has completed loading and
+	 *                   been parsed; will be passed one argument which is the result JS object
+	 */
+	getJSON : function(url, callback) {
+		var opts = {
+			method : "GET",
+			url : url,
+			async : true,
+			success : function(data) {
+				callback(JSON.parse(data.responseText));
+			}
+		};
+		zomby.Util.getUrl(opts);
+	},
+
+	/**
+	 * Retrieve a remote file
+	 * @param {String} url - The URL of the JSON document
+	 * @param {Object} opts - Object holding options for the request. Recognized properties:
+	 *                 - {String} method - either "GET" or "POST", defaults to GET
+	 *                 - {String} url - required; the url of the request
+	 *                 - {Boolean} async - if true then the request will be made asynchronously, defaults to false
+	 *                 - {String} username - optional username for authentication
+	 *                 - {String} password - optional password for authentication
+	 *                 - {Function} success - a function to be called upon successful response.  Passed one argument
+	 *                              which is the XMLHttpRequest object.
+	 *                 - {Function} error - a function to be called if the request errors out. If not supplied then an
+	 *                              exception will be thrown instead. Passed one argument which is the XMLHttpRequest object.
+	 */
+	getUrl : function(opts) {
+		var xhr = window.ActiveXObject ? new ActiveXObject("Microsoft.XMLHTTP") : new XMLHttpRequest();
+
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState == 4) {
+				if(xhr.status == 200) {
+					opts.success(xhr);
+				} else {
+					if(opts.error) {
+						opts.error(xhr);
+					} else {
+						throw xhr;
+					}
+				}
+			}
+		};
+
+		xhr.open(opts.method || "GET", opts.url, opts.async, opts.username, opts.password);
+		xhr.send();
+	}
 
 };

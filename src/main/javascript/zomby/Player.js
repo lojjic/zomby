@@ -4,6 +4,7 @@ zomby.Player = Base.extend({
 	ready : false,
 	element : null,
 	data : null,
+	timeline : null,
 
 	constructor : function(el, src) {
 		this.findElement(el);
@@ -29,7 +30,10 @@ zomby.Player = Base.extend({
 
 	loadData : function(src) {
 		if(typeof src == "string") {
-			// TODO load external file or parse JSON
+			var me = this;
+			zomby.Util.getJSON(src, function(obj) {
+				me.data = obj;
+			})
 		} else {
 			this.data = src;
 		}
@@ -38,8 +42,9 @@ zomby.Player = Base.extend({
 	playWhenReady : function() {
 		var me = this;
 		(function check() {
-			if(me.element && me.src) {
-				var tl = new zomby.model.Timeline();
+			if(me.element && me.data) {
+				var tl = this.timeline = new zomby.model.Timeline(me.data);
+				tl.start();
 			} else {
 				setTimeout(check, 100);
 			}

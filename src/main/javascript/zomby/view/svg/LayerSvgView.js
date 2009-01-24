@@ -5,7 +5,8 @@ zomby.view.svg.LayerSvgView = zomby.view.svg.SvgView.extend({
 
 	constructor : function(layer, parent) {
 		this.base(layer, parent);
-		this.shapeView = zomby.view.View.forModelObject(layer.shape, this);
+		var v = this.shapeView = zomby.view.View.forModelObject(layer.getShape(), this);
+		v.appendTo(this.getElement());
 	},
 
 	/**

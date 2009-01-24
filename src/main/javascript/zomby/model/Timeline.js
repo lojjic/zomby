@@ -3,19 +3,24 @@
  *
  * @constructor
  */
-zomby.model.Timeline = Base.extend(
+zomby.model.Timeline = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Timeline.prototype */
 {
 	frame : 0,
+	fps: 10,
 	length : 100,
-	fps : 10,
 	loop : false,
+	library : null,
+	width : 100,
+	height : 100,
 
-	constructor : function() {
-		/**
-		 * @type Array<zomby.model.Layer>
-		 */
+	constructor : function(props) {
+		this.base(props);
+		this.library = new zomby.model.Library(props.library);
 		this.layers = [];
+		zomby.Util.each(props.layers, function(lyr) {
+			this.layers.push(new zomby.model.Layer(lyr, this));
+		}, this);
 	},
 
 	/**
@@ -45,30 +50,11 @@ zomby.model.Timeline = Base.extend(
 	},
 
 	/**
-	 * Sync all shapes to the current frame
+	 * Sync all layers to the current frame
 	 */
 	sync : function() {
 		zomby.Util.each(this.layers, function(lyr) {
-			lyr.go(this.frame + lyr.start);
+			lyr.go(this.frame + lyr.startFrame);
 		}, this);
-	},
-
-	/**
-	 * Start the timeline playing
-	 */
-	start : function() {
-		if(!this._timer) {
-			this._timer = setInterval(zomby.Util.rescope(this.step,  this), 1000 / this.fps);
-		}
-	},
-
-	/**
-	 * Stop the timeline playing
-	 */
-	stop : function() {
-		if(this._timer) {
-			clearInterval(this._timer);
-			this._timer = null;
-		}
 	}
 });

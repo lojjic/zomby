@@ -7,7 +7,9 @@ zomby.view.svg.TimelineSvgView = zomby.view.svg.SvgView.extend({
 		this.base(timeline, parent);
 		this.layerViews = [];
 		zomby.Util.each(timeline.layers, function(lyr) {
-			this.layerViews.push(zomby.view.View.forModelObject(lyr, this));
+			var v = new zomby.view.svg.LayerSvgView(lyr, this);
+			this.layerViews.push(v);
+			v.appendTo(this.getElement());
 		}, this);
 	},
 
@@ -26,7 +28,11 @@ zomby.view.svg.TimelineSvgView = zomby.view.svg.SvgView.extend({
 		this.base();
 		zomby.Util.each(this.layerViews, function(view) {
 			view.update();
-		})
+		});
+		var m = this.modelObject,
+			el = this.getElement();
+		el.setAttribute("width", m.width);
+		el.setAttribute("height", m.height);
 	}
 }, {
 	MODEL_CLASS : zomby.model.Timeline

@@ -1,0 +1,95 @@
+<html>
+<head>
+	<title>Basic Animation</title>
+</head>
+<body>
+	<h1>Basic Animation</h1>
+	<div id="tester"></div>
+	<p>
+		<button onclick="player.start()">Start</button>
+		<button onclick="player.stop()">Stop</button>
+	</p>
+
+	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
+
+	<script type="text/javascript">
+		var player = new zomby.Player('tester', {
+			loop:true,
+			fps:20,
+			width : 800,
+			height : 600,
+			length : 50,
+			library : {
+				"My Ellipse" : {
+					type: "ellipse",
+					xRadius : 64,
+					yRadius : 48,
+					x : 100,
+					y : 100,
+					fill : {
+						paint:'red'
+					}
+				},
+				"My Rect" : {
+					type: 'rectangle',
+					width: 50,
+					height: 50,
+					x: 0,
+					y: 100,
+					fill:{paint:'blue'}
+				}
+			},
+			layers : [
+				{
+					startFrame:0,
+					endFrame:49,
+					shape:"lib:My Ellipse",
+					keyframes:[
+						{
+							index:0
+						},
+						{
+							index:25,
+							tween:true,
+							properties:{
+								x : 200,
+								y : 400,
+								yRadius : 200
+							}
+						},
+						{
+							index:49,
+							tween:true,
+							properties:{
+								x:600,
+								y:100,
+								yRadius: 20,
+								xRadius: 200
+							}
+						}
+					]
+				},
+				{
+					startFrame:0,
+					endFrame:49,
+					shape:"lib:My Rect",
+					keyframes:[
+						{
+							index:0
+						},
+						{
+							index:49,
+							tween:true,
+							properties:{
+								width:100,
+								height:100,
+								x:700
+							}
+						}
+					]
+				}
+			]
+		});
+	</script>
+</body>
+</html>

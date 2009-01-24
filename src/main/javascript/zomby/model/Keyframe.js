@@ -10,9 +10,28 @@ zomby.model.Keyframe = zomby.model.ModelObject.extend(
 	tween : false,
 	easing : "linear",
 	properties : null,
+	onenter : null,
+	onexit : null,
 
-	constructor : function(props) {
-		this.base(props);
-		this.properties = props.properties || {}; 
+	doOnEnter : function(timeline, layer) {
+		if(this.onenter) {
+			var cache = '_onenterFunc',
+				fn = this[cache];
+			if(!fn) {
+				fn = this[cache] = new Function("timeline", "layer", this.onenter);
+			}
+			fn(timeline, layer);
+		}
+	},
+
+	doOnExit : function(timeline, layer) {
+		if(this.onexit) {
+			var cache = '_onexitFunc',
+				fn = this[cache];
+			if(!fn) {
+				fn = this[cache] = new Function("timeline", "layer", this.onexit);
+			}
+			fn(timeline, layer);
+		}
 	}
 });

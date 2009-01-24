@@ -16,7 +16,7 @@ zomby.Util = {
 	 * @param {Object} thisObj - (optional) an object which will be used as the 'this' keyword in the callback function
 	 */
 	each : function( arr, fn, thisObj ) {
-		if(arr && arr.length > 0) {
+		if(zomby.Util.isArray(arr) && arr.length > 0) {
 			//use built-in forEach if available (JS 1.6+) for performance boost
 			if(arr instanceof Array && typeof typeof arr.forEach == "function") {
 				arr.forEach(fn, thisObj);
@@ -26,6 +26,15 @@ zomby.Util = {
 				}
 			}
 		}
+	},
+
+	/**
+	 * Determine whether a given object is an Array or array-like (iterable) object
+	 * @param {Object} obj - The object to test
+	 * @return Boolean
+	 */
+	isArray : function(obj) {
+		return obj && typeof obj == "object" && typeof obj.length == "number";
 	},
 
 	/**

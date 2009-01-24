@@ -20,6 +20,20 @@ zomby.model.ModelObject = Base.extend(
 	},
 
 	/**
+	 * Enumerate the names of all this object's public data properties.
+	 * Excludes any methods and properties beginning with an underscore.
+	 */
+	getPropertyNames: function() {
+		var names = [], p
+		for(p in this) {
+			if(typeof p != 'function' && p.charAt(0) != '_') {
+				names.push(p);
+			}
+		}
+		return names;
+	},
+
+	/**
 	 * Set the value(s) of one or more properties. Arguments take two forms:
 	 * (a) a single property name and value
 	 * (b) an object of name-value pairs
@@ -33,20 +47,32 @@ zomby.model.ModelObject = Base.extend(
 	 * @param {Object} value The new value of the property, if the first argument was a String
 	 */
 	set : function(nameOrPairs, value) {
-		if(typeof nameOrPairs == "string") {
-			if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
-				if(typeof value == "object" && value.type && _typesToClasses[value.type]) {
-					this[nameOrPairs] = zomby.model.ModelObject.fromObject(value);
-				} else {
-					this[nameOrPairs] = value;
+		switch(typeof nameOrPairs) {
+			case "string":
+				if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
+					function toObject(o) {
+						if(o && typeof o == "object" && o.type && _typesToClasses[o.type]) {
+							return zomby.model.ModelObject.fromObject(o);
+						} else if(zomby.Util.isArray(o)) {
+							var arr = [];
+							zomby.Util.each(o, function(it) {
+								arr.push(toObject(it));
+							});
+							return arr;
+						} else {
+							return o;
+						}
+					}
+					this[nameOrPairs] = toObject(value);
 				}
-			}
-		} else if(typeof nameOrPairs == "object") {
-			for(var p in nameOrPairs) {
-				this.set(p, nameOrPairs[p]);
-			}
-		} else {
-			throw new Error("Argument must be a String or an Object");
+				break;
+			case "object":
+				for(var p in nameOrPairs) {
+					this.set(p, nameOrPairs[p]);
+				}
+				break;
+			default:
+				throw new Error("Argument must be a String or an Object");
 		}
 	},
 
@@ -55,19 +81,7 @@ zomby.model.ModelObject = Base.extend(
 	 * @return zomby.model.ModelObject
 	 */
 	clone : function() {
-		var obj = new this.constructor();
-		for(var p in this) {
-			var val = this[p];
-			switch(typeof val) {
-				case "function":
-					break;
-				case "object":
-					obj[p] = ('clone' in val && typeof val.clone == "function") ? val.clone() : val;
-					break;
-				default:
-					obj[p] = val;
-			}
-		}
+		return new this.constructor(this);
 	},
 
 	/**
@@ -104,11 +118,10 @@ zomby.model.ModelObject = Base.extend(
 	 */
 	extend : function(proto, stat) {
 		var sub = Base.extend.call(this, proto, stat),
-			t = stat && stat.TYPE,
-			ttc = _typesToClasses;
+			t = stat && stat.TYPE;
 		if(t) {
-			if(ttc[t]) throw new Error("ModelObject TYPE already defined: " + t);
-			ttc[t] = sub;
+			if(_typesToClasses[t]) throw new Error("ModelObject TYPE already defined: " + t);
+			_typesToClasses[t] = sub;
 		}
 		return sub;
 	}

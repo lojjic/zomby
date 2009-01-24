@@ -19,6 +19,7 @@
 				<include>zomby/model/ModelObject.js</include>
 				<include>zomby/model/Keyframe.js</include>
 				<include>zomby/model/Layer.js</include>
+				<include>zomby/model/Library.js</include>
 				<include>zomby/model/Timeline.js</include>
 				<include>zomby/model/shape/__package__.js</include>
 				<include>zomby/model/shape/Shape.js</include>

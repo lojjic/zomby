@@ -3,7 +3,7 @@
  *
  * @constructor
  */
-zomby.model.Layer = Base.extend(
+zomby.model.Layer = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Layer.prototype */
 {
 	frame : 0,
@@ -11,11 +11,15 @@ zomby.model.Layer = Base.extend(
 	endFrame : 100,
 	shape : null,
 
-	constructor : function() {
-		/**
-		 * @type Array<zomby.model.Keyframe>
-		 */
+	constructor : function(props, timeline) {
+		this.base(props);
+		this.timeline = timeline;
 		this.keyframes = [];
+		zomby.Util.each(props.keyframes, function(kf) {
+			this.keyframes.push(new zomby.model.Keyframe(kf));
+		}, this);
+
+		var s = props.shape;
 	},
 
 	/**
@@ -28,51 +32,100 @@ zomby.model.Layer = Base.extend(
 	},
 
 	/**
+	 * Get the Shape object; if the shape is a reference to a library
+	 * object ("lib:shapeid"), dereference it to a clone of that library object.
+	 */
+	getShape: function() {
+		var cache = "_realShape",
+			s = this[cache];
+		if( !s ) {
+			s = this[cache] = this.getInitialShape().clone();
+		}
+		return s;
+	},
+
+	getInitialShape: function() {
+		var cache = "_initialShape",
+			s = this[cache];
+		if(!s) {
+			s = this.shape;
+			if(typeof s == "string" && s.indexOf("lib:") == 0) {
+				s = s.substring(4);
+				s = this[cache] = this.timeline.library.get(s);
+			}
+		}
+		return s;
+	},
+
+	/**
 	 * Sync the given {@link zomby.model.shape.Shape}'s properties to the current frame
 	 */
 	sync : function() {
-		var kf = this.getPrevNextKeyframes(),
-			s = this.shape,
-			props, p;
-		// Current frame is keyframe; copy shape properties directly:
-		if(kf[0].index == this.frame) {
-			props = kf[0].properties;
+		var kf = this.keyframes,
+			kfIdx = this.getCurrentKeyframeIndex(),
+			prev = kf[kfIdx],
+			next = kf[kfIdx + 1],
+			s = this.getShape(),
+			tl = this.timeline,
+			props = {}, kfProps, p;
+
+		// Find the full set of shape properties for the reference keyframe
+		// by walking back through the previous keyframes and collecting the
+		// most recently declared property values.
+		for(var i=kfIdx; i>=0; i--) {
+			if(kfProps = kf[i].properties) {
+				for(p in kfProps) {
+					if(!(p in props)) {
+						props[p] = kfProps[p];
+					}
+				}
+			}
+		}
+		var init = this.getInitialShape();
+		zomby.Util.each(init.getPropertyNames(), function(p) {
+			if(!(p in props)) {
+				props[p] = init[p];
+			}
+		});
+
+		// Current frame is keyframe; copy shape properties directly, and execute any listeners:
+		if(prev.index == this.frame) {
+			prev.doOnEnter(tl, this);
 			for(p in props) {
 				s[p] = props[p];
 			}
+			prev.doOnExit(tl, this);
 		}
 		// In between tweened keyframes; calculate the tweened numeric values and copy the rest directly:
-		else if(kf[1]) {
-			props = kf[1].properties;
-			var easing = zomby.anim.Easing[kf[1].easing || "linear"],
-				oldProps = kf[0].properties,
-				curFrame = this.frame - kf[0].frame,
-				totFrames = kf[1].frame - kf[0].frame;
-			for(p in props) {
-				if(kf[1].tween && typeof props[p] == "number") {
-					s[p] = easing(curFrame, oldProps[p], props[p], totFrames);
-				} else {
-					s[p] = oldProps[p];
+		else if(next) {
+			var nextProps = next.properties;
+			if(nextProps) {
+				var easing = zomby.anim.Easing[next.easing || "linear"],
+					curFrame = this.frame - prev.index,
+					totFrames = next.index - prev.index;
+				for(p in nextProps) {
+					if(next.tween && typeof props[p] == "number") {
+						s[p] = easing(curFrame, props[p], nextProps[p], totFrames);
+					} else {
+						s[p] = props[p];
+					}
 				}
 			}
 		}
 	},
 
-	/**
-	 * Get the previous/current and next keyframes
-	 */
-	getPrevNextKeyframes : function() {
-		var last = this._lastPrevNext,
-			kf = this.keyframes,
-			f = this.frame;
-		if(last && last[0].index <= f && last[1] > f) {
-			return last;
-		}
-		zomby.Util.each(kf, function(prev, i) {
-			var next = kf[i + 1];
-			if(prev.index <= f && next.index > f) {
-				return this._lastPrevNext = [prev, next];
+	getCurrentKeyframeIndex: function() {
+		// TODO optimize w/caching, binary search, etc.
+		var kf = this.keyframes,
+			f = this.frame,
+			prev, next;
+		for(var i=0, len=kf.length; i<len; i++) {
+			prev = kf[i];
+			next = kf[i + 1];
+			if(prev.index <= f && (!next || next.index > f)) {
+				return i;
 			}
-		}, this);
+		}
 	}
+
 });

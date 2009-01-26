@@ -1,0 +1,90 @@
+<html>
+<head>
+	<title>Many Shapes</title>
+</head>
+<body>
+	<h1>Many Shapes</h1>
+	<div id="tester"></div>
+	<p>
+		<button onclick="player.start()">Start</button>
+		<button onclick="player.stop()">Stop</button>
+	</p>
+	<div>frames/sec: <span id="fps">-</span></div>
+
+	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
+
+	<script type="text/javascript">
+		var layers = [],
+			rows = 12,
+			cols = 16,
+			width = 800,
+			height = 600;
+
+		for(var i=0; i<cols; i++) {
+			for(var j=0; j<rows; j++) {
+				layers.push({
+					startFrame:0,
+					endFrame:49,
+					shape:"lib:My Rect",
+					keyframes:[
+						{
+							index:0,
+							properties:{
+								x: width / cols * i,
+								y: height / rows * j
+							}
+						},
+						{
+							index:19,
+							tween:true,
+							properties:{
+								width: width / cols,
+								height: height / rows
+							}
+						},
+						{
+							index:39,
+							tween:true,
+							properties:{
+								width: 1,
+								height: 1
+							}
+						}
+					]
+				});
+			}
+		}
+
+
+		var player = new zomby.Player('tester', {
+			loop:true,
+			fps:20,
+			width : width,
+			height : height,
+			length : 40,
+			library : {
+				"My Rect" : {
+					type: 'rectangle',
+					width: 1,
+					height: 1,
+					x: 0,
+					y: 100,
+					fill:{paint:'blue'}
+				}
+			},
+			layers : layers
+		});
+
+		// A little hackery to track the actual frame rate
+		var _step = player.timeline.step,
+			date = new Date().getTime();
+		player.timeline.step = function() {
+			_step.call(this)
+			var fps = 1000 / ( -date + ( date = new Date().getTime() ) );
+			document.getElementById('fps').firstChild.nodeValue = fps;
+		};
+
+
+	</script>
+</body>
+</html>

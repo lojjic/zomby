@@ -61,7 +61,7 @@ zomby.Player = Base.extend({
 			me._timer = setInterval(function() {
 				me.timeline.step();
 				me.timelineView.update();
-			}, 1000 / this.timeline.fps);
+			}, 1000 / me.timeline.fps);
 		}
 	},
 

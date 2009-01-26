@@ -18,13 +18,11 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		zomby.Util.each(props.keyframes, function(kf) {
 			this.keyframes.push(new zomby.model.Keyframe(kf));
 		}, this);
-
-		var s = props.shape;
 	},
 
 	/**
 	 * Go directly to a specific frame
-	 * @param {Integer} frame
+	 * @param {Number} frame
 	 */
 	go : function(frame) {
 		this.frame = frame;
@@ -62,7 +60,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 */
 	sync : function() {
 		var kf = this.keyframes,
-			kfIdx = this.getCurrentKeyframeIndex(),
+			kfIdx = this.getReferenceKeyframeIndex(),
 			prev = kf[kfIdx],
 			next = kf[kfIdx + 1],
 			s = this.getShape(),
@@ -114,16 +112,37 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		}
 	},
 
-	getCurrentKeyframeIndex: function() {
+	/**
+	 * Find the index of the reference Keyframe for the current frame,
+	 * i.e. the one that is either equal to the current frame or the
+	 * most recent one.
+	 */
+	getReferenceKeyframeIndex: function() {
 		// TODO optimize w/caching, binary search, etc.
 		var kf = this.keyframes,
 			f = this.frame,
-			prev, next;
-		for(var i=0, len=kf.length; i<len; i++) {
-			prev = kf[i];
-			next = kf[i + 1];
-			if(prev.index <= f && (!next || next.index > f)) {
-				return i;
+			cache = '_lastKfIdx',
+			last = this[cache] || 0,
+			i, len;
+
+		function test(idx) {
+			var prev = kf[idx],
+				next = kf[idx + 1];
+			return (prev.index <= f && (!next || next.index > f));
+		}
+
+		// The most common case for normal forward-playing is that either
+		// the reference keyframe will be the same or one after that of the
+		// last tested frame. Therefore we start by testing the cached index,
+		// then step forward to the end, and then start back at zero.
+		for(i=last, len=kf.length; i<len; i++) {
+			if(test(i)) {
+				return this[cache] = i;
+			}
+		}
+		for(i=0; i<last; i++) {
+			if(test(i)) {
+				return this[cache] = i;
 			}
 		}
 	}

@@ -63,32 +63,53 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 */
 	sync : function() {
 		var me = this,
+			propsCache = "_lastKfProps",
 			kf = me.keyframes,
+			lastKfIdx = me._lastRefKfIdx,
 			kfIdx = me.getReferenceKeyframeIndex(),
 			prev = kf[kfIdx],
 			next,
 			s = me.getShape(),
 			tl = me.timeline,
-			props = {}, kfProps, p;
+			props, kfProps, p;
 
-		// Find the full set of shape properties for the reference keyframe
-		// by walking back through the previous keyframes and collecting the
-		// most recently declared property values.
-		for(var i=kfIdx; i>=0; i--) {
-			if(kfProps = kf[i].properties) {
-				for(p in kfProps) {
-					if(!(p in props)) {
-						props[p] = kfProps[p];
+		// Find the full set of shape properties for the reference keyframe.
+		// First we see if we have a cached set of values, and if it is for
+		// the same keyframe then use it directly.
+		if(lastKfIdx == kfIdx) {
+			props = me[propsCache];
+		}
+		// If we're just one keyframe after the cached one, then use it but
+		// add in the new keyframe's properties
+		else if(lastKfIdx == kfIdx - 1) {
+			props = me[propsCache];
+			kfProps = prev.properties;
+			for(p in kfProps) {
+				props[p] = kfProps[p];
+			}
+			me[propsCache] = props;
+		}
+		else {
+			// Not cached; rebuild by walking back through the previous keyframes
+			// and collecting the most recently declared property values.
+			props = me[propsCache] = {};
+			for(var i=kfIdx; i>=0; i--) {
+				kfProps = kf[i].properties;
+				if(kfProps) {
+					for(p in kfProps) {
+						if(!(p in props)) {
+							props[p] = kfProps[p];
+						}
 					}
 				}
 			}
+			var init = me.getInitialShape();
+			zomby.Util.each(init.getPropertyNames(), function(p) {
+				if(!(p in props)) {
+					props[p] = init[p];
+				}
+			});
 		}
-		var init = me.getInitialShape();
-		zomby.Util.each(init.getPropertyNames(), function(p) {
-			if(!(p in props)) {
-				props[p] = init[p];
-			}
-		});
 
 		// Current frame is keyframe; copy shape properties directly, and execute any listeners:
 		if(prev.index == me.frame) {

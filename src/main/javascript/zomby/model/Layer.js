@@ -12,12 +12,13 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	shape : null,
 
 	constructor : function(props, timeline) {
-		this.base(props);
-		this.timeline = timeline;
-		this.keyframes = [];
+		var me = this;
+		me.base(props);
+		me.timeline = timeline;
+		me.keyframes = [];
 		zomby.Util.each(props.keyframes, function(kf) {
-			this.keyframes.push(new zomby.model.Keyframe(kf));
-		}, this);
+			me.keyframes.push(new zomby.model.Keyframe(kf));
+		});
 	},
 
 	/**
@@ -34,22 +35,24 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 * object ("lib:shapeid"), dereference it to a clone of that library object.
 	 */
 	getShape: function() {
-		var cache = "_realShape",
-			s = this[cache];
+		var me = this,
+			cache = "_realShape",
+			s = me[cache];
 		if( !s ) {
-			s = this[cache] = this.getInitialShape().clone();
+			s = me[cache] = me.getInitialShape().clone();
 		}
 		return s;
 	},
 
 	getInitialShape: function() {
-		var cache = "_initialShape",
-			s = this[cache];
+		var me = this,
+			cache = "_initialShape",
+			s = me[cache];
 		if(!s) {
-			s = this.shape;
+			s = me.shape;
 			if(typeof s == "string" && s.indexOf("lib:") == 0) {
 				s = s.substring(4);
-				s = this[cache] = this.timeline.library.get(s);
+				s = me[cache] = me.timeline.library.get(s);
 			}
 		}
 		return s;
@@ -59,12 +62,13 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 * Sync the given {@link zomby.model.shape.Shape}'s properties to the current frame
 	 */
 	sync : function() {
-		var kf = this.keyframes,
-			kfIdx = this.getReferenceKeyframeIndex(),
+		var me = this,
+			kf = me.keyframes,
+			kfIdx = me.getReferenceKeyframeIndex(),
 			prev = kf[kfIdx],
-			next = kf[kfIdx + 1],
-			s = this.getShape(),
-			tl = this.timeline,
+			next,
+			s = me.getShape(),
+			tl = me.timeline,
 			props = {}, kfProps, p;
 
 		// Find the full set of shape properties for the reference keyframe
@@ -79,7 +83,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 				}
 			}
 		}
-		var init = this.getInitialShape();
+		var init = me.getInitialShape();
 		zomby.Util.each(init.getPropertyNames(), function(p) {
 			if(!(p in props)) {
 				props[p] = init[p];
@@ -87,26 +91,24 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		});
 
 		// Current frame is keyframe; copy shape properties directly, and execute any listeners:
-		if(prev.index == this.frame) {
-			prev.doOnEnter(tl, this);
+		if(prev.index == me.frame) {
+			prev.doOnEnter(tl, me);
 			for(p in props) {
 				s[p] = props[p];
 			}
-			prev.doOnExit(tl, this);
+			prev.doOnExit(tl, me);
 		}
 		// In between tweened keyframes; calculate the tweened numeric values and copy the rest directly:
-		else if(next) {
-			var nextProps = next.properties;
-			if(nextProps) {
-				var easing = zomby.anim.Easing[next.easing || "linear"],
-					curFrame = this.frame - prev.index,
-					totFrames = next.index - prev.index;
-				for(p in nextProps) {
-					if(next.tween && typeof props[p] == "number") {
-						s[p] = easing(curFrame, props[p], nextProps[p], totFrames);
-					} else {
-						s[p] = props[p];
-					}
+		else if(next = kf[kfIdx + 1]) {
+			var nextProps = next.properties,
+				easing = zomby.anim.Easing[next.easing || "linear"],
+				curFrame = me.frame - prev.index,
+				totFrames = next.index - prev.index;
+			for(p in props) {
+				if(nextProps && next.tween && p in nextProps && typeof props[p] == "number" && typeof nextProps[p] == "number") {
+					s[p] = easing(curFrame, props[p], nextProps[p], totFrames);
+				} else {
+					s[p] = props[p];
 				}
 			}
 		}
@@ -118,13 +120,14 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 * most recent one.
 	 */
 	getReferenceKeyframeIndex: function() {
-		// TODO optimize w/caching, binary search, etc.
-		var kf = this.keyframes,
-			f = this.frame,
-			cache = '_lastKfIdx',
-			last = this[cache] || 0,
+		var me = this,
+			kf = me.keyframes,
+			f = me.frame,
+			cache = '_lastRefKfIdx',
+			last = me[cache] || 0,
 			i, len;
 
+		// Returns true if the given index is the reference keyframe
 		function test(idx) {
 			var prev = kf[idx],
 				next = kf[idx + 1];
@@ -132,17 +135,17 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		}
 
 		// The most common case for normal forward-playing is that either
-		// the reference keyframe will be the same or one after that of the
+		// the reference keyframe will be the same as or one after that of the
 		// last tested frame. Therefore we start by testing the cached index,
 		// then step forward to the end, and then start back at zero.
 		for(i=last, len=kf.length; i<len; i++) {
 			if(test(i)) {
-				return this[cache] = i;
+				return me[cache] = i;
 			}
 		}
 		for(i=0; i<last; i++) {
 			if(test(i)) {
-				return this[cache] = i;
+				return me[cache] = i;
 			}
 		}
 	}

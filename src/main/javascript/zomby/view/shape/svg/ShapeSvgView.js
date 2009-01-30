@@ -46,7 +46,7 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 			if(val === null) {
 				el.removeAttribute(a);
 			} else {
-				el.setAttribute(a, attrs[a]);
+				el.setAttribute(a, val);
 			}
 		}
 	},

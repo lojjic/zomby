@@ -127,7 +127,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 				totFrames = next.index - prev.index;
 			for(p in props) {
 				if(nextProps && next.tween && p in nextProps && typeof props[p] == "number" && typeof nextProps[p] == "number") {
-					s[p] = easing(curFrame, props[p], nextProps[p], totFrames);
+					s[p] = easing(curFrame, props[p], nextProps[p] - props[p], totFrames);
 				} else {
 					s[p] = props[p];
 				}

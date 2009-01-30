@@ -1,0 +1,112 @@
+<html>
+<head>
+	<title>Easing</title>
+</head>
+<body>
+	<h1>Easing</h1>
+	<div id="tester"></div>
+	<p>
+		<button onclick="player.start()">Start</button>
+		<button onclick="player.stop()">Stop</button>
+	</p>
+
+	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
+
+	<script type="text/javascript">
+		var layers = [], i=0;
+		for( var p in zomby.anim.Easing ) {
+			var yPos = ++i * 20;
+			layers.push({
+				startFrame:0,
+				endFrame:79,
+				shape:"lib:circle",
+				keyframes:[
+					{
+						index:0,
+						properties:{
+							x: 130,
+							y: yPos - 5
+						}
+					},
+					{
+						index:30,
+						tween:true,
+						easing: p,
+						properties:{
+							x: 500
+						}
+					},
+					{
+						index:40
+					},
+					{
+						index:70,
+						tween:true,
+						easing: p,
+						properties:{
+							x: 130
+						}
+					},
+					{
+						index:79
+					}
+				]
+			});
+			layers.push({
+				startFrame:0,
+				endFrame:79,
+				shape:{
+					type:'text',
+					x:0, y:yPos,
+					fill:{
+						paint:"#000"
+					},
+					font:{size:12},
+					lines:[
+						{
+							parts:[p]
+						}
+					]
+				},
+				keyframes: [
+					{index:0}
+				]
+			});
+			layers.push({
+				startFrame:0,
+				endFrame:79,
+				shape:{
+					type:'line',
+					x:0,
+					y:yPos + 4,
+					xEnd:600,
+					yEnd:yPos + 4,
+					stroke:{paint:"#CCC"}
+				},
+				keyframes: [
+					{index:0}
+				]
+			});
+		}
+
+		var player = new zomby.Player('tester', {
+			loop:true,
+			fps:20,
+			width : 800,
+			height : 800,
+			length : 80,
+			library : {
+				"circle" : {
+					type: "ellipse",
+					xRadius : 6,
+					yRadius : 6,
+					fill : {
+						paint:'red'
+					}
+				}
+			},
+			layers : layers
+		});
+	</script>
+</body>
+</html>

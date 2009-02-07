@@ -10,9 +10,6 @@
 
 *) Loading mechanism - AJAX to load the data
 
-*) When updating views, avoid modifying SVG attributes/elements if they haven't changed since the last update --
-   need some sort of local property cache to compare against?
-
 *) Work to make JSON serialization as succinct as possible -- omit properties that don't need to be serialized, like
    those that match the default values for their ModelObject.
 
@@ -21,3 +18,30 @@
 
 *) ForeignObject support so complex content e.g. HTML can be loaded as a shape
 
+*) Support for animating pre-existing elements on the page
+
+*) Make the canvas area optional so the whole page, along with all its other contents, are the canvas
+
+*) Performance ideas:
+
+    - Can gain quite a bit by avoiding calling setAttribute for SVG properties which have not changed since the
+      last view update.  Need a way to determine the modified properties, which each view class will check before
+      attempting to set each attribute.  Ideas on how to implement this:
+          - FF, WebKit, and Opera(?) support property setters, so we can implement a setter function for each
+            property which adds it to a collection of modified properties.  The setter functions can either be added
+            at the ModelObject level (override ModelObject.extend to intercept creation of the prototype properties
+            so they're created using getter/setter functions instead), or as a separate wrapper class which sets up
+            a getter/setter for each of its wrapped object's properties.
+          - For IE, which doesn't yet support getters/setters, we'll have to iterate through all of the model object's
+            properties and compare them to a cached object holding the values from the last run.
+
+    - Computing tweened frames on-the-fly can be expensive, much more so than if each frame were pre-computed. Should
+      add an optimization that stores computed tween-frame values, that way they can get used directly.  At the very
+      least this should be done the first time each tween frame is rendered, so on subsequent loops it won't have to
+      be computed again.  We can also do pre-computation before the first render to avoid the performance hit the first
+      time through.  We could do this at the beginning of each tween (though that might create a delay at that frame),
+      or create a "worker" thread which does pre-computation along the timeline in the background, which shouldn't
+      interfere with the rendering performance.
+
+    - In the many cases where we need to blank out an object, find out if it's faster to replace the old one with a
+      new empty object, or to delete all the properties of the old object.

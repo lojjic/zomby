@@ -24,7 +24,18 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	 * Get the shape-specific SVG element, which is wrapped in the outer "g" element.
 	 */
 	getShapeElement : function() {
-		return this._shapeElement || (this._shapeElement = this.createSVG(this.getTagName()));
+		var el = this._shapeElement, trans;
+		if(!el) {
+			el = this._shapeElement = this.createSVG(this.getTagName());
+			el.setAttribute( "transform", "translate(0,0) scale(1) rotate(0)" ); //initialize the 3-item SVGTransformList; is there a better way?
+			trans = el.transform.baseVal;
+			this._transforms = {
+				translate : trans.getItem(0),
+				scale : trans.getItem(1),
+				rotate : trans.getItem(2)
+			};
+		}
+		return el;
 	},
 
 	/**
@@ -74,18 +85,16 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	update : function() {
 		this.base();
 		var props = this.getChanges(),
-			transform = '', m;
+			transform = this._transforms;
 
-		if(props.scale != null) {
-			transform += " scale(" + props.scale + ")";
+		if("x" in props || "y" in props) {
+			transform.translate.setTranslate(props.x, props.y);
 		}
-		if(props.rotate != null) {
-			transform += " rotate(" + props.rotate + ")";
+		if("scale" in props) {
+			transform.scale.setScale(props.scale, props.scale);
 		}
-		if(transform || "x" in props || "y" in props) {
-			m = this.modelObject;
-			transform = "translate(" + m.x + "," + m.y + ") " + transform;
-			this.setAttribute("transform", transform);
+		if("rotate" in props) {
+			transform.rotate.setRotate(props.rotate, 0, 0);
 		}
 
 		if("opacity" in props) {

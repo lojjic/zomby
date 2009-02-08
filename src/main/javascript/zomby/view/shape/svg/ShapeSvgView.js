@@ -85,10 +85,11 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	update : function() {
 		this.base();
 		var props = this.getChanges(),
-			transform = this._transforms;
+			transform = this._transforms, m;
 
 		if("x" in props || "y" in props) {
-			transform.translate.setTranslate(props.x, props.y);
+			m = this.modelObject;
+			transform.translate.setTranslate(m.x, m.y);
 		}
 		if("scale" in props) {
 			transform.scale.setScale(props.scale, props.scale);

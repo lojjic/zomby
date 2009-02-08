@@ -22,6 +22,7 @@ zomby.view.shape.svg.GroupSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 	 * Update the view to match all aspects of its Line object
 	 */
 	update : function() {
+		this.base();
 		zomby.Util.each(this.shapeViews, function(view) {
 			view.update();
 		});

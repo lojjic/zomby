@@ -10,14 +10,24 @@ zomby.view.shape.svg.LineSvgView = zomby.view.shape.svg.StrokeableSvgView.extend
 	 */
 	update : function() {
 		this.base();
-		var line = this.modelObject;
-		this.setAttributes({
-			x1 : 0,
-			y1 : 0,
-			x2 : line.xEnd - line.x,
-			y2 : line.yEnd - line.y
-		});
+		var changed = this.getChanges(),
+			model = this.modelObject;
+
+		if("x" in changed || "xEnd" in changed) {
+			this.setAttribute("x2", model.xEnd - model.x);
+		}
+		if("y" in changed || "yEnd" in changed) {
+			this.setAttribute("y2", model.yEnd - model.y);
+		}
+	},
+
+	createSVG : function(name) {
+		var el = this.base(name);
+		el.setAttribute("x1", 0);
+		el.setAttribute("y1", 0);
+		return el;
 	}
+
 }, {
 	TAG : "line",
 	MODEL_CLASS : zomby.model.shape.Line

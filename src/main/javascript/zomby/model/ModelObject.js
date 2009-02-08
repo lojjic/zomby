@@ -1,6 +1,7 @@
 (function() {
 
-var _typesToClasses = {};
+var _typesToClasses = {},
+	useGettersAndSetters = (typeof {}.__defineSetter__ == "function");
 
 /**
  * @class Base class for model objects.
@@ -24,7 +25,7 @@ zomby.model.ModelObject = Base.extend(
 	 * Excludes any methods and properties beginning with an underscore.
 	 */
 	getPropertyNames: function() {
-		var names = [], p
+		var names = [], p;
 		for(p in this) {
 			if(typeof p != 'function' && p.charAt(0) != '_') {
 				names.push(p);
@@ -49,7 +50,7 @@ zomby.model.ModelObject = Base.extend(
 	set : function(nameOrPairs, value) {
 		switch(typeof nameOrPairs) {
 			case "string":
-				if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
+				if(nameOrPairs in this && typeof this[nameOrPairs] != "function" && nameOrPairs.charAt(0) != '_') {
 					function toObject(o) {
 						if(o && typeof o == "object" && o.type && _typesToClasses[o.type]) {
 							return zomby.model.ModelObject.fromObject(o);
@@ -90,6 +91,16 @@ zomby.model.ModelObject = Base.extend(
 	 */
 	serialize : function() {
 		return JSON.stringify(this);
+	},
+
+	getChanges : function() {
+		return useGettersAndSetters ? (this._changes || (this._changes = {})) : this;
+	},
+
+	resetChanges : function() {
+		if(useGettersAndSetters) {
+			this._changes = {};
+		}
 	}
 
 },
@@ -112,17 +123,40 @@ zomby.model.ModelObject = Base.extend(
 	},
 
 	/**
-	 * Override base extend function to make it keep a mapping of static TYPEs
-	 * to classes; this allows fromObject() to retrieve the appropriate class
-	 * for a given model object type string.
+	 * Override base extend function to:
+	 * - Keep a mapping of static TYPEs to classes; this allows fromObject() to
+	 *   retrieve the appropriate class for a given model object type string.
+	 * - Re-create each non-function property as a getter/setter pair, where the setter
+	 *   is used to track property changes.
 	 */
-	extend : function(proto, stat) {
-		var sub = Base.extend.call(this, proto, stat),
-			t = stat && stat.TYPE;
+	extend : function(inst, stat) {
+		var sub = Base.extend.call(this, inst, stat),
+			proto = sub.prototype,
+			t = stat && stat.TYPE,
+			prop;
+
 		if(t) {
 			if(_typesToClasses[t]) throw new Error("ModelObject TYPE already defined: " + t);
 			_typesToClasses[t] = sub;
 		}
+
+		if(useGettersAndSetters) {
+			for(prop in proto) {
+				(function(p) {
+					if(proto.hasOwnProperty(p) && p.charAt(0) != '_' && typeof proto[p] != "function") {
+						var priv = '__' + p;
+						proto[priv] = proto[p];
+						proto.__defineGetter__(p, function() {
+							return this[priv];
+						});
+						proto.__defineSetter__(p, function(v) {
+							return this[priv] = this.getChanges()[p] = v;
+						});
+					}
+				})(prop);
+			}
+		}
+
 		return sub;
 	}
 });

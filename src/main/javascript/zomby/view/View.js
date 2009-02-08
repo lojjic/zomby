@@ -23,12 +23,21 @@ zomby.view.View = Base.extend(
 	 * @abstract
 	 */
 	update : function() {
+		var m = this.modelObject;
+		if(m) {
+			this._changes = m.getChanges();
+			m.resetChanges();
+		}
 	},
 
 	/**
 	 * Destroy the view instance, cleaning up any resources
 	 */
 	destroy : function() {
+	},
+
+	getChanges : function() {
+		return this._changes || (this._changes = {});
 	}
 
 }, {

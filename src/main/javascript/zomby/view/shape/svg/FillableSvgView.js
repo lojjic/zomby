@@ -11,8 +11,6 @@ zomby.view.shape.svg.FillableSvgView = zomby.view.shape.svg.StrokeableSvgView.ex
 	 */
 	update : function() {
 		this.base();
-		var f = this.modelObject.fill,
-			v = this.fillView || (this.fillView = new zomby.view.property.svg.FillSvgView(f, this));
-		v.update();
+		(this.fillView || (this.fillView = new zomby.view.property.svg.FillSvgView(this.modelObject.fill, this))).update();
 	}
 });

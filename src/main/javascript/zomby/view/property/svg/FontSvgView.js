@@ -1,20 +1,30 @@
 
 zomby.view.property.svg.FontSvgView = zomby.view.property.PropertyView.extend({
+	update : (function() {
+		var propsToAttrs = {
+			family : "font-family",
+			style : "font-style",
+			variant : "font-variant",
+			weight : "font-weight",
+			stretch : "font-stretch",
+			size : "font-size",
+			kerning : "kerning",
+			letterSpacing : "letter-spacing",
+			wordSpacing : "word-spacing",
+			decoration : "text-decoration"
+		};
 
-	update : function() {
-		var m = this.modelObject;
-		this.parentView.setAttributes({
-			"font-family" : m.family,
-			"font-style" : m.style,
-			"font-variant" : m.variant,
-			"font-weight" : m.weight,
-			"font-stretch" : m.stretch,
-			"font-size" : m.size,
-			kerning : m.kerning,
-			"letter-spacing" : m.letterSpacing,
-			"word-spacing" : m.wordSpacing,
-			"text-decoration" : m.decoration
-		});
-	}
+		return function() {
+			this.base();
+			var props = this.getChanges(),
+				v = this.parentView,
+				p;
+			for(p in propsToAttrs) {
+				if(p in props) {
+					v.setAttribute(propsToAttrs[p], props[p]);
+				}
+			}
+		};
+	})()
 
 });

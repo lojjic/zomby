@@ -6,8 +6,8 @@
 	<h1>Many Shapes</h1>
 	<div id="tester"></div>
 	<p>
-		<button onclick="player.start()">Start</button>
-		<button onclick="player.stop()">Stop</button>
+		<button onclick="player.start();">Start</button>
+		<button onclick="player.stop(); startTime = null; frames = 1;">Stop</button>
 	</p>
 	<div>frames/sec: <span id="fps">-</span></div>
 
@@ -26,6 +26,24 @@
 					startFrame:0,
 					endFrame:49,
 					shape:"lib:My Rect",
+					/*keyframes: (function() {
+						var kfs = [];
+						for(var k=0; k<40; k++) {
+							var props = {
+								width: (width / cols * (Math.abs(k - 20) / 20)),
+								height: (height / rows * (Math.abs(k - 20) / 20))
+							};
+							if(k==0) {
+								props.x = width / cols * i;
+								props.y = height / rows * j;
+							}
+							kfs.push({
+								index:k,
+								properties:props
+							});
+						}
+						return kfs;
+					})()*/
 					keyframes:[
 						{
 							index:0,
@@ -77,10 +95,11 @@
 
 		// A little hackery to track the actual frame rate
 		var _step = player.timeline.step,
-			date = new Date().getTime();
-		player.timeline.step = function() {
-			_step.call(this)
-			var fps = 1000 / ( -date + ( date = new Date().getTime() ) );
+			startTime,
+			frames = 1;
+		player.timeline.step = function() {   
+			_step.call(this);
+			var fps = 1000 / (( new Date().getTime() - (startTime || (startTime = new Date().getTime())) ) / frames++);
 			document.getElementById('fps').firstChild.nodeValue = fps;
 		};
 

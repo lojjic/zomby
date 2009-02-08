@@ -5,18 +5,32 @@
 zomby.view.property.svg.StrokeSvgView = zomby.view.property.PropertyView.extend(
 /** @scope zomby.view.property.svg.StrokeSvgView.prototype */
 {
-	update : function() {
-		var v = this.parentView,
-			m = this.modelObject;
-		v.setAttributes({
-			stroke : m.paint,
-			"stroke-width" : m.width,
-			"stroke-linecap" : m.cap,
-			"stroke-linejoin" : m.join,
-			"stroke-miterlimit" : m.miterLimit,
-			"stroke-dasharray" : m.dashArray ? m.dashArray.join(',') : null,
-			"stroke-dashoffset" : m.dashOffset,
-			"stroke-opacity" : m.opacity
-		});
-	}
+	update : (function() {
+		var propsToAttrs = {
+			paint : "stroke",
+			width : "stroke-width",
+			cap : "stroke-linecap",
+			join : "stroke-linejoin",
+			miterLimit : "stroke-miterlimit",
+			dashOffset : "stroke-dashoffset",
+			opacity : "stroke-opacity"
+		};
+
+		return function() {
+			this.base();
+
+			var v = this.parentView,
+				props = this.getChanges(),
+				p;
+			for(p in propsToAttrs) {
+				if(p in props) {
+					v.setAttribute(propsToAttrs[p], props[p]);
+				}
+			}
+
+			if("dashArray" in props) {
+				v.setAttribute("stroke-dasharray", props.dashArray ? props.dashArray.join(",") : null);
+			}
+		};
+	})()
 });

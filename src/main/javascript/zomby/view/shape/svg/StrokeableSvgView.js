@@ -11,8 +11,6 @@ zomby.view.shape.svg.StrokeableSvgView = zomby.view.shape.svg.ShapeSvgView.exten
 	 */
 	update : function() {
 		this.base();
-		var s = this.modelObject.stroke,
-			v = this.strokeView || (this.strokeView = new zomby.view.property.svg.StrokeSvgView(s, this));
-		v.update();
+		(this.strokeView || (this.strokeView = new zomby.view.property.svg.StrokeSvgView(this.modelObject.stroke, this))).update();
 	}
 });

@@ -38,7 +38,6 @@
 				<include>zomby/model/property/Font.js</include>
 				<include>zomby/model/property/Gradient.js</include>
 				<include>zomby/model/property/Stroke.js</include>
-				<include>zomby/model/property/Transform.js</include>
 
 				<!--===== View classes =====-->
 				<include>zomby/view/__package__.js</include>
@@ -68,7 +67,6 @@
 				<include>zomby/view/property/svg/FontSvgView.js</include>
 				<include>zomby/view/property/svg/GradientSvgView.js</include>
 				<include>zomby/view/property/svg/StrokeSvgView.js</include>
-				<include>zomby/view/property/svg/TransformSvgView.js</include>
 			</includes>
 		</script>
 	</scripts>

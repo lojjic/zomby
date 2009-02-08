@@ -10,11 +10,15 @@ zomby.view.shape.svg.EllipseSvgView = zomby.view.shape.svg.FillableSvgView.exten
 	 */
 	update : function() {
 		this.base();
-		var m = this.modelObject;
-		this.setAttributes({
-			rx : m.xRadius,
-			ry : m.yRadius
-		});
+		var props = this.getChanges(), p;
+		p = "xRadius";
+		if(p in props) {
+			this.setAttribute("rx", props[p]);
+		}
+		p = "yRadius";
+		if(p in props) {
+			this.setAttribute("ry", props[p]);
+		}
 	}
 }, {
 	TAG : "ellipse",

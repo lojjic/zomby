@@ -10,11 +10,16 @@ zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.FillableSvgView.ext
 	 */
 	update : function() {
 		this.base();
-		var m = this.modelObject;
-		this.setAttributes({
-			width : m.width,
-			height : m.height
-		});
+		var props = this.getChanges(), p;
+
+		p = "width";
+		if(p in props) {
+			this.setAttribute(p, props[p]);
+		}
+		p = "height";
+		if(p in props) {
+			this.setAttribute(p, props[p]);
+		}
 	}
 }, {
 	TAG : "rect",

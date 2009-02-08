@@ -10,13 +10,26 @@ zomby.view.shape.svg.ImageSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 	 */
 	update : function() {
 		this.base();
-		var m = this.modelObject;
-		this.getShapeElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", m.src);
-		this.setAttributes({
-			width : m.width,
-			height : m.height,
-			preserveAspectRatio : "none"
-		});
+		var props = this.getChanges(), p;
+
+		p = "src";
+		if(p in props) {
+			this.getShapeElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", props[p]);
+		}
+		p = "width";
+		if(p in props) {
+			this.setAttribute(p, props[p]);
+		}
+		p = "height";
+		if(p in props) {
+			this.setAttribute(p, props[p]);
+		}
+	},
+
+	createSVG : function(name) {
+		var el = this.base(name);
+		el.setAttribute("preserveAspectRatio", "none");
+		return el;
 	}
 }, {
 	TAG : "image",

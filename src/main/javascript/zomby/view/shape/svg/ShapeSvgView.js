@@ -5,7 +5,6 @@
 zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	constructor : function(shape, parent) {
 		this.base(shape, parent);
-		this.transformView = shape.transform ? new zomby.view.property.svg.TransformSvgView(shape.transform, this) : null;
 	},
 
 	/**
@@ -40,14 +39,22 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	 * @param {Object} attrs
 	 */
 	setAttributes : function(attrs) {
-		var el = this.getShapeElement();
 		for(var a in attrs) {
-			var val = attrs[a];
-			if(val === null) {
-				el.removeAttribute(a);
-			} else {
-				el.setAttribute(a, val);
-			}
+			this.setAttribute(a, attrs[a]);
+		}
+	},
+
+	/**
+	 * Set an attribute value on the shape's SVG element.
+	 * @param {String} name - name of the attribute
+	 * @param {String} value - value of the attribute; if null or undefined the attribute will be removed.
+	 */
+	setAttribute : function(name, value) {
+		var el = this.getShapeElement();
+		if(value == null) {
+			el.removeAttribute(name);
+		} else {
+			el.setAttribute(name, value);
 		}
 	},
 
@@ -66,8 +73,25 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 
 	update : function() {
 		this.base();
-		var m = this.modelObject;
-		this.getElement().setAttribute("transform", "translate(" + m.x + "," + m.y + ")");
-		this.transformView.update();
+		var props = this.getChanges(),
+			transform = '', m;
+
+		if("x" in props || "y" in props) {
+			m = this.modelObject;
+			transform += " translate(" + m.x + "," + m.y + ")";
+		}
+		if(props.scale != null) {
+			transform += " scale(" + props.scale + ")";
+		}
+		if(props.rotate != null) {
+			transform += " rotate(" + props.rotate + ")";
+		}
+		if(transform) {
+			this.setAttribute("transform", transform);
+		}
+
+		if("opacity" in props) {
+			this.setAttribute("opacity", props.opacity);
+		}
 	}
 });

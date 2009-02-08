@@ -1,13 +1,34 @@
 zomby.model.shape.Shape = zomby.model.ModelObject.extend({
 
 	type : null,
+
+	/**
+	 * X position
+	 */
 	x : 0,
+
+	/**
+	 * Y position
+	 */
 	y : 0,
-	transform : null,
+
+	/**
+	 * Scale. 1 == native size.
+	 */
+	scale : 1,
+
+	/**
+	 * Rotation of the shape in degrees
+	 */
+	rotate : 0,
+
+	/**
+	 * Opacity. 0 == fully transparent, 1 == fully opaque
+	 */
+	opacity : 1,
 
 	constructor : function(props) {
 		this.base(props);
-		this.transform = new zomby.model.property.Transform(props ? props.transform : null);
 	},
 
 	getBounds : function() {

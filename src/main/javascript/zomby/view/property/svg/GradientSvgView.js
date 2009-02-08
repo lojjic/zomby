@@ -21,6 +21,7 @@ zomby.view.property.svg.GradientSvgView = zomby.view.property.PropertyView.exten
 	},
 
 	update : function() {
+		this.base();
 		var el = this.getElement(),
 			m = this.modelObject,
 			stopEl;

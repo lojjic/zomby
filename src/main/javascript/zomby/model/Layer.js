@@ -71,6 +71,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 			next,
 			s = me.getShape(),
 			tl = me.timeline,
+			canUseOnlyNextKfProps = false, //if we know the only changes are the next keyframe's props, don't have to iterate over all of them
 			props, kfProps, p;
 
 		// Find the full set of shape properties for the reference keyframe.
@@ -78,6 +79,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		// the same keyframe then use it directly.
 		if(lastKfIdx == kfIdx) {
 			props = me[propsCache];
+			canUseOnlyNextKfProps = true;
 		}
 		// If we're just one keyframe after the cached one, then use it but
 		// add in the new keyframe's properties
@@ -88,6 +90,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 				props[p] = kfProps[p];
 			}
 			me[propsCache] = props;
+			canUseOnlyNextKfProps = true;
 		}
 		else {
 			// Not cached; rebuild by walking back through the previous keyframes
@@ -125,7 +128,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 				easing = zomby.anim.Easing[next.easing || "linear"],
 				curFrame = me.frame - prev.index,
 				totFrames = next.index - prev.index;
-			for(p in props) {
+			for(p in (canUseOnlyNextKfProps ? nextProps : props)) {
 				if(nextProps && next.tween && p in nextProps && typeof props[p] == "number" && typeof nextProps[p] == "number") {
 					s[p] = easing(curFrame, props[p], nextProps[p] - props[p], totFrames);
 				} else {
@@ -146,29 +149,24 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 			f = me.frame,
 			cache = '_lastRefKfIdx',
 			last = me[cache] || 0,
-			i, len;
-
-		// Returns true if the given index is the reference keyframe
-		function test(idx) {
-			var prev = kf[idx],
-				next = kf[idx + 1];
-			return (prev.index <= f && (!next || next.index > f));
-		}
+			i = last,
+			len = kf.length,
+			next;
 
 		// The most common case for normal forward-playing is that either
 		// the reference keyframe will be the same as or one after that of the
 		// last tested frame. Therefore we start by testing the cached index,
 		// then step forward to the end, and then start back at zero.
-		for(i=last, len=kf.length; i<len; i++) {
-			if(test(i)) {
+		do {
+			next = kf[i + 1];
+			if (kf[i].index <= f && (!next || next.index > f)) {
 				return me[cache] = i;
 			}
-		}
-		for(i=0; i<last; i++) {
-			if(test(i)) {
-				return me[cache] = i;
+			i++;
+			if(i == len) {
+				i = 0;
 			}
-		}
+		} while(i != last);
 	}
 
 });

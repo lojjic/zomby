@@ -21,7 +21,7 @@ zomby.view.svg.LayerSvgView = zomby.view.svg.SvgView.extend({
 	 * Update the view to match all aspects of its Layer object
 	 */
 	update : function() {
-		this.base();
+		// doesn't need to call super since doesn't use changes 
 		this.shapeView.update();
 	}
 }, {

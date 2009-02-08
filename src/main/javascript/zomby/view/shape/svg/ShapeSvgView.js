@@ -76,17 +76,15 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 		var props = this.getChanges(),
 			transform = '', m;
 
-		if("x" in props || "y" in props) {
-			m = this.modelObject;
-			transform += " translate(" + m.x + "," + m.y + ")";
-		}
 		if(props.scale != null) {
 			transform += " scale(" + props.scale + ")";
 		}
 		if(props.rotate != null) {
 			transform += " rotate(" + props.rotate + ")";
 		}
-		if(transform) {
+		if(transform || "x" in props || "y" in props) {
+			m = this.modelObject;
+			transform = "translate(" + m.x + "," + m.y + ") " + transform;
 			this.setAttribute("transform", transform);
 		}
 

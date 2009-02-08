@@ -93,15 +93,23 @@ zomby.model.ModelObject = Base.extend(
 		return JSON.stringify(this);
 	},
 
-	getChanges : function() {
-		return useGettersAndSetters ? (this._changes || (this._changes = {})) : this;
-	},
+	getChanges : (function() { //branch up-front rather than on each call
+		return useGettersAndSetters ?
+			function() {
+				return (this._changes || (this._changes = {}));
+			} :
+			function() {
+				return this;
+			};
+	})(),
 
-	resetChanges : function() {
-		if(useGettersAndSetters) {
-			this._changes = {};
-		}
-	}
+	resetChanges : (function() { //branch up-front rather than on each call
+		return useGettersAndSetters ?
+			function() {
+				this._changes = {};
+			} :
+			function() {};
+	})()
 
 },
 /** @scope zomby.model.ModelObject */

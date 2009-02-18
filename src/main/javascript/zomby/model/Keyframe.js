@@ -15,10 +15,11 @@ zomby.model.Keyframe = zomby.model.ModelObject.extend(
 
 	doOnEnter : function(timeline, layer) {
 		if(this.onenter) {
-			var cache = '_onenterFunc',
-				fn = this[cache];
+			var CACHE_PROP = '_onenterFunc',
+				fn = this.getPrivate(CACHE_PROP);
 			if(!fn) {
-				fn = this[cache] = new Function("timeline", "layer", this.onenter);
+				fn = new Function("timeline", "layer", this.onenter);
+				this.setPrivate(CACHE_PROP, fn);
 			}
 			fn(timeline, layer);
 		}
@@ -26,10 +27,11 @@ zomby.model.Keyframe = zomby.model.ModelObject.extend(
 
 	doOnExit : function(timeline, layer) {
 		if(this.onexit) {
-			var cache = '_onexitFunc',
-				fn = this[cache];
+			var CACHE_PROP = '_onexitFunc',
+				fn = this.getPrivate(CACHE_PROP);
 			if(!fn) {
-				fn = this[cache] = new Function("timeline", "layer", this.onexit);
+				fn = new Function("timeline", "layer", this.onexit);
+				this.setPrivate(CACHE_PROP, fn);
 			}
 			fn(timeline, layer);
 		}

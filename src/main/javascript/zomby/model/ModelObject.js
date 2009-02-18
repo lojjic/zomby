@@ -1,6 +1,7 @@
 (function() {
 
 var _typesToClasses = {},
+	changedPropsCache = '_changedProps',
 	useGettersAndSetters = (typeof {}.__defineSetter__ == "function");
 
 /**
@@ -15,19 +16,36 @@ zomby.model.ModelObject = Base.extend(
 	type : null,
 
 	constructor : function(props) {
-		this.base();
-		this.type = this.constructor.TYPE;
-		if(props) this.set(props);
+		var me = this,
+			privateData = {};
+
+		me.base();
+
+		// Create methods for setting truly private arbitrary data, stored in the closure
+		me.setPrivate = function(name, val) {
+			return privateData[name] = val;
+		};
+		me.hasPrivate = function(name) {
+			return (name in privateData);
+		};
+		me.getPrivate = function(name) {
+			return privateData[name];
+		};
+
+		me.type = me.constructor.TYPE;
+		if(props) me.set(props);
 	},
 
 	/**
-	 * Enumerate the names of all this object's public data properties.
-	 * Excludes any methods and properties beginning with an underscore.
+	 * Enumerate the names of all this object's public data properties,
+	 * excluding any methods. Will return "conventional private" properties
+	 * beginning with underscores; use the setPrivate method to store truly
+	 * private data.
 	 */
 	getPropertyNames: function() {
 		var names = [], p;
 		for(p in this) {
-			if(typeof p != 'function' && p.charAt(0) != '_') {
+			if(typeof p != 'function') {
 				names.push(p);
 			}
 		}
@@ -50,7 +68,7 @@ zomby.model.ModelObject = Base.extend(
 	set : function(nameOrPairs, value) {
 		switch(typeof nameOrPairs) {
 			case "string":
-				if(nameOrPairs in this && typeof this[nameOrPairs] != "function" && nameOrPairs.charAt(0) != '_') {
+				if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
 					function toObject(o) {
 						if(o && typeof o == "object" && o.type && _typesToClasses[o.type]) {
 							return zomby.model.ModelObject.fromObject(o);
@@ -96,7 +114,7 @@ zomby.model.ModelObject = Base.extend(
 	getChanges : (function() { //branch up-front rather than on each call
 		return useGettersAndSetters ?
 			function() {
-				return (this._changes || (this._changes = {}));
+				return (this.getPrivate(changedPropsCache) || this.setPrivate(changedPropsCache, {}));
 			} :
 			function() {
 				return this;
@@ -106,7 +124,7 @@ zomby.model.ModelObject = Base.extend(
 	resetChanges : (function() { //branch up-front rather than on each call
 		return useGettersAndSetters ?
 			function() {
-				this._changes = {};
+				this.setPrivate(changedPropsCache, {});
 			} :
 			function() {};
 	})()
@@ -151,14 +169,13 @@ zomby.model.ModelObject = Base.extend(
 		if(useGettersAndSetters) {
 			for(prop in proto) {
 				(function(p) {
-					if(proto.hasOwnProperty(p) && p.charAt(0) != '_' && typeof proto[p] != "function") {
-						var priv = '__' + p;
-						proto[priv] = proto[p];
+					if(proto.hasOwnProperty(p) && typeof proto[p] != "function") {
+						var protoVal = proto[p];
 						proto.__defineGetter__(p, function() {
-							return this[priv];
+							return this.hasPrivate(p) ? this.getPrivate(p) : protoVal;
 						});
 						proto.__defineSetter__(p, function(v) {
-							return this[priv] = this.getChanges()[p] = v;
+							return this.setPrivate(p, (this.getChanges()[p] = v));
 						});
 					}
 				})(prop);

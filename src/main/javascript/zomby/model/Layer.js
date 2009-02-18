@@ -3,6 +3,14 @@
  *
  * @constructor
  */
+(function() {
+
+var CACHE_LAST_KF_PROPS = "_lastKfProps",
+	CACHE_LAST_KF_IDX = "_lastRefKfIdx",
+	CACHE_REAL_SHAPE = "_realShape",
+	CACHE_INITIAL_SHAPE = "_initialShape",
+	TYPE_OBJECT = "object";
+
 zomby.model.Layer = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Layer.prototype */
 {
@@ -36,23 +44,23 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 */
 	getShape: function() {
 		var me = this,
-			cache = "_realShape",
-			s = me[cache];
+			s = me.getPrivate(CACHE_REAL_SHAPE);
 		if( !s ) {
-			s = me[cache] = me.getInitialShape().clone();
+			s = me.getInitialShape().clone();
+			me.setPrivate(CACHE_REAL_SHAPE, s);
 		}
 		return s;
 	},
 
 	getInitialShape: function() {
 		var me = this,
-			cache = "_initialShape",
-			s = me[cache];
+			s = me.getPrivate(CACHE_INITIAL_SHAPE);
 		if(!s) {
 			s = me.shape;
-			if(typeof s == "string" && s.indexOf("lib:") == 0) {
+			if(typeof s === "string" && s.indexOf("lib:") === 0) {
 				s = s.substring(4);
-				s = me[cache] = me.timeline.library.get(s);
+				s = me.timeline.library.get(s);
+				me.setPrivate(CACHE_INITIAL_SHAPE, s);
 			}
 		}
 		return s;
@@ -61,82 +69,100 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	/**
 	 * Sync the given {@link zomby.model.shape.Shape}'s properties to the current frame
 	 */
-	sync : function() {
-		var me = this,
-			propsCache = "_lastKfProps",
-			kf = me.keyframes,
-			lastKfIdx = me._lastRefKfIdx,
-			kfIdx = me.getReferenceKeyframeIndex(),
-			prev = kf[kfIdx],
-			next,
-			s = me.getShape(),
-			tl = me.timeline,
-			canUseOnlyNextKfProps = false, //if we know the only changes are the next keyframe's props, don't have to iterate over all of them
-			props, kfProps, p;
+	sync : (function() {
+		var Easing = zomby.anim.Easing;
 
-		// Find the full set of shape properties for the reference keyframe.
-		// First we see if we have a cached set of values, and if it is for
-		// the same keyframe then use it directly.
-		if(lastKfIdx == kfIdx) {
-			props = me[propsCache];
-			canUseOnlyNextKfProps = true;
-		}
-		// If we're just one keyframe after the cached one, then use it but
-		// add in the new keyframe's properties
-		else if(lastKfIdx == kfIdx - 1) {
-			props = me[propsCache];
-			kfProps = prev.properties;
-			for(p in kfProps) {
-				props[p] = kfProps[p];
+		function tweenRecursive(model, fromProps, toProps, easing, curFrame, totFrames) {
+			for(var p in toProps) {
+				var to = toProps[p],
+					from = (fromProps ? fromProps[p] : null),
+					toType = typeof to, fromType = typeof from;
+				if(fromType === toType && toType === "number") {
+					model[p] = easing(curFrame, from, to - from, totFrames);
+				}
+				else if(toType === TYPE_OBJECT && fromType === TYPE_OBJECT && typeof model[p] === TYPE_OBJECT) {
+					tweenRecursive(model[p], from, to, easing, curFrame, totFrames);
+				}
 			}
-			me[propsCache] = props;
-			canUseOnlyNextKfProps = true;
 		}
-		else {
-			// Not cached; rebuild by walking back through the previous keyframes
-			// and collecting the most recently declared property values.
-			props = me[propsCache] = {};
-			for(var i=kfIdx; i>=0; i--) {
-				kfProps = kf[i].properties;
-				if(kfProps) {
-					for(p in kfProps) {
-						if(!(p in props)) {
-							props[p] = kfProps[p];
+
+		function copyRecursive(from, to) {
+			for(var p in from) {
+				var fromVal = from[p],
+					toVal = to[p],
+					fromType = typeof fromVal;
+				if(toVal && typeof toVal === TYPE_OBJECT && fromType === TYPE_OBJECT) {
+					copyRecursive(fromVal, toVal);
+				}
+				else if(fromType !== "function") {
+					to[p] = fromVal;
+				}
+			}
+		}
+
+		return function() {
+			var me = this,
+				keyframes = me.keyframes,
+				lastKfIdx = me.getPrivate(CACHE_LAST_KF_IDX),
+				kfIdx = me.getReferenceKeyframeIndex(),
+				refKf = keyframes[kfIdx], nextKf,
+				isKeyframe = (refKf.index === me.frame),
+				s = me.getShape(),
+				tl = me.timeline,
+				fullProps, propsToSync, i, props;
+
+			// execute onEnter listener if keyframe
+			if(isKeyframe) {
+				refKf.doOnEnter(tl, me);
+			}
+
+			// Make sure the shape is synced with the reference keyframe, being careful to avoid
+			// setting properties that don't need syncing.
+			// If tweening, we need a full set of "before" numeric values for calculating the tween.
+
+			if(lastKfIdx === kfIdx) {
+				// can use cached fullProps, and already in sync with reference keyframe
+				fullProps = me.getPrivate(CACHE_LAST_KF_PROPS);
+			} else {
+				propsToSync = {};
+				if(lastKfIdx < kfIdx) {
+					// can use cached values as a starting point but must bring them up to date
+					fullProps = me.getPrivate(CACHE_LAST_KF_PROPS);
+					for(i=lastKfIdx + 1; i<=kfIdx; i++) {
+						props = keyframes[i].properties;
+						if(props) {
+							copyRecursive(props, fullProps);
+							copyRecursive(props, propsToSync);
+						}
+					}
+				} else {
+					// can't use any cached values, and everything must be synced
+					fullProps = propsToSync;
+					copyRecursive(me.getInitialShape(), fullProps);
+					for(i=0; i<=kfIdx; i++) {
+						props = keyframes[i].properties;
+						if(props) {
+							copyRecursive(props, fullProps);
 						}
 					}
 				}
+				// Sync shape to reference keyframe
+				copyRecursive(propsToSync, s);
+				// Save the full set of values for next time
+				me.setPrivate(CACHE_LAST_KF_PROPS, fullProps);
 			}
-			var init = me.getInitialShape();
-			zomby.Util.each(init.getPropertyNames(), function(p) {
-				if(!(p in props)) {
-					props[p] = init[p];
-				}
-			});
-		}
 
-		// Current frame is keyframe; copy shape properties directly, and execute any listeners:
-		if(prev.index == me.frame) {
-			prev.doOnEnter(tl, me);
-			for(p in props) {
-				s[p] = props[p];
+			// execute onExit listener if keyframe:
+			if(isKeyframe) {
+				refKf.doOnExit(tl, me);
 			}
-			prev.doOnExit(tl, me);
-		}
-		// In between tweened keyframes; calculate the tweened numeric values and copy the rest directly:
-		else if(next = kf[kfIdx + 1]) {
-			var nextProps = next.properties,
-				easing = zomby.anim.Easing[next.easing || "linear"],
-				curFrame = me.frame - prev.index,
-				totFrames = next.index - prev.index;
-			for(p in (canUseOnlyNextKfProps ? nextProps : props)) {
-				if(nextProps && next.tween && p in nextProps && typeof props[p] == "number" && typeof nextProps[p] == "number") {
-					s[p] = easing(curFrame, props[p], nextProps[p] - props[p], totFrames);
-				} else {
-					s[p] = props[p];
-				}
+			// In between tweened keyframes; calculate the tweened numeric values:
+			else if((nextKf = keyframes[kfIdx + 1]) && nextKf.tween && nextKf.properties) {
+				tweenRecursive(s, fullProps, nextKf.properties,
+					Easing[nextKf.easing || "linear"], me.frame - refKf.index, nextKf.index - refKf.index);
 			}
-		}
-	},
+		};
+	})(),
 
 	/**
 	 * Find the index of the reference Keyframe for the current frame,
@@ -147,8 +173,7 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		var me = this,
 			kf = me.keyframes,
 			f = me.frame,
-			cache = '_lastRefKfIdx',
-			last = me[cache] || 0,
+			last = me.getPrivate(CACHE_LAST_KF_IDX) || 0,
 			i = last,
 			len = kf.length,
 			next;
@@ -160,13 +185,14 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		do {
 			next = kf[i + 1];
 			if (kf[i].index <= f && (!next || next.index > f)) {
-				return me[cache] = i;
+				return me.setPrivate(CACHE_LAST_KF_IDX, i);
 			}
 			i++;
-			if(i == len) {
+			if(i === len) {
 				i = 0;
 			}
-		} while(i != last);
+		} while(i !== last);
 	}
-
 });
+
+})();

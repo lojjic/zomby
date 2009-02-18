@@ -109,6 +109,39 @@
 							}
 						}
 					]
+				},
+				{
+					startFrame: 0,
+					endFrame: 49,
+					shape:{
+						type: "ellipse",
+						x: 400,
+						y: 400,
+						xRadius: 100,
+						yRadius: 50,
+						stroke:{
+							paint: 'blue'
+						}
+					},
+					keyframes:[
+						{
+							index:0,
+							properties:{
+								stroke:{
+									width: 2
+								}
+							}
+						},
+						{
+							index:49,
+							tween:true,
+							properties:{
+								stroke:{
+									width: 20
+								}
+							}
+						}
+					]
 				}
 			]
 		});

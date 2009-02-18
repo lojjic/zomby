@@ -2,17 +2,19 @@
 zomby.model.Library = zomby.model.ModelObject.extend({
 
 	constructor : function(props) {
+		this.base(props);
 		// Don't parse the props into Shape objects yet, that's done lazily as they are first requested.
-		this._defs = props || {};
-		this._shapes = {};
+		this.setPrivate('_defs', props || {});
+		this.setPrivate('_shapes', {});
 	},
 
 	get : function(id) {
-		var s = this._shapes[id], d;
+		var shapes = this.getPrivate('_shapes'),
+			s = shapes[id], d;
 		if(!s) {
-			d = this._defs[id];
+			d = this.getPrivate('_defs')[id];
 			if(d) {
-				s = this._shapes[id] = zomby.model.ModelObject.fromObject(d);
+				s = shapes[id] = zomby.model.ModelObject.fromObject(d);
 			}
 		}
 		return s ? s.clone() : null;

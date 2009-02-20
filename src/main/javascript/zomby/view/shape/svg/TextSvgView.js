@@ -15,19 +15,14 @@
 
 		SpanView = TextBaseView.extend({
 			/**
-			 * Create the element; overridden to return a tspan element directly so
-			 * it isn't wrapped in a g element like the base ShapeSvgView does.
+			 * Create the element
 			 */
 			create : function() {
-				var el = this.createSVG(this.getTagName());
+				var el = this.base();
 				if(typeof this.modelObject == "string") {
 					el.appendChild(document.createTextNode(""));
 				}
 				return el;
-			},
-
-			getShapeElement : function() {
-				return this.getElement();
 			},
 
 			update : function() {
@@ -41,7 +36,6 @@
 				}
 				// Otherwise update all the parts
 				else {
-					this.base();
 					var parts = this.modelObject.parts,
 						views = this.partViews || (this.partViews = []);
 
@@ -73,7 +67,7 @@
 				this.base();
 				var pv = this.parentView.pathView;
 				if(pv) {
-					this.getShapeElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", "#" + zomby.Util.generateId(pv));
+					this.getElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", "#" + zomby.Util.generateId(pv));
 				}
 			}
 		});
@@ -100,7 +94,7 @@
 				var lv = views[i];
 				if(!lv || lv.modelObject !== l) {
 					lv = new LineView(l, this);
-					this.getShapeElement().insertBefore(lv.getElement(), views[i] ? views[i].getElement() : null);
+					this.getElement().insertBefore(lv.getElement(), views[i] ? views[i].getElement() : null);
 					views.splice(i, 0, lv);
 				}
 				lv.update();
@@ -127,7 +121,7 @@
 					v = this.pathView = new pkg.PathSvgView(path, this);
 					v.appendTo(this.getDefsElement());
 					var id = zomby.Util.generateId(v);
-					v.getShapeElement().setAttribute("id", id);
+					v.getElement().setAttribute("id", id);
 				}
 				v.update();
 			}

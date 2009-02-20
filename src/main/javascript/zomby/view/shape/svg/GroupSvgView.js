@@ -10,7 +10,7 @@ zomby.view.shape.svg.GroupSvgView = zomby.view.shape.svg.ShapeSvgView.extend(
 	constructor : function(group, parent) {
 		this.base(group, parent);
 		this.shapeViews = [];
-		var el = this.getShapeElement();
+		var el = this.getElement();
 		zomby.Util.each(group.shapes, function(shape) {
 			var v = zomby.view.View.forModelObject(shape, this);
 			this.shapeViews.push(v);

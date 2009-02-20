@@ -8,27 +8,15 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	},
 
 	/**
-	 * Create the view element for the shape. We wrap the actual shape element
-	 * within a "g" container which gets positioned with a translate transform;
-	 * positioning the element this way moves the origin point so further
-	 * transforms e.g. rotate behave more sensibly.
+	 * Create the view element for the shape. We set up a three-element transform consisting
+	 * of a translate, followed by a scale, followed by a rotate. These transforms are then
+	 * accessed via the SVG DOM in the update method to modify them individually.
 	 * @type Element
 	 */
 	create : function() {
-		var g = this.createSVG("g");
-		g.appendChild(this.getShapeElement());
-		return g;
-	},
-
-	/**
-	 * Get the shape-specific SVG element, which is wrapped in the outer "g" element.
-	 */
-	getShapeElement : function() {
-		var el = this._shapeElement, trans;
-		if(!el) {
-			el = this._shapeElement = this.createSVG(this.getTagName());
-			el.setAttribute( "transform", "translate(0,0) scale(1) rotate(0)" ); //initialize the 3-item SVGTransformList; is there a better way?
-			trans = el.transform.baseVal;
+		var el = this.createSVG(this.getTagName()), trans;
+		el.setAttribute( "transform", "translate(0,0) scale(1) rotate(0)" ); //initialize the 3-item SVGTransformList; is there a better way?
+		if((trans = el.transform) && (trans = trans.baseVal)) {
 			this._transforms = {
 				translate : trans.getItem(0),
 				scale : trans.getItem(1),
@@ -61,7 +49,7 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	 * @param {String} value - value of the attribute; if null or undefined the attribute will be removed.
 	 */
 	setAttribute : function(name, value) {
-		var el = this.getShapeElement();
+		var el = this.getElement();
 		if(value == null) {
 			el.removeAttribute(name);
 		} else {
@@ -74,12 +62,17 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 	 * for this view. The element is lazily created and inserted upon first access.
 	 */
 	getDefsElement : function() {
-		if(!this._defs) {
-			this.getElement().appendChild(
-				this._defs = this.createSVG("defs")
+		var defs = this._defs, svgEl;
+		if(!defs) {
+			svgEl = this.getElement().ownerSVGElement;
+			defs = svgEl.getElementsByTagName("defs")[0];
+		}
+		if(!defs) {
+			svgEl.appendChild(
+				defs = this._defs = this.createSVG("defs")
 			);
 		}
-		return this._defs;
+		return defs;
 	},
 
 	update : function() {

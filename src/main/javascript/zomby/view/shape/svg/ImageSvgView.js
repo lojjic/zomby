@@ -14,7 +14,7 @@ zomby.view.shape.svg.ImageSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 
 		p = "src";
 		if(p in props) {
-			this.getShapeElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", props[p]);
+			this.getElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", props[p]);
 		}
 		p = "width";
 		if(p in props) {

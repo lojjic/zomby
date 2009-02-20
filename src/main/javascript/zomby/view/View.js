@@ -13,6 +13,7 @@ zomby.view.View = Base.extend(
 /** @scope zomby.view.View.prototype */
 {
 	constructor : function(modelObject, parentView) {
+		// if(!(modelObject instanceof this.constructor.MODEL_CLASS)) throw "Wrong type";
 		this.modelObject = modelObject;
 		this.parentView = parentView;
 	},

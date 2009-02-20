@@ -66,11 +66,11 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 		if(!defs) {
 			svgEl = this.getElement().ownerSVGElement;
 			defs = svgEl.getElementsByTagName("defs")[0];
-		}
-		if(!defs) {
-			svgEl.appendChild(
-				defs = this._defs = this.createSVG("defs")
-			);
+			if(!defs) {
+				svgEl.appendChild(
+					defs = this._defs = this.createSVG("defs")
+				);
+			}
 		}
 		return defs;
 	},

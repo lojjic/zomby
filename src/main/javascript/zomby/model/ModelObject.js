@@ -172,7 +172,8 @@ zomby.model.ModelObject = Base.extend(
 					if(proto.hasOwnProperty(p) && typeof proto[p] != "function") {
 						var protoVal = proto[p];
 						proto.__defineGetter__(p, function() {
-							return this.hasPrivate(p) ? this.getPrivate(p) : protoVal;
+							var v = this.getPrivate(p);
+							return v !== undefined ? v : protoVal;
 						});
 						proto.__defineSetter__(p, function(v) {
 							return this.setPrivate(p, (this.getChanges()[p] = v));

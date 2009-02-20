@@ -52,9 +52,12 @@ zomby.model.Timeline = zomby.model.ModelObject.extend(
 	/**
 	 * Sync all layers to the current frame
 	 */
-	sync : function() {
-		zomby.Util.each(this.layers, function(lyr) {
+	sync : (function() {
+		function syncLayer(lyr) {
 			lyr.go(this.frame + lyr.startFrame);
-		}, this);
-	}
+		}
+		return function() {
+			zomby.Util.each(this.layers, syncLayer, this);
+		};
+	})()
 });

@@ -25,35 +25,38 @@
 				return el;
 			},
 
-			update : function() {
-				var el = this.getElement();
-
-				// If the model object is a plain string, set it as the text node
-				if(typeof this.modelObject == "string") {
-					// Note we don't call the superclass here since it's just text and therefore should
-					// inherit everything from its parent model object and have no properties of its own.
-					el.firstChild.nodeValue = this.modelObject;
-				}
-				// Otherwise update all the parts
-				else {
-					var parts = this.modelObject.parts,
-						views = this.partViews || (this.partViews = []);
-
-					// Update the part views, creating/deleting them as necessary
-					zomby.Util.each(parts, function(p, i) {
-						var pv = views[i];
-						if(!pv || pv.modelObject !== p) {
-							pv = new SpanView(p, this);
-							el.insertBefore(pv.getElement(), views[i] ? views[i].getElement() : null);
-							views.splice(i, 0, pv);
-						}
-						pv.update();
-					}, this);
-					while(views.length > parts.length) {
-						views.pop().destroy();
+			update : (function() {
+				function updatePart(p, i) {
+					var pv = views[i];
+					if(!pv || pv.modelObject !== p) {
+						pv = new SpanView(p, this);
+						el.insertBefore(pv.getElement(), views[i] ? views[i].getElement() : null);
+						views.splice(i, 0, pv);
 					}
+					pv.update();
 				}
-			}
+				return function() {
+					var el = this.getElement();
+
+					// If the model object is a plain string, set it as the text node
+					if(typeof this.modelObject == "string") {
+						// Note we don't call the superclass here since it's just text and therefore should
+						// inherit everything from its parent model object and have no properties of its own.
+						el.firstChild.nodeValue = this.modelObject;
+					}
+					// Otherwise update all the parts
+					else {
+						var parts = this.modelObject.parts,
+							views = this.partViews || (this.partViews = []);
+
+						// Update the part views, creating/deleting them as necessary
+						zomby.Util.each(parts, updatePart, this);
+						while(views.length > parts.length) {
+							views.pop().destroy();
+						}
+					}
+				};
+			})()
 		}, {
 			TAG : "tspan"
 		}),
@@ -82,15 +85,8 @@
 		/**
 		 * Update the view to match all aspects of its Text object
 		 */
-		update : function() {
-			this.base();
-			this.updatePath();
-
-			var m = this.modelObject,
-				views = this.lineViews || (this.lineViews = []);
-
-			// Update the line views, creating/deleting them as necessary
-			zomby.Util.each(m.lines, function(l, i) {
+		update : (function() {
+			function updateLine(l, i) {
 				var lv = views[i];
 				if(!lv || lv.modelObject !== l) {
 					lv = new LineView(l, this);
@@ -100,15 +96,25 @@
 				lv.update();
 				lv.getElement().setAttribute("x", 0);
 				lv.getElement().setAttribute("y", m.lineHeight * i);
-			}, this);
-			while(views.length > m.lines.length) {
-				views.pop().destroy();
 			}
+			return function() {
+				this.base();
+				this.updatePath();
 
-			this.setAttributes({
-				"text-anchor" : m.align
-			});
-		},
+				var m = this.modelObject,
+					views = this.lineViews || (this.lineViews = []);
+
+				// Update the line views, creating/deleting them as necessary
+				zomby.Util.each(m.lines, updateLine, this);
+				while(views.length > m.lines.length) {
+					views.pop().destroy();
+				}
+
+				this.setAttributes({
+					"text-anchor" : m.align
+				});
+			};
+		})(),
 
 		/**
 		 * Update the text's path, if present

@@ -24,23 +24,27 @@ zomby.view.svg.TimelineSvgView = zomby.view.svg.SvgView.extend({
 	/**
 	 * Update the view to match all aspects of its Timeline object
 	 */
-	update : function() {
-		this.base();
-		var props = this.getChanges(), p;
-
-		p = "width";
-		if(p in props) {
-			this.getElement().setAttribute(p, props[p]);
-		}
-		p = "height";
-		if(p in props) {
-			this.getElement().setAttribute(p, props[p]);
-		}
-
-		zomby.Util.each(this.layerViews, function(view) {
+	update : (function() {
+		function updateView(view) {
 			view.update();
-		});
-	}
+		}
+
+		return function() {
+			this.base();
+			var props = this.getChanges(), p;
+
+			p = "width";
+			if(p in props) {
+				this.getElement().setAttribute(p, props[p]);
+			}
+			p = "height";
+			if(p in props) {
+				this.getElement().setAttribute(p, props[p]);
+			}
+
+			zomby.Util.each(this.layerViews, updateView);
+		}
+	})()
 }, {
 	MODEL_CLASS : zomby.model.Timeline
 });

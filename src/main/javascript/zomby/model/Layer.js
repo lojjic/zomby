@@ -3,13 +3,6 @@
  *
  * @constructor
  */
-(function() {
-
-var CACHE_LAST_KF_PROPS = "_lastKfProps",
-	CACHE_LAST_KF_IDX = "_lastRefKfIdx",
-	CACHE_REAL_SHAPE = "_realShape",
-	CACHE_INITIAL_SHAPE = "_initialShape",
-	TYPE_OBJECT = "object";
 
 zomby.model.Layer = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Layer.prototype */
@@ -43,7 +36,8 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 * object ("lib:shapeid"), dereference it to a clone of that library object.
 	 */
 	getShape: function() {
-		var me = this,
+		var CACHE_REAL_SHAPE = "_realShape",
+			me = this,
 			s = me.getPrivate(CACHE_REAL_SHAPE);
 		if( !s ) {
 			s = me.getInitialShape().clone();
@@ -53,7 +47,8 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	},
 
 	getInitialShape: function() {
-		var me = this,
+		var CACHE_INITIAL_SHAPE = "_initialShape",
+			me = this,
 			s = me.getPrivate(CACHE_INITIAL_SHAPE);
 		if(!s) {
 			s = me.shape;
@@ -73,10 +68,11 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		var Easing = zomby.anim.Easing;
 
 		function tweenRecursive(model, fromProps, toProps, easing, curFrame, totFrames) {
-			for(var p in toProps) {
-				var to = toProps[p],
-					from = (fromProps ? fromProps[p] : null),
-					toType = typeof to, fromType = typeof from;
+			var TYPE_OBJECT = "object", p, to, from, toType, fromType;
+			for(p in toProps) {
+				to = toProps[p];
+				from = (fromProps ? fromProps[p] : null);
+				toType = typeof to, fromType = typeof from;
 				if(fromType === toType && toType === "number") {
 					model[p] = easing(curFrame, from, to - from, totFrames);
 				}
@@ -87,10 +83,11 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		}
 
 		function copyRecursive(from, to) {
-			for(var p in from) {
-				var fromVal = from[p],
-					toVal = to[p],
-					fromType = typeof fromVal;
+			var TYPE_OBJECT = "object", p, fromVal, toVal, fromType;
+			for(p in from) {
+				fromVal = from[p];
+				toVal = to[p];
+				fromType = typeof fromVal;
 				if(toVal && typeof toVal === TYPE_OBJECT && fromType === TYPE_OBJECT) {
 					copyRecursive(fromVal, toVal);
 				}
@@ -101,7 +98,9 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		}
 
 		return function() {
-			var me = this,
+			var CACHE_LAST_KF_PROPS = "_lastKfProps",
+				CACHE_LAST_KF_IDX = "_lastRefKfIdx",
+				me = this,
 				keyframes = me.keyframes,
 				lastKfIdx = me.getPrivate(CACHE_LAST_KF_IDX),
 				kfIdx = me.getReferenceKeyframeIndex(),
@@ -170,7 +169,8 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 	 * most recent one.
 	 */
 	getReferenceKeyframeIndex: function() {
-		var me = this,
+		var CACHE_LAST_KF_IDX = "_lastRefKfIdx",
+			me = this,
 			kf = me.keyframes,
 			f = me.frame,
 			last = me.getPrivate(CACHE_LAST_KF_IDX) || 0,
@@ -194,5 +194,3 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 		} while(i !== last);
 	}
 });
-
-})();

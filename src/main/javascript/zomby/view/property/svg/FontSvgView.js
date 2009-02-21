@@ -1,6 +1,7 @@
 
 zomby.view.property.svg.FontSvgView = zomby.view.property.PropertyView.extend({
-	update : (function() {
+
+	updateProp : (function() {
 		var propsToAttrs = {
 			family : "font-family",
 			style : "font-style",
@@ -14,15 +15,10 @@ zomby.view.property.svg.FontSvgView = zomby.view.property.PropertyView.extend({
 			decoration : "text-decoration"
 		};
 
-		return function() {
-			this.base();
-			var props = this.getChanges(),
-				v = this.parentView,
-				p;
-			for(p in propsToAttrs) {
-				if(p in props) {
-					v.setAttribute(propsToAttrs[p], props[p]);
-				}
+		return function(name, val) {
+			var attr = propsToAttrs[name];
+			if(attr) {
+				this.parentView.setAttribute(attr, val);
 			}
 		};
 	})()

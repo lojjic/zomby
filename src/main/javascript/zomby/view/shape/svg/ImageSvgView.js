@@ -5,24 +5,15 @@
 zomby.view.shape.svg.ImageSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 /** @scope zomby.view.shape.svg.ImageSvgView.prototype */
 {
-	/**
-	 * Update the view to match all aspects of its Image object
-	 */
-	update : function() {
-		this.base();
-		var props = this.getChanges(), p;
-
-		p = "src";
-		if(p in props) {
-			this.getElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", props[p]);
-		}
-		p = "width";
-		if(p in props) {
-			this.setAttribute(p, props[p]);
-		}
-		p = "height";
-		if(p in props) {
-			this.setAttribute(p, props[p]);
+	updateProp : function(name, val) {
+		this.base(name, val);
+		switch(name) {
+			case "src":
+				this.getElement().setAttributeNS(zomby.Constants.XLINK_NS, "href", val);
+				break;
+			case "width":
+			case "height":
+				this.setAttribute(name, val);
 		}
 	},
 

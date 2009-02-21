@@ -5,7 +5,7 @@
 zomby.view.property.svg.StrokeSvgView = zomby.view.property.PropertyView.extend(
 /** @scope zomby.view.property.svg.StrokeSvgView.prototype */
 {
-	update : (function() {
+	updateProp : (function() {
 		var propsToAttrs = {
 			paint : "stroke",
 			width : "stroke-width",
@@ -16,20 +16,16 @@ zomby.view.property.svg.StrokeSvgView = zomby.view.property.PropertyView.extend(
 			opacity : "stroke-opacity"
 		};
 
-		return function() {
-			this.base();
-
-			var v = this.parentView,
-				props = this.getChanges(),
-				p;
-			for(p in propsToAttrs) {
-				if(p in props) {
-					v.setAttribute(propsToAttrs[p], props[p]);
-				}
-			}
-
-			if("dashArray" in props) {
-				v.setAttribute("stroke-dasharray", props.dashArray ? props.dashArray.join(",") : null);
+		return function(name, val) {
+			switch(name) {
+				case "dashArray":
+					this.parentView.setAttribute("stroke-dasharray", val ? val.join(',') : null);
+					break;
+				default:
+					var attr = propsToAttrs[name];
+					if(attr) {
+						this.parentView.setAttribute(attr, val);
+					}
 			}
 		};
 	})()

@@ -5,19 +5,19 @@
 zomby.view.shape.svg.LineSvgView = zomby.view.shape.svg.StrokeableSvgView.extend(
 /** @scope zomby.view.shape.svg.LineSvgView.prototype */
 {
-	/**
-	 * Update the view to match all aspects of its Line object
-	 */
-	update : function() {
-		this.base();
-		var changed = this.getChanges(),
-			model = this.modelObject;
-
-		if("x" in changed || "xEnd" in changed) {
-			this.setAttribute("x2", model.xEnd - model.x);
-		}
-		if("y" in changed || "yEnd" in changed) {
-			this.setAttribute("y2", model.yEnd - model.y);
+	updateProp : function(name, val) {
+		var m;
+		this.base(name, val);
+		switch(name) {
+			case "x":
+			case "xEnd":
+				m = this.modelObject;
+				this.setAttribute("x2", m.xEnd - m.x);
+				break;
+			case "y":
+			case "yEnd":
+				m = this.modelObject;
+				this.setAttribute("y2", m.yEnd - m.y);
 		}
 	},
 

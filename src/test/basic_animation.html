@@ -9,6 +9,7 @@
 		<button onclick="player.start()">Start</button>
 		<button onclick="player.stop()">Stop</button>
 	</p>
+	<div>frames/sec: <span id="fps">-</span></div>
 
 	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
 
@@ -145,6 +146,18 @@
 				}
 			]
 		});
+
+
+		// A little hackery to track the actual frame rate
+		var _step = player.timeline.step,
+			startTime,
+			frames = 1;
+		player.timeline.step = function() {
+			_step.call(this);
+			var fps = 1000 / (( new Date().getTime() - (startTime || (startTime = new Date().getTime())) ) / frames++);
+			document.getElementById('fps').firstChild.nodeValue = fps;
+		};
+
 	</script>
 </body>
 </html>

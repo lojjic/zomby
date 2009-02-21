@@ -5,22 +5,16 @@
 zomby.view.shape.svg.RectangleSvgView = zomby.view.shape.svg.FillableSvgView.extend(
 /** @scope zomby.view.shape.svg.RectangleSvgView.prototype */
 {
-	/**
-	 * Update the view to match all aspects of its Rectangle object
-	 */
-	update : function() {
-		this.base();
-		var props = this.getChanges(), p;
 
-		p = "width";
-		if(p in props) {
-			this.setAttribute(p, props[p]);
-		}
-		p = "height";
-		if(p in props) {
-			this.setAttribute(p, props[p]);
+	updateProp : function(name, val) {
+		this.base(name, val);
+		switch(name) {
+			case "width":
+			case "height":
+				this.setAttribute(name, val);
 		}
 	}
+
 }, {
 	TAG : "rect",
 	MODEL_CLASS : zomby.model.shape.Rectangle

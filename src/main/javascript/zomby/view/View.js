@@ -20,25 +20,30 @@ zomby.view.View = Base.extend(
 
 	/**
 	 * Update the entire state of the view from the shape.
-	 * Abstract; must be implemented by subclasses.
-	 * @abstract
 	 */
 	update : function() {
-		var m = this.modelObject;
+		var m = this.modelObject, props, p;
 		if(m) {
-			this._changes = m.getChanges();
+			props = m.getChanges();
+			for(p in props) {
+				this.updateProp(p, props[p]);
+			}
 			m.resetChanges();
 		}
 	},
 
 	/**
+	 * Handle the update of a single property.
+	 * @abstract
+	 * @param {String} name The name of the property
+	 * @param {Object} val The property's new value
+	 */
+	updateProp : function(name, val) {},
+
+	/**
 	 * Destroy the view instance, cleaning up any resources
 	 */
 	destroy : function() {
-	},
-
-	getChanges : function() {
-		return this._changes || (this._changes = {});
 	}
 
 }, {

@@ -11,37 +11,30 @@ zomby.view.property.svg.FillSvgView = zomby.view.property.PropertyView.extend(
 
 	update : function() {
 		this.base();
-
-		var me = this,
-			v = me.parentView,
-			props = me.getChanges(),
-			gv = me.gradientView,
-			p;
-
-		p = "rule";
-		if(p in props) {
-			v.setAttribute("fill-rule", props[p]);
-		}
-
-		p = "opacity";
-		if(p in props) {
-			v.setAttribute("fill-opacity", props[p]);
-		}
-
-		p = "paint";
-		if(p in props) {
-			if(props[p] instanceof zomby.model.property.Gradient) {
-				if(!gv) {
-					gv = this.gradientView = zomby.view.View.forModelObject(props[p], this);
-				}
-				gv.update();
-				v.setAttribute("fill", "url(#" + gv.getId() + ")");
-			} else {
-				v.setAttribute("fill", props[p]);
-			}
-		}
-		else if(gv) {
+		var gv = this.gradientView;
+		if(gv) {
 			gv.update();
+		}
+	},
+
+	updateProp : function(name, val) {
+		switch(name) {
+			case "rule":
+			case "opacity":
+				this.parentView.setAttribute("fill-" + name, val);
+				break;
+			case "paint":
+				if(val instanceof zomby.model.property.Gradient) {
+					var gv = this.gradientView;
+					if(!gv) {
+						gv = this.gradientView = zomby.view.View.forModelObject(val, this);
+					}
+					gv.update();
+					this.parentView.setAttribute("fill", "url(#" + gv.getId() + ")");
+				} else {
+					this.parentView.setAttribute("fill", val);
+				}
+				break;
 		}
 	}
 });

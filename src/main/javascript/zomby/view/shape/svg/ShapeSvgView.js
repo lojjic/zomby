@@ -75,24 +75,22 @@ zomby.view.shape.svg.ShapeSvgView = zomby.view.svg.SvgView.extend({
 		return defs;
 	},
 
-	update : function() {
-		this.base();
-		var props = this.getChanges(),
-			transform = this._transforms, m;
-
-		if("x" in props || "y" in props) {
-			m = this.modelObject;
-			transform.translate.setTranslate(m.x, m.y);
-		}
-		if("scale" in props) {
-			transform.scale.setScale(props.scale, props.scale);
-		}
-		if("rotate" in props) {
-			transform.rotate.setRotate(props.rotate, 0, 0);
-		}
-
-		if("opacity" in props) {
-			this.setAttribute("opacity", props.opacity);
+	updateProp : function(name, val) {
+		switch(name) {
+			case "x":
+			case "y":
+				var m = this.modelObject;
+				this._transforms.translate.setTranslate(m.x, m.y);
+				break;
+			case "scale":
+				this._transforms.scale.setScale(val, val);
+				break;
+			case "rotate":
+				this._transforms.rotate.setRotate(val, 0, 0);
+				break;
+			case "opacity":
+				this.setAttribute(name, val);
 		}
 	}
+
 });

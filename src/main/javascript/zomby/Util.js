@@ -52,7 +52,7 @@ zomby.Util = {
 				id = el[exp] = "zomby_id_" + new Date().getTime() + Math.random();
 			}
 			return id;
-		}
+		};
 	})(),
 
 	/**
@@ -75,23 +75,35 @@ zomby.Util = {
 
 	/**
 	 * Retrieve a remote file
-	 * @param {String} url - The URL of the JSON document
 	 * @param {Object} opts - Object holding options for the request. Recognized properties:
 	 *                 - {String} method - either "GET" or "POST", defaults to GET
 	 *                 - {String} url - required; the url of the request
 	 *                 - {Boolean} async - if true then the request will be made asynchronously, defaults to false
 	 *                 - {String} username - optional username for authentication
 	 *                 - {String} password - optional password for authentication
+	 *                 - {Function} partial - optional function to be called incrementally as the result data streams
+	 *                              in. Passed one argument which is the XMLHttpRequest object, from which the current
+	 *                              incomplete responseText can be retrieved.
 	 *                 - {Function} success - a function to be called upon successful response.  Passed one argument
 	 *                              which is the XMLHttpRequest object.
 	 *                 - {Function} error - a function to be called if the request errors out. If not supplied then an
 	 *                              exception will be thrown instead. Passed one argument which is the XMLHttpRequest object.
 	 */
 	getUrl : function(opts) {
-		var xhr = window.ActiveXObject ? new ActiveXObject("Microsoft.XMLHTTP") : new XMLHttpRequest();
+		var xhr = window.ActiveXObject ? new ActiveXObject("Microsoft.XMLHTTP") : new XMLHttpRequest(),
+			done = false;
 
 		xhr.onreadystatechange = function() {
-			if(xhr.readyState == 4) {
+			if(opts.partial && xhr.readyState == 3) {
+				(function notify() {
+					if(!done) {
+						opts.partial(xhr);
+						setTimeout(notify, 500);
+					}
+				})();
+			}
+			else if(xhr.readyState == 4) {
+				done = true;
 				if(xhr.status == 200) {
 					opts.success(xhr);
 				} else {

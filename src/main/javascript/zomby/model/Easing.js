@@ -6,7 +6,7 @@ zomby.model.Easing = zomby.model.ModelObject.extend({
 		var fn = this.getPrivate("fn");
 		if(!fn) {
 			fn = new Function("t", "b", "c", "d", this.code);
-			this.setPrivate(fn);
+			this.setPrivate("fn", fn);
 		}
 		return fn(time, begin, change, duration);
 	}

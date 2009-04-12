@@ -24,7 +24,9 @@ zomby.Util = {
 		} else {
 			return function( arr, fn, thisObj ) {
 				for(var i=0, len=arr.length; i<len; i++) {
-					fn.call(thisObj, arr[i], i, arr);
+					if(i in arr) {
+						fn.call(thisObj, arr[i], i, arr);
+					}
 				}
 			};
 		}
@@ -36,7 +38,7 @@ zomby.Util = {
 	 * @return Boolean
 	 */
 	isArray : function(obj) {
-		return obj && obj.toString === '[object Array]';
+		return obj && obj.toString() === '[object Array]';
 	},
 
 	/**

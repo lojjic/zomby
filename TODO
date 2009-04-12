@@ -45,3 +45,8 @@
 
     - In the many cases where we need to blank out an object, find out if it's faster to replace the old one with a
       new empty object, or to delete all the properties of the old object.
+
+*) Figure out cross-domain data loading. Can't use XHR directly (until cross-site XHR is widespread). Can't use script
+   tag injection because it is synchronous so it wouldn't allow parsing while streaming. Look into an approach like
+   Dojo's iframe proxy using fragment identifiers: http://www.dojotoolkit.org/node/87
+   There are obviously security concerns if we can allow cross-domain loading because we execute JS in the data

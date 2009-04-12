@@ -1,8 +1,29 @@
 (function() {
 
 var _typesToClasses = {},
-	changedPropsCache = '_changedProps',
-	useGettersAndSetters = (typeof {}.__defineSetter__ == "function");
+	useGettersAndSetters = (typeof _typesToClasses.__defineSetter__ === "function");
+
+/**
+ * For a given ModelObject instance, create methods for accessing/setting
+ * private data. The data is stored locally in a closure so it is completely
+ * invisible to other objects and even other methods of this object. The method
+ * creation is done lazily on first access (see the stub methods in the
+ * prototype below) to avoid unnecessary function creation in the constructor,
+ * that way the object instantiation is still very fast.
+ */
+function initPrivateAccessMethods( instance ) {
+	var privateData = {};
+	instance.setPrivate = function(name, val) {
+		return (privateData[name] = val);
+	};
+	instance.hasPrivate = function(name) {
+		return (name in privateData);
+	};
+	instance.getPrivate = function(name) {
+		return privateData[name];
+	};
+}
+
 
 /**
  * @class Base class for model objects.
@@ -14,26 +35,15 @@ zomby.model.ModelObject = Base.extend(
 /** @scope zomby.model.ModelObject.prototype */
 {
 	type : null,
+	label : null,
 
 	constructor : function(props) {
-		var me = this,
-			privateData = {};
-
+		var me = this;
 		me.base();
-
-		// Create methods for setting truly private arbitrary data, stored in the closure
-		me.setPrivate = function(name, val) {
-			return privateData[name] = val;
-		};
-		me.hasPrivate = function(name) {
-			return (name in privateData);
-		};
-		me.getPrivate = function(name) {
-			return privateData[name];
-		};
-
 		me.type = me.constructor.TYPE;
-		if(props) me.set(props);
+		if(props) {
+			me.set(props);
+		}
 	},
 
 	/**
@@ -45,7 +55,7 @@ zomby.model.ModelObject = Base.extend(
 	getPropertyNames: function() {
 		var names = [], p;
 		for(p in this) {
-			if(typeof p != 'function') {
+			if(typeof p !== 'function') {
 				names.push(p);
 			}
 		}
@@ -65,34 +75,73 @@ zomby.model.ModelObject = Base.extend(
 	 *        a set of property name-value pairs
 	 * @param {Object} value The new value of the property, if the first argument was a String
 	 */
-	set : function(nameOrPairs, value) {
-		switch(typeof nameOrPairs) {
-			case "string":
-				if(nameOrPairs in this && typeof this[nameOrPairs] != "function") {
-					function toObject(o) {
-						if(o && typeof o == "object" && o.type && _typesToClasses[o.type]) {
-							return zomby.model.ModelObject.fromObject(o);
-						} else if(zomby.Util.isArray(o)) {
-							var arr = [];
-							zomby.Util.each(o, function(it) {
-								arr.push(toObject(it));
-							});
-							return arr;
-						} else {
-							return o;
-						}
-					}
-					this[nameOrPairs] = toObject(value);
-				}
-				break;
-			case "object":
-				for(var p in nameOrPairs) {
-					this.set(p, nameOrPairs[p]);
-				}
-				break;
-			default:
-				throw new Error("Argument must be a String or an Object");
+	set : (function() {
+		function toObject(o) {
+			var ret, arr;
+			if(o && typeof o === "object" && o.type && _typesToClasses[o.type]) {
+				ret = zomby.model.ModelObject.fromObject(o);
+			} else if(zomby.Util.isArray(o)) {
+				arr = [];
+				zomby.Util.each(o, function(it) {
+					arr.push(toObject(it));
+				});
+				ret = arr;
+			} else {
+				ret = o;
+			}
+			return ret;
 		}
+
+		return function(nameOrPairs, value) {
+			switch(typeof nameOrPairs) {
+				case "string":
+					if(nameOrPairs in this && typeof this[nameOrPairs] !== "function") {
+						this[nameOrPairs] = toObject(value);
+					}
+					break;
+				case "object":
+					for(var p in nameOrPairs) {
+						this.set(p, nameOrPairs[p]);
+					}
+					break;
+				default:
+					throw new Error("Argument must be a String or an Object");
+			}
+		};
+	})(),
+	
+	/**
+	 * Store a value under the given name in this object's private data.
+	 * This is a stub method which lazily overwrites itself with the real
+	 * implementation when first called.
+	 * @param {String} name The private data member name
+	 * @param {Object} value The private data member value
+	 */
+	setPrivate: function(name, value) {
+		initPrivateAccessMethods(this);
+		return this.setPrivate(name, value);
+	},
+
+	/**
+	 * Determine if this object's private data contains a member with the given name.
+	 * This is a stub method which lazily overwrites itself with the real
+	 * implementation when first called.
+	 * @param {String} name The private data member name
+	 */
+	hasPrivate: function(name) {
+		initPrivateAccessMethods(this);
+		return this.hasPrivate(name);
+	},
+	
+	/**
+	 * Retrieve a private data member value with the given name.
+	 * This is a stub method which lazily overwrites itself with the real
+	 * implementation when first called.
+	 * @param {String} name The private data member name
+	 */
+	getPrivate: function(name) {
+		initPrivateAccessMethods(this);
+		return this.getPrivate(name);
 	},
 
 	/**
@@ -114,7 +163,8 @@ zomby.model.ModelObject = Base.extend(
 	getChanges : (function() { //branch up-front rather than on each call
 		return useGettersAndSetters ?
 			function() {
-				return (this.getPrivate(changedPropsCache) || this.setPrivate(changedPropsCache, {}));
+				var prop = "_changedProps";
+				return (this.getPrivate(prop) || this.setPrivate(prop, {}));
 			} :
 			function() {
 				return this;
@@ -124,7 +174,7 @@ zomby.model.ModelObject = Base.extend(
 	resetChanges : (function() { //branch up-front rather than on each call
 		return useGettersAndSetters ?
 			function() {
-				this.setPrivate(changedPropsCache, {});
+				this.setPrivate("_changedProps", {});
 			} :
 			function() {};
 	})()
@@ -139,13 +189,14 @@ zomby.model.ModelObject = Base.extend(
 	 * from it based on its declared type.
 	 */
 	fromObject : function(obj) {
+		var cls, ret = null;
 		if(obj.type) {
-			var cls = _typesToClasses[obj.type];
+			cls = _typesToClasses[obj.type];
 			if(cls) {
-				return new cls(obj);
+				ret = new cls(obj);
 			}
 		}
-		return null;
+		return ret;
 	},
 
 	/**
@@ -159,27 +210,30 @@ zomby.model.ModelObject = Base.extend(
 		var sub = Base.extend.call(this, inst, stat),
 			proto = sub.prototype,
 			t = stat && stat.TYPE,
-			prop;
+			prop, initGetSet;
 
 		if(t) {
-			if(_typesToClasses[t]) throw new Error("ModelObject TYPE already defined: " + t);
+			if(_typesToClasses[t]) {
+				throw new Error("ModelObject TYPE already defined: " + t);
+			}
 			_typesToClasses[t] = sub;
 		}
 
 		if(useGettersAndSetters) {
+			initGetSet = function(proto, prop) {
+				var protoVal;
+				if(proto.hasOwnProperty(prop) && typeof (protoVal = proto[prop]) !== "function") {
+					proto.__defineGetter__(prop, function() {
+						var v = this.getPrivate(prop);
+						return v !== undefined ? v : protoVal;
+					});
+					proto.__defineSetter__(prop, function(v) {
+						return this.setPrivate(prop, (this.getChanges()[prop] = v));
+					});
+				}
+			};
 			for(prop in proto) {
-				(function(p) {
-					if(proto.hasOwnProperty(p) && typeof proto[p] != "function") {
-						var protoVal = proto[p];
-						proto.__defineGetter__(p, function() {
-							var v = this.getPrivate(p);
-							return v !== undefined ? v : protoVal;
-						});
-						proto.__defineSetter__(p, function(v) {
-							return this.setPrivate(p, (this.getChanges()[p] = v));
-						});
-					}
-				})(prop);
+				initGetSet(proto, prop);
 			}
 		}
 

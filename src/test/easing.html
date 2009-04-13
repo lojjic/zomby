@@ -84,22 +84,17 @@
 				"else s = p/(2*Math.PI) * Math.asin (c/a);" +
 				"return (t < 1) ? -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b : a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;",
 
-			/*inBack: "if(s===undefined) s = 1.70158; return c*(t/=d)*t*((s+1)*t - s) + b",
+			inBack: "var s = 1.70158; return c*(t/=d)*t*((s+1)*t - s) + b",
 
-			outBack: "if(s===undefined) s = 1.70158; return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b",
+			outBack: "var s = 1.70158; return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b",
 
-			inOutBack: "if (s===undefined) s = 1.70158; return ((t/=d/2) < 1) ? c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b : c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;"*/
+			inOutBack: "var s = 1.70158; return ((t/=d/2) < 1) ? c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b : c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;",
 
-			/*inBounce: function (t, b, c, d) {
-				return c - Easing.outBounce (d-t, 0, c, d) + b;
-			},
-			outBounce: function (t, b, c, d) {
-				return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b :
-						(t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b :
-						(t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b :
-						c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
-			},
-			inOutBounce:"return (t < d/2) ? Easing.inBounce (t*2, 0, c, d) * .5 + b : Easing.outBounce (t*2-d, 0, c, d) * .5 + c*.5 + b";*/
+			inBounce: "return c - (function (t, b, c, d) {return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b : (t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b : (t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b : c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b})(d-t, 0, c, d) + b;",
+
+			outBounce: "return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b : (t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b : (t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b : c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;",
+
+			inOutBounce:"return (t < d/2) ? (function(t, b, c, d){ return c - (function (t, b, c, d) {return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b : (t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b : (t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b : c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b})(d-t, 0, c, d) + b; })(t*2, 0, c, d) * .5 + b : (function(t, b, c, d){ return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b : (t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b : (t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b : c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b; })(t*2-d, 0, c, d) * .5 + c*.5 + b"
 		};
 
 		var layers = [],

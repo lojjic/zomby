@@ -11,12 +11,11 @@
 				<include>zomby/Player.js</include>
 				<include>zomby/Constants.js</include>
 				<include>zomby/Util.js</include>
-				<include>zomby/anim/__package__.js</include>
-				<include>zomby/anim/Easing.js</include>
 
 				<!--===== Model classes =====-->
 				<include>zomby/model/__package__.js</include>
 				<include>zomby/model/ModelObject.js</include>
+				<include>zomby/model/Easing.js</include>
 				<include>zomby/model/Keyframe.js</include>
 				<include>zomby/model/Layer.js</include>
 				<include>zomby/model/Library.js</include>

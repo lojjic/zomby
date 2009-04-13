@@ -1,73 +1,90 @@
+
 {
-	shapes : {
-		myText : {
-			type : "text",
-			value : "text content",
-			size : 12,
-			align : "left",
-			width : 200
+	frame : 0,
+	fps: 10,
+	length : 100,
+	loop : true,
+	width : 100,
+	height : 100,
+	library : [
+		{
+			label : 'my library ellipse',
+			type : "ellipse",
+			xRadius : 100,
+			yRadius : 200
 		},
-		myCircle : {
-			type : "circle",
-			radius : 123,
-			stroke : {
-				color : "#ABC",
-				style : "dashed",
-				size : 2,
-				join : "miter"
-			},
-			fill : {
-				color : "green",
-				gradient : {
-					angle : 45,
-					stops : [
-						{
-							offset : -10,
-							color : "#FFF"
-						}
-					]
-				},
-				image : {
-					url : "http://...",
-					transform : { ... }
-				}
-			}
-		},
-		myRect : {
-			type : "rect",
-			width : 240,
-			height : 120,
-			stroke : { ... },
-			fill : { ... }
+		{
+			label : 'in-out quadratic',
+			type : 'easing',
+			code : 'return ((t/=d/2)<1)?c/2*t*t+b:-c/2*((--t)*(t-2)-1)+b;'
 		}
-		myComp : {
-			type : "compound",
-			objects : [
+	],
+	layers : [
+		{
+			label : "my layer",
+			shapes : [
+				"lib:0",
 				{
-					ref : "myCircle",
-					transform : {
-						translate : [100,200],
-						scale : 2,
-						rotate : 90,
-						opacity : 0.5
-					}
+					label : "my rectangle",
+					type : "rectangle",
+					width: 20,
+					height: 20,
+					x : 10,
+					y : 10
 				}
 			]
 		}
-	},
-	
-	timeline: {
-		fps : 12,
-		layers : [
-			{
-				shapes : { ... },
-				start : 1,
-				end : 100
-				objects : [
-					
-				]
+	],
+	keyframes: [
+		{
+			frame : 1,
+			layers : {
+				"0" : {
+					"0" : {
+						tweens: [
+							{
+								easing:'lib:1',
+								frames: 200,
+								to: {y:80,yRadius:100}
+							}
+						],
+						properties : {
+							x : 100,
+							y : 20
+						}
+					}
+				}
 			}
-		]
-	}
-	
+		},
+		{
+			frame : 100,
+			layers : {
+				"0" : {
+					"1" : {
+						tweens:[
+							{
+								frames: 100,
+								to:{width : 40, height: 10, x : 200}
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			frame : 200,
+			layers : {
+				"0" : {
+					"0" : {},
+					"1" : {
+						properties : {
+							fill : {
+								paint : "#FC0"
+							}
+						}
+					}
+				}
+			}
+		}
+	]
 }

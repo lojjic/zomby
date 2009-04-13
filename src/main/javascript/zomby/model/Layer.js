@@ -7,88 +7,43 @@
 zomby.model.Layer = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Layer.prototype */
 {
-	frame : 0,
-	startFrame : 0,
-	endFrame : 100,
-	shape : null,
+	shapes : null,
 
 	constructor : function(props, timeline) {
-		var me = this;
-		me.base(props);
-		me.timeline = timeline;
-		me.keyframes = [];
-		zomby.Util.each(props.keyframes, function(kf) {
-			me.keyframes.push(new zomby.model.Keyframe(kf));
-		});
+		this.base(props);
+		this.timeline = timeline;
 	},
 
 	/**
-	 * Go directly to a specific frame
-	 * @param {Number} frame
+	 * Get a Shape object by its index.
+	 * @param {Number} idx The index of the desired shape
 	 */
-	go : function(frame) {
-		this.frame = frame;
-		this.sync();
-	},
-
-	/**
-	 * Get the Shape object; if the shape is a reference to a library
-	 * object ("lib:shapeid"), dereference it to a clone of that library object.
-	 */
-	getShape: function() {
-		var CACHE_REAL_SHAPE = "_realShape",
+	getShape: function(idx) {
+		var CACHE_PROP = "_realShape_" + idx,
 			me = this,
-			s = me.getPrivate(CACHE_REAL_SHAPE);
+			s = me.getPrivate(CACHE_PROP);
 		if( !s ) {
-			s = me.getInitialShape().clone();
-			me.setPrivate(CACHE_REAL_SHAPE, s);
-		}
-		return s;
-	},
-
-	getInitialShape: function() {
-		var CACHE_INITIAL_SHAPE = "_initialShape",
-			me = this,
-			s = me.getPrivate(CACHE_INITIAL_SHAPE);
-		if(!s) {
-			s = me.shape;
-			if(typeof s === "string" && s.indexOf("lib:") === 0) {
-				s = s.substring(4);
-				s = me.timeline.library.get(s);
-				me.setPrivate(CACHE_INITIAL_SHAPE, s);
-			}
+			s = me.getInitialShape(idx).clone();
+			me.setPrivate(CACHE_PROP, s);
 		}
 		return s;
 	},
 
 	/**
-	 * Sync the given {@link zomby.model.shape.Shape}'s properties to the current frame
+	 * Reset a single shape to its initial defined state
+	 * @param {Number} idx
 	 */
-	sync : (function() {
-		var Easing = zomby.anim.Easing;
-
-		function tweenRecursive(model, fromProps, toProps, easing, curFrame, totFrames) {
-			var TYPE_OBJECT = "object", p, to, from, toType, fromType;
-			for(p in toProps) {
-				to = toProps[p];
-				from = (fromProps ? fromProps[p] : null);
-				toType = typeof to, fromType = typeof from;
-				if(fromType === toType && toType === "number") {
-					model[p] = easing(curFrame, from, to - from, totFrames);
-				}
-				else if(toType === TYPE_OBJECT && fromType === TYPE_OBJECT && typeof model[p] === TYPE_OBJECT) {
-					tweenRecursive(model[p], from, to, easing, curFrame, totFrames);
-				}
-			}
-		}
+	resetShape : function(idx) {
+		var shape = this.getPrivate("_realShape_" + idx),
+			initial = this.getInitialShape(idx);
 
 		function copyRecursive(from, to) {
-			var TYPE_OBJECT = "object", p, fromVal, toVal, fromType;
+			var p, fromVal, toVal, fromType;
 			for(p in from) {
 				fromVal = from[p];
 				toVal = to[p];
 				fromType = typeof fromVal;
-				if(toVal && typeof toVal === TYPE_OBJECT && fromType === TYPE_OBJECT) {
+				if(toVal && typeof toVal === fromType && fromType === "object") {
 					copyRecursive(fromVal, toVal);
 				}
 				else if(fromType !== "function") {
@@ -97,100 +52,36 @@ zomby.model.Layer = zomby.model.ModelObject.extend(
 			}
 		}
 
-		return function() {
-			var CACHE_LAST_KF_PROPS = "_lastKfProps",
-				CACHE_LAST_KF_IDX = "_lastRefKfIdx",
-				me = this,
-				keyframes = me.keyframes,
-				lastKfIdx = me.getPrivate(CACHE_LAST_KF_IDX),
-				kfIdx = me.getReferenceKeyframeIndex(),
-				refKf = keyframes[kfIdx], nextKf,
-				isKeyframe = (refKf.index === me.frame),
-				s = me.getShape(),
-				tl = me.timeline,
-				fullProps, propsToSync, i, props;
-
-			// execute onEnter listener if keyframe
-			if(isKeyframe) {
-				refKf.doOnEnter(tl, me);
-			}
-
-			// Make sure the shape is synced with the reference keyframe, being careful to avoid
-			// setting properties that don't need syncing.
-			// If tweening, we need a full set of "before" numeric values for calculating the tween.
-
-			if(lastKfIdx === kfIdx) {
-				// can use cached fullProps, and already in sync with reference keyframe
-				fullProps = me.getPrivate(CACHE_LAST_KF_PROPS);
-			} else {
-				propsToSync = {};
-				if(lastKfIdx < kfIdx) {
-					// can use cached values as a starting point but must bring them up to date
-					fullProps = me.getPrivate(CACHE_LAST_KF_PROPS);
-					for(i=lastKfIdx + 1; i<=kfIdx; i++) {
-						props = keyframes[i].properties;
-						if(props) {
-							copyRecursive(props, fullProps);
-							copyRecursive(props, propsToSync);
-						}
-					}
-				} else {
-					// can't use any cached values, and everything must be synced
-					fullProps = propsToSync;
-					copyRecursive(me.getInitialShape(), fullProps);
-					for(i=0; i<=kfIdx; i++) {
-						props = keyframes[i].properties;
-						if(props) {
-							copyRecursive(props, fullProps);
-						}
-					}
-				}
-				// Sync shape to reference keyframe
-				copyRecursive(propsToSync, s);
-				// Save the full set of values for next time
-				me.setPrivate(CACHE_LAST_KF_PROPS, fullProps);
-			}
-
-			// execute onExit listener if keyframe:
-			if(isKeyframe) {
-				refKf.doOnExit(tl, me);
-			}
-			// In between tweened keyframes; calculate the tweened numeric values:
-			else if((nextKf = keyframes[kfIdx + 1]) && nextKf.tween && nextKf.properties) {
-				tweenRecursive(s, fullProps, nextKf.properties,
-					Easing[nextKf.easing || "linear"], me.frame - refKf.index, nextKf.index - refKf.index);
-			}
-		};
-	})(),
+		copyRecursive(initial, shape);
+	},
 
 	/**
-	 * Find the index of the reference Keyframe for the current frame,
-	 * i.e. the one that is either equal to the current frame or the
-	 * most recent one.
+	 * Reset all shapes to their initial defined states
 	 */
-	getReferenceKeyframeIndex: function() {
-		var CACHE_LAST_KF_IDX = "_lastRefKfIdx",
-			me = this,
-			kf = me.keyframes,
-			f = me.frame,
-			last = me.getPrivate(CACHE_LAST_KF_IDX) || 0,
-			i = last,
-			len = kf.length,
-			next;
+	resetShapes : function() {
+		for(var i=0, len=this.shapes.length; i<len; i++) {
+			this.resetShape(i);
+		}
+	},
 
-		// The most common case for normal forward-playing is that either
-		// the reference keyframe will be the same as or one after that of the
-		// last tested frame. Therefore we start by testing the cached index,
-		// then step forward to the end, and then start back at zero.
-		do {
-			next = kf[i + 1];
-			if (kf[i].index <= f && (!next || next.index > f)) {
-				return me.setPrivate(CACHE_LAST_KF_IDX, i);
+	/**
+	 * Get a Shape object in its initial state. If the shape refers to a library
+	 * object ("lib:{num}"), it will be defererenced to a clone of that library object.
+	 * Be careful not to modify any properties of the returned object!
+	 * @param {Number} idx The index of the desired shape
+	 */
+	getInitialShape: function(idx) {
+		var CACHE_PROP = "_initialShape_" + idx,
+			me = this,
+			s = me.getPrivate(CACHE_PROP);
+		if(!s) {
+			s = me.shapes[idx];
+			if(typeof s === "string" && s.indexOf("lib:") === 0) {
+				s = s.substring(4);
+				s = me.timeline.library.get(s);
+				me.setPrivate(CACHE_PROP, s);
 			}
-			i++;
-			if(i === len) {
-				i = 0;
-			}
-		} while(i !== last);
+		}
+		return s;
 	}
 });

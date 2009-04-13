@@ -6,10 +6,8 @@
 zomby.model.Keyframe = zomby.model.ModelObject.extend(
 /** @scope zomby.model.Keyframe.prototype */
 {
-	index : 0,
-	tween : false,
-	easing : "linear",
-	properties : null,
+	frame : 0,
+	layers : null,
 	onenter : null,
 	onexit : null,
 

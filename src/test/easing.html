@@ -13,79 +13,173 @@
 	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
 
 	<script type="text/javascript">
-		var layers = [], i=0;
-		for( var p in zomby.anim.Easing ) {
+		var easings = {
+			linear: "return b + c * t / d;",
+
+			swing: "return ((-Math.cos(t / d * Math.PI) / 2) + .5) * c + b;",
+
+			inQuad: "return c*(t/=d)*t + b;",
+
+			outQuad: "return -c *(t/=d)*(t-2) + b;",
+
+			inOutQuad: "return ((t/=d/2) < 1) ? c/2*t*t + b : -c/2 * ((--t)*(t-2) - 1) + b;",
+
+			inCubic: "return c*(t/=d)*t*t + b;",
+
+			outCubic: "return c*((t=t/d-1)*t*t + 1) + b;",
+
+			inOutCubic: "return ((t/=d/2) < 1) ? c/2*t*t*t + b : c/2*((t-=2)*t*t + 2) + b;",
+
+			inQuart: "return c*(t/=d)*t*t*t + b;",
+
+			outQuart: "return -c * ((t=t/d-1)*t*t*t - 1) + b;",
+
+			inOutQuart: "return ((t/=d/2) < 1) ? c/2*t*t*t*t + b : -c/2 * ((t-=2)*t*t*t - 2) + b;",
+
+			inQuint: "return c*(t/=d)*t*t*t*t + b;",
+
+			outQuint: "return c*((t=t/d-1)*t*t*t*t + 1) + b;",
+
+			inOutQuint: "return ((t/=d/2) < 1) ? c/2*t*t*t*t*t + b : c/2*((t-=2)*t*t*t*t + 2) + b;",
+
+			inSine: "return -c * Math.cos(t/d * (Math.PI/2)) + c + b;",
+
+			outSine: "return c * Math.sin(t/d * (Math.PI/2)) + b;",
+
+			inOutSine: "return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;",
+
+			inExpo: "return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;",
+
+			outExpo: "return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;",
+
+			inOutExpo: "return t==0 ? b : t==d ? b+c : (t/=d/2) < 1 ? c/2 * Math.pow(2, 10 * (t - 1)) + b : c/2 * (-Math.pow(2, -10 * --t) + 2) + b;",
+
+			inCirc: "return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;",
+
+			outCirc: "return c * Math.sqrt(1 - (t=t/d-1)*t) + b;",
+
+			inOutCirc: "return ((t/=d/2) < 1) ? -c/2 * (Math.sqrt(1 - t*t) - 1) + b : c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;",
+
+			inElastic: "var s=1.70158, p=0, a=c;" +
+				"if (t==0) return b;" +
+				"if ((t/=d)==1) return b+c;" +
+				"if (!p) p=d*.3;" +
+				"if (a < Math.abs(c)) { a=c; s=p/4; }" +
+				"else s = p/(2*Math.PI) * Math.asin (c/a);" +
+				"return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;",
+
+			outElastic: "var s=1.70158, p=0, a=c;" +
+				"if (t==0) return b;" +
+				"if ((t/=d)==1) return b+c;" +
+				"if (!p) p=d*.3;" +
+				"if (a < Math.abs(c)) { a=c; s=p/4; }" +
+				"else s = p/(2*Math.PI) * Math.asin (c/a);" +
+				"return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;",
+
+			inOutElastic: "var s=1.70158, p=0, a=c;" +
+				"if (t==0) return b;" +
+				"if ((t/=d/2)==2) return b+c;" +
+				"if (!p) p=d*(.3*1.5);" +
+				"if (a < Math.abs(c)) { a=c; s=p/4; }" +
+				"else s = p/(2*Math.PI) * Math.asin (c/a);" +
+				"return (t < 1) ? -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b : a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;",
+
+			/*inBack: "if(s===undefined) s = 1.70158; return c*(t/=d)*t*((s+1)*t - s) + b",
+
+			outBack: "if(s===undefined) s = 1.70158; return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b",
+
+			inOutBack: "if (s===undefined) s = 1.70158; return ((t/=d/2) < 1) ? c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b : c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;"*/
+
+			/*inBounce: function (t, b, c, d) {
+				return c - Easing.outBounce (d-t, 0, c, d) + b;
+			},
+			outBounce: function (t, b, c, d) {
+				return ((t/=d) < (1/2.75)) ? c*(7.5625*t*t) + b :
+						(t < (2/2.75)) ? c*(7.5625*(t-=(1.5/2.75))*t + .75) + b :
+						(t < (2.5/2.75)) ? c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b :
+						c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+			},
+			inOutBounce:"return (t < d/2) ? Easing.inBounce (t*2, 0, c, d) * .5 + b : Easing.outBounce (t*2-d, 0, c, d) * .5 + c*.5 + b";*/
+		};
+
+		var layers = [],
+			library = [{
+				type: "ellipse",
+				xRadius : 6,
+				yRadius : 6,
+				x : 130,
+				fill : {
+					paint:'red'
+				}
+			}],
+			kf1Layers = [],
+			kf2Layers = [],
+			i=0;
+
+		for( var p in easings ) {
 			var yPos = ++i * 20;
+
+			library.push({
+				type: "easing",
+				label: p,
+				code: easings[p]
+			});
+
 			layers.push({
-				startFrame:0,
-				endFrame:79,
-				shape:"lib:circle",
-				keyframes:[
+				shapes: [
+					"lib:0",
 					{
-						index:0,
-						properties:{
-							x: 130,
-							y: yPos - 5
-						}
+						type:'text',
+						x:0, y:yPos,
+						fill:{
+							paint:"#000"
+						},
+						font:{size:12},
+						lines:[
+							{
+								parts:[p]
+							}
+						]
 					},
 					{
-						index:30,
-						tween:true,
-						easing: p,
-						properties:{
-							x: 500
-						}
-					},
-					{
-						index:40
-					},
-					{
-						index:70,
-						tween:true,
-						easing: p,
-						properties:{
-							x: 130
-						}
-					},
-					{
-						index:79
+						type:'line',
+						x:0,
+						y:yPos + 4,
+						xEnd:600,
+						yEnd:yPos + 4,
+						stroke:{paint:"#CCC"}
 					}
 				]
 			});
-			layers.push({
-				startFrame:0,
-				endFrame:79,
-				shape:{
-					type:'text',
-					x:0, y:yPos,
-					fill:{
-						paint:"#000"
+
+			kf1Layers.push({
+				"0" : {
+					properties : {
+						y : yPos - 5
 					},
-					font:{size:12},
-					lines:[
+					tweens : [
 						{
-							parts:[p]
+							frames : 30,
+							easing: "lib:" + i,
+							to : {
+								x : 500
+							}
 						}
 					]
-				},
-				keyframes: [
-					{index:0}
-				]
+				}
 			});
-			layers.push({
-				startFrame:0,
-				endFrame:79,
-				shape:{
-					type:'line',
-					x:0,
-					y:yPos + 4,
-					xEnd:600,
-					yEnd:yPos + 4,
-					stroke:{paint:"#CCC"}
-				},
-				keyframes: [
-					{index:0}
-				]
+			kf2Layers.push({
+				"0" : {
+					tweens : [
+						{
+							frames : 30,
+							easing: "lib:" + i,
+							to : {
+								x : 130
+							}
+						}
+					]
+				}
 			});
 		}
 
@@ -95,17 +189,18 @@
 			width : 800,
 			height : 800,
 			length : 80,
-			library : {
-				"circle" : {
-					type: "ellipse",
-					xRadius : 6,
-					yRadius : 6,
-					fill : {
-						paint:'red'
-					}
+			library : library,
+			layers : layers,
+			keyframes : [
+				{
+					frame : 1,
+					layers : kf1Layers
+				},
+				{
+					frame : 40,
+					layers : kf2Layers
 				}
-			},
-			layers : layers
+			]
 		});
 	</script>
 </body>

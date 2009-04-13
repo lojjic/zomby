@@ -6,8 +6,8 @@
 	<h1>Basic Animation</h1>
 	<div id="tester"></div>
 	<p>
-		<button onclick="player.start()">Start</button>
-		<button onclick="player.stop()">Stop</button>
+		<button onclick="player.start();">Start</button>
+		<button onclick="player.stop(); startTime = null; frames = 1;">Stop</button>
 	</p>
 	<div>frames/sec: <span id="fps">-</span></div>
 
@@ -20,8 +20,9 @@
 			width : 800,
 			height : 600,
 			length : 50,
-			library : {
-				"My Ellipse" : {
+			library : [
+				{
+					label: "My Ellipse",
 					type: "ellipse",
 					xRadius : 64,
 					yRadius : 48,
@@ -31,7 +32,8 @@
 						paint:'red'
 					}
 				},
-				"My Rect" : {
+				{
+					label: "My Rect",
 					type: 'rectangle',
 					width: 50,
 					height: 50,
@@ -39,7 +41,113 @@
 					y: 100,
 					fill:{paint:'blue'}
 				}
-			},
+			],
+			layers : [
+				{
+					shapes: [
+						"lib:0",
+						"lib:1",
+						"lib:1",
+						{
+							type: "ellipse",
+							x: 400,
+							y: 400,
+							xRadius: 100,
+							yRadius: 50,
+							stroke:{
+								paint: 'blue'
+							}
+						}
+					]
+				}
+			],
+			keyframes: [
+				{
+					frame: 1,
+					layers: {
+						"0" : {
+							"0" : {
+								tweens: [
+									{
+										frames: 25,
+										to: {
+											x : 200,
+											y : 400,
+											yRadius : 200
+										}
+									}
+								]
+							},
+							"1" : {
+								tweens: [
+									{
+										frames: 50,
+										to : {
+											width:100,
+											height:100,
+											x:700
+										}
+									}
+								]
+							},
+							"2" : {
+								tweens: [
+									{
+										frames: 50,
+										to : {
+											width:100,
+											height:100,
+											x:700
+										}
+									}
+								],
+								properties: {
+									y: 200
+								}
+							},
+							"3" : {
+								tweens: [
+									{
+										frames: 50,
+										to : {
+											stroke:{
+												width: 20
+											}
+										}
+									}
+								],
+								properties: {
+									stroke:{
+										width: 2
+									}
+								}
+							}
+						}
+					}
+				},
+				{
+					frame: 25,
+					layers: {
+						"0" : {
+							"0" : {
+								tweens: [
+									{
+										frames: 25,
+										to : {
+											x:600,
+											y:100,
+											yRadius: 20,
+											xRadius: 200
+										}
+									}
+								]
+							}
+						}
+					}
+				}
+			]
+
+/*
 			layers : [
 				{
 					startFrame:0,
@@ -145,8 +253,8 @@
 					]
 				}
 			]
+ */
 		});
-
 
 		// A little hackery to track the actual frame rate
 		var _step = player.timeline.step,

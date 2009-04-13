@@ -38,7 +38,7 @@ zomby.Util = {
 	 * @return Boolean
 	 */
 	isArray : function(obj) {
-		return obj && obj.toString() === '[object Array]';
+		return obj && Object.prototype.toString.call(obj) === '[object Array]';
 	},
 
 	/**

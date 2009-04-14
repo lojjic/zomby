@@ -1,0 +1,113 @@
+<html>
+<head>
+	<title>Staggered Tweens</title>
+</head>
+<body>
+	<h1>Staggered Tweens</h1>
+	<p>This tests performance where there is a keyframe every frame, each starting a tween that spans many keyframes.</p>
+	<div id="tester"></div>
+	<p>
+		<button onclick="player.start();">Start</button>
+		<button onclick="player.stop(); startTime = null; frames = 1;">Stop</button>
+	</p>
+	<div>frames/sec: <span id="fps">-</span></div>
+
+	<script type="text/javascript" src="../../target/scripts/zomby-runtime.js"></script>
+
+	<script type="text/javascript">
+		var shapes = [],
+			keyframes = [],
+			kf1Shapes = [],
+			kf2Shapes = [],
+			rows = 12,
+			cols = 16,
+			width = 800,
+			height = 600,
+			tweenLength = rows * cols / 4,
+			movieLength = rows * cols + (tweenLength * 2);
+
+		for(var i=0; i < rows * cols + tweenLength; i++) {
+			shapes.push("lib:0");
+
+			keyframes.push({
+				frame : i + 1,
+				layers : {
+					"0" : (function() {
+						var shapes = {};
+
+						if(i < rows * cols) {
+							shapes[i] = {
+								tweens: [{
+									frames: tweenLength,
+									to : {
+										width: width / cols,
+										height: height / rows,
+										rotate: 90
+									}
+								}],
+								properties: {
+									x: width / cols * (i % cols),
+									y: height / rows * Math.floor(i / cols)
+								}
+							};
+						}
+
+						if(i >= tweenLength && i - tweenLength < rows * cols) {
+							shapes[i - tweenLength] = {
+								tweens: [{
+									frames: tweenLength,
+									to : {
+										width: 1,
+										height: 1,
+										rotate: 0
+									}
+								}]
+							};
+						}
+
+						return shapes;
+					})()
+				}
+			});
+		}
+
+
+		var player = new zomby.Player('tester', {
+			loop:true,
+			fps: 100,
+			width : width,
+			height : height,
+			length : rows * cols + (tweenLength * 2),
+			library : [
+				{
+					label: "my rect",
+					type: 'rectangle',
+					width: 1,
+					height: 1,
+					x: 0,
+					y: 100,
+					fill:{paint:'blue'}
+				}
+			],
+			layers : [
+				{
+					shapes : shapes
+				}
+			],
+			keyframes: keyframes
+		});
+
+		// A little hackery to track the actual frame rate
+		var _step = player.timeline.step,
+			startTime,
+			frames = 1;
+		player.timeline.step = function() {   
+			_step.call(this);
+			var fps = 1000 / (( new Date().getTime() - (startTime || (startTime = new Date().getTime())) ) / frames++);
+			document.getElementById('fps').firstChild.nodeValue = fps;
+		};
+
+
+	</script>
+</body>
+</html>

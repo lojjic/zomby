@@ -5,9 +5,9 @@
 			<fileName>zomby-runtime.js</fileName>
 			<includes>
 				<!--===== Core classes =====-->
-				<include>zomby/support/Base.js</include>
 				<include>zomby/support/json2.js</include>
 				<include>zomby/__package__.js</include>
+				<include>zomby/Base.js</include>
 				<include>zomby/Player.js</include>
 				<include>zomby/Constants.js</include>
 				<include>zomby/Util.js</include>

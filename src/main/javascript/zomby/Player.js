@@ -1,5 +1,5 @@
 
-zomby.Player = Base.extend({
+zomby.Player = zomby.Base.extend({
 	ready : false,
 	element : null,
 	data : null,

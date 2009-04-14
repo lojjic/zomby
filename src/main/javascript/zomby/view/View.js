@@ -9,7 +9,7 @@ var _modelViewMapping = {};
  * @param {zomby.model.ModelObject} modelObject The model object this view represents
  * @param {zomby.view.View} parentView The parent View object for this view, or null if top-level
  */
-zomby.view.View = Base.extend(
+zomby.view.View = zomby.Base.extend(
 /** @scope zomby.view.View.prototype */
 {
 	constructor : function(modelObject, parentView) {
@@ -70,7 +70,7 @@ zomby.view.View = Base.extend(
 	 * appropriate View for a given model object.
 	 */
 	extend : function(proto, stat) {
-		var sub = Base.extend.call(this, proto, stat),
+		var sub = zomby.Base.extend.call(this, proto, stat),
 			c = stat && stat.MODEL_CLASS;
 		if(c) {
 			_modelViewMapping[c.TYPE] = sub;

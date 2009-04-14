@@ -16,7 +16,7 @@
  *        or in seconds, depending on the isSeconds argument
  * @param {Boolean} isSeconds If true, the duration argument will be interpreted as seconds
  */
-zomby.anim.Tween = Base.extend(
+zomby.anim.Tween = zomby.Base.extend(
 /** @scope zomby.anim.Tween.prototype */
 {
 	FPS : zomby.Constants.DEFAULT_FPS,

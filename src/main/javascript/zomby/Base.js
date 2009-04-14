@@ -2,25 +2,31 @@
 	Base.js, version 1.1
 	Copyright 2006-2007, Dean Edwards
 	License: http://www.opensource.org/licenses/mit-license.php
+
+	Modified from original to put the Base object in the zomby namespace,
+	and to optimize for JS compression.
 */
+
+zomby.Base = (function() {
 
 var Base = function() {
 	// dummy
 };
 
 Base.extend = function(_instance, _static) { // subclass
-	var extend = Base.prototype.extend;
+	var extend = Base.prototype.extend,
+		proto, constructor, klass;
 	
 	// build the prototype
 	Base._prototyping = true;
-	var proto = new this;
+	proto = new this;
 	extend.call(proto, _instance);
 	delete Base._prototyping;
 	
 	// create the wrapper for the constructor function
 	//var constructor = proto.constructor.valueOf(); //-dean
-	var constructor = proto.constructor;
-	var klass = proto.constructor = function() {
+	constructor = proto.constructor;
+	klass = proto.constructor = function() {
 		if (!Base._prototyping) {
 			if (this._constructing || this.constructor == klass) { // instantiation
 				this._constructing = true;
@@ -51,19 +57,20 @@ Base.extend = function(_instance, _static) { // subclass
 
 Base.prototype = {	
 	extend: function(source, value) {
+		var ancestor, method, extend, proto, hidden, i, key;
 		if (arguments.length > 1) { // extending with a name/value pair
-			var ancestor = this[source];
+			ancestor = this[source];
 			if (ancestor && (typeof value == "function") && // overriding a method?
 				// the valueOf() comparison is to avoid circular references
 				(!ancestor.valueOf || ancestor.valueOf() != value.valueOf()) &&
 				/\bbase\b/.test(value)) {
 				// get the underlying method
-				var method = value.valueOf();
+				method = value.valueOf();
 				// override
 				value = function() {
-					var previous = this.base || Base.prototype.base;
+					var previous = this.base || Base.prototype.base, returnValue;
 					this.base = ancestor;
-					var returnValue = method.apply(this, arguments);
+					returnValue = method.apply(this, arguments);
 					this.base = previous;
 					return returnValue;
 				};
@@ -75,24 +82,23 @@ Base.prototype = {
 			}
 			this[source] = value;
 		} else if (source) { // extending with an object literal
-			var extend = Base.prototype.extend;
+			extend = Base.prototype.extend;
 			// if this object has a customised extend method then use it
 			if (!Base._prototyping && typeof this != "function") {
 				extend = this.extend || extend;
 			}
-			var proto = {toSource: null};
+			proto = {toSource: null};
 			// do the "toString" and other methods manually
-			var hidden = ["constructor", "toString", "valueOf"];
+			hidden = ["constructor", "toString", "valueOf"];
 			// if we are prototyping then include the constructor
-			var i = Base._prototyping ? 0 : 1;
+			i = Base._prototyping ? 0 : 1;
 			while (key = hidden[i++]) {
 				if (source[key] != proto[key]) {
 					extend.call(this, key, source[key]);
-
 				}
 			}
 			// copy each of the source object's properties to this object
-			for (var key in source) {
+			for (key in source) {
 				if (!proto[key]) extend.call(this, key, source[key]);
 			}
 		}
@@ -138,3 +144,6 @@ Base = Base.extend({
 		return String(this.valueOf());
 	}
 });
+
+return Base;
+})();

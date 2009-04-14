@@ -1,5 +1,5 @@
 
-zomby.editor.ui.canvas.SelectionManager = Base.extend({
+zomby.editor.ui.canvas.SelectionManager = zomby.Base.extend({
 
 	canvas : null,
 	shapes : null,

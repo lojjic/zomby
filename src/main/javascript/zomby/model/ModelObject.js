@@ -31,7 +31,7 @@ function initPrivateAccessMethods( instance ) {
  * @constructor
  * @param {Object} props (optional) Name-value pairs for the object's initial property values.
  */
-zomby.model.ModelObject = Base.extend(
+zomby.model.ModelObject = zomby.Base.extend(
 /** @scope zomby.model.ModelObject.prototype */
 {
 	type : null,
@@ -207,7 +207,7 @@ zomby.model.ModelObject = Base.extend(
 	 *   is used to track property changes.
 	 */
 	extend : function(inst, stat) {
-		var sub = Base.extend.call(this, inst, stat),
+		var sub = zomby.Base.extend.call(this, inst, stat),
 			proto = sub.prototype,
 			t = stat && stat.TYPE,
 			prop, initGetSet;

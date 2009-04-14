@@ -6,7 +6,7 @@
  * @param {Object} newValue The new value of the property
  * @param {Object} target The target object whose property was changed
  */
-zomby.core.PropertyChangeEventData = Base.extend(
+zomby.core.PropertyChangeEventData = zomby.Base.extend(
 /** @scope zomby.core.PropertyChangeEventData.prototype */
 {
 	constructor : function(name, oldValue, newValue, target) {

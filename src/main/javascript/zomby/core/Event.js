@@ -5,7 +5,7 @@
  * @constructor
  * @param {String} type The type of the event.
  */
-zomby.core.Event = Base.extend(
+zomby.core.Event = zomby.Base.extend(
 /** @scope zomby.core.Event.prototype */
 {
 	type : null,

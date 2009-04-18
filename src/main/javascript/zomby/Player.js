@@ -4,6 +4,8 @@ zomby.Player = zomby.Base.extend({
 	element : null,
 	data : null,
 	timeline : null,
+	playing : false,
+	dropFrames : 0,
 
 	constructor : function(el, src) {
 		this.findElement(el);
@@ -56,12 +58,40 @@ zomby.Player = zomby.Base.extend({
 	 * Start the timeline playing
 	 */
 	start : function() {
-		var me = this;
-		if(!me._timer) {
-			me._timer = setInterval(function() {
-				me.timeline.step();
-				me.timelineView.update();
-			}, 1000 / me.timeline.fps);
+		if(!this.playing) {
+			this.playing = true;
+
+			var me = this,
+				lastStepDuration = 0,
+				droppedCount = 0;
+
+			function step() {
+				var startTime, endTime,
+					timeout = 1000 / me.timeline.fps,
+					dropLimit = me.dropFrames;
+				if(me.playing) {
+					startTime = new Date().getTime();
+
+					// Always update the model
+					me.timeline.step();
+
+					// Render the frame if the model update didn't take too long, and if the
+					// configured number of prior frames have not been dropped.
+					if(dropLimit > 0 && droppedCount <= dropLimit && lastStepDuration > timeout) {
+						droppedCount++;
+					} else {
+						me.timelineView.update();
+						droppedCount = 0;
+					}
+
+					endTime = new Date().getTime();
+
+					lastStepDuration = endTime - startTime;
+
+					me._timer = setTimeout(step, Math.max(0, timeout - lastStepDuration));
+				}
+			}
+			step();
 		}
 	},
 
@@ -69,9 +99,8 @@ zomby.Player = zomby.Base.extend({
 	 * Stop the timeline playing
 	 */
 	stop : function() {
-		if(this._timer) {
-			clearInterval(this._timer);
-			this._timer = null;
+		if(this.playing) {
+			this.playing = false;
 		}
 	}
 

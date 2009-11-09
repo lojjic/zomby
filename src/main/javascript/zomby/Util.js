@@ -120,6 +120,23 @@ zomby.Util = {
 
 		xhr.open(opts.method || "GET", opts.url, opts.async, opts.username, opts.password);
 		xhr.send();
+	},
+
+	/**
+	 * Calculate the location of the zomby script file
+	 */
+	getScriptLoc: function() {
+		var scripts = document.getElementsByTagName('script'),
+			i = scripts.length,
+			re = /zomby[^\/]*\.js/,
+			src;
+		while(i--) {
+			src = scripts[i].src;
+			if(re.test(src)) {
+				return src.replace(re, '');
+			}
+		}
+		return '';
 	}
 
 };
